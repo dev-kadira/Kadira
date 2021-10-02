@@ -6,22 +6,36 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- * ***********************************************************************************/
+ * */
 
-class Vtiger_RecipientPreferencesSaveAjax_Action extends Vtiger_SaveAjax_Action {
-
-	public function requiresPermission(Vtiger_Request $request){
+class Vtiger_RecipientPreferencesSaveAjax_Action extends Vtiger_SaveAjax_Action
+{
+	/**
+	 * requiresPermission
+	 *
+	 * @param  mixed $request
+	 * @return Array
+	 */
+	public function requiresPermission(Vtiger_Request $request)
+	{
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		
+		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
+
 		return $permissions;
 	}
-	
-	public function process(Vtiger_Request $request) {
+
+	/**
+	 * process
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function process(Vtiger_Request $request)
+	{
 		$sourceModule = $request->get('source_module');
 		$selecltedFields = $request->get('selectedFields');
 		$response = new Vtiger_Response();
-		$prefs = array();
+		$prefs = [];
 		if ($selecltedFields) {
 			foreach ($selecltedFields as $fieldInfoJson) {
 				if (is_array($fieldInfoJson)) {
@@ -46,7 +60,7 @@ class Vtiger_RecipientPreferencesSaveAjax_Action extends Vtiger_SaveAjax_Action 
 
 
 		$recipientPrefModel = Vtiger_RecipientPreference_Model::getInstance($sourceModule);
-		if (!$recipientPrefModel) {
+		if (! $recipientPrefModel) {
 			$recipientPrefModel = new Vtiger_RecipientPreference_Model();
 			$recipientPrefModel->setSourceModule($sourceModule);
 		}
@@ -64,5 +78,4 @@ class Vtiger_RecipientPreferencesSaveAjax_Action extends Vtiger_SaveAjax_Action 
 		}
 		$response->emit();
 	}
-
 }

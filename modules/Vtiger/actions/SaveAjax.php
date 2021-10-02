@@ -6,54 +6,64 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-class Vtiger_SaveAjax_Action extends Vtiger_Save_Action {
-
-	public function process(Vtiger_Request $request) {
-		$fieldToBeSaved = $request->get('field');
+class Vtiger_SaveAjax_Action extends Vtiger_Save_Action
+{
+	/**
+	 * process
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function process(Vtiger_Request $request)
+	{
 		$response = new Vtiger_Response();
+
 		try {
-			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', $request->get('_timeStampNoChangeMode',false));
+			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', $request->get('_timeStampNoChangeMode', false));
 			$recordModel = $this->saveRecord($request);
 			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', false);
 
 			$fieldModelList = $recordModel->getModule()->getFields();
-			$result = array();
-			$picklistColorMap = array();
+			$result = [];
+			$picklistColorMap = [];
+
 			foreach ($fieldModelList as $fieldName => $fieldModel) {
-				if($fieldModel->isViewable()){
+				if ($fieldModel->isViewable()) {
 					$recordFieldValue = $recordModel->get($fieldName);
-					if(is_array($recordFieldValue) && $fieldModel->getFieldDataType() == 'multipicklist') {
+					if (is_array($recordFieldValue) && $fieldModel->getFieldDataType() == 'multipicklist') {
 						foreach ($recordFieldValue as $picklistValue) {
 							$picklistColorMap[$picklistValue] = Settings_Picklist_Module_Model::getPicklistColorByValue($fieldName, $picklistValue);
 						}
-						$recordFieldValue = implode(' |##| ', $recordFieldValue);     
+						$recordFieldValue = implode(' |##| ', $recordFieldValue);
 					}
-					if($fieldModel->getFieldDataType() == 'picklist') {
+					if ($fieldModel->getFieldDataType() == 'picklist') {
 						$picklistColorMap[$recordFieldValue] = Settings_Picklist_Module_Model::getPicklistColorByValue($fieldName, $recordFieldValue);
 					}
 					$fieldValue = $displayValue = Vtiger_Util_Helper::toSafeHTML($recordFieldValue);
-					if ($fieldModel->getFieldDataType() !== 'currency' && $fieldModel->getFieldDataType() !== 'datetime' && $fieldModel->getFieldDataType() !== 'date' && $fieldModel->getFieldDataType() !== 'double') { 
-						$displayValue = $fieldModel->getDisplayValue($fieldValue, $recordModel->getId()); 
+					if ($fieldModel->getFieldDataType() !== 'currency' && $fieldModel->getFieldDataType() !== 'datetime' && $fieldModel->getFieldDataType() !== 'date' && $fieldModel->getFieldDataType() !== 'double') {
+						$displayValue = $fieldModel->getDisplayValue($fieldValue, $recordModel->getId());
 					}
 					if ($fieldModel->getFieldDataType() == 'currency') {
 						$displayValue = Vtiger_Currency_UIType::transformDisplayValue($fieldValue);
 					}
-					if(!empty($picklistColorMap)) {
-						$result[$fieldName] = array('value' => $fieldValue, 'display_value' => $displayValue, 'colormap' => $picklistColorMap);
+					if (! empty($picklistColorMap)) {
+						$result[$fieldName] = ['value' => $fieldValue, 'display_value' => $displayValue, 'colormap' => $picklistColorMap];
 					} else {
-						$result[$fieldName] = array('value' => $fieldValue, 'display_value' => $displayValue);
+						$result[$fieldName] = ['value' => $fieldValue, 'display_value' => $displayValue];
 					}
 				}
 			}
 
 			//Handling salutation type
-			if ($request->get('field') === 'firstname' && in_array($request->getModule(), array('Contacts', 'Leads'))) {
+			if ($request->get('field') === 'firstname' && in_array($request->getModule(), ['Contacts', 'Leads'])) {
 				$salutationType = $recordModel->getDisplayValue('salutationtype');
 				$firstNameDetails = $result['firstname'];
-				$firstNameDetails['display_value'] = $salutationType. " " .$firstNameDetails['display_value'];
-				if ($salutationType != '--None--') $result['firstname'] = $firstNameDetails;
+				$firstNameDetails['display_value'] = $salutationType . ' ' . $firstNameDetails['display_value'];
+				if ($salutationType != '--None--') {
+					$result['firstname'] = $firstNameDetails;
+				}
 			}
 
 			// removed decode_html to eliminate XSS vulnerability
@@ -74,14 +84,15 @@ class Vtiger_SaveAjax_Action extends Vtiger_Save_Action {
 	 * @param Vtiger_Request $request
 	 * @return Vtiger_Record_Model or Module specific Record Model instance
 	 */
-	public function getRecordModelFromRequest(Vtiger_Request $request) {
+	public function getRecordModelFromRequest(Vtiger_Request $request)
+	{
 		$moduleName = $request->getModule();
-		if($moduleName == 'Calendar') {
+		if ($moduleName == 'Calendar') {
 			$moduleName = $request->get('calendarModule');
 		}
 		$recordId = $request->get('record');
 
-		if(!empty($recordId)) {
+		if (! empty($recordId)) {
 			$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
 			$recordModel->set('id', $recordId);
 			$recordModel->set('mode', 'edit');
@@ -97,26 +108,26 @@ class Vtiger_SaveAjax_Action extends Vtiger_Save_Action {
 				}
 
 				// To support Inline Edit in Vtiger7
-				if($request->has($fieldName)){
-					$fieldValue = $request->get($fieldName,null);
-				}else if($fieldName === $request->get('field')){
+				if ($request->has($fieldName)) {
+					$fieldValue = $request->get($fieldName, null);
+				} elseif ($fieldName === $request->get('field')) {
 					$fieldValue = $request->get('value');
 				}
 				$fieldDataType = $fieldModel->getFieldDataType();
 				if ($fieldDataType == 'time' && $fieldValue !== null) {
 					$fieldValue = Vtiger_Time_UIType::getTimeValueWithSeconds($fieldValue);
 				}
-                $fieldValue = $this->purifyCkeditorField($fieldName, $fieldValue);
+				$fieldValue = $this->purifyCkeditorField($fieldName, $fieldValue);
 				if ($fieldValue !== null) {
-					if (!is_array($fieldValue)) {
+					if (! is_array($fieldValue)) {
 						$fieldValue = trim($fieldValue);
 					}
 					$recordModel->set($fieldName, $fieldValue);
 				}
 				$recordModel->set($fieldName, $fieldValue);
-				if($fieldName === 'contact_id' && isRecordExists($fieldValue)) {
+				if ($fieldName === 'contact_id' && isRecordExists($fieldValue)) {
 					$contactRecord = Vtiger_Record_Model::getInstanceById($fieldValue, 'Contacts');
-					$recordModel->set("relatedContact",$contactRecord);
+					$recordModel->set('relatedContact', $contactRecord);
 				}
 			}
 		} else {
@@ -132,33 +143,42 @@ class Vtiger_SaveAjax_Action extends Vtiger_Save_Action {
 				} else {
 					$fieldValue = $fieldModel->getDefaultFieldValue();
 				}
-                if($fieldValue){
-                    $fieldValue = Vtiger_Util_Helper::validateFieldValue($fieldValue,$fieldModel);
-                }
+				if ($fieldValue) {
+					$fieldValue = Vtiger_Util_Helper::validateFieldValue($fieldValue, $fieldModel);
+				}
 				$fieldDataType = $fieldModel->getFieldDataType();
 				if ($fieldDataType == 'time' && $fieldValue !== null) {
 					$fieldValue = Vtiger_Time_UIType::getTimeValueWithSeconds($fieldValue);
 				}
-                $fieldValue = $this->purifyCkeditorField($fieldName, $fieldValue);
+				$fieldValue = $this->purifyCkeditorField($fieldName, $fieldValue);
 				if ($fieldValue !== null) {
-					if (!is_array($fieldValue)) {
+					if (! is_array($fieldValue)) {
 						$fieldValue = trim($fieldValue);
 					}
 					$recordModel->set($fieldName, $fieldValue);
 				}
-			} 
+			}
 		}
 
 		return $recordModel;
 	}
-    
-    public function purifyCkeditorField($fieldName, $fieldValue) {
-        $ckeditorFields = array('commentcontent', 'notecontent', 'signature');
-        if((in_array($fieldName, $ckeditorFields)) && $fieldValue !== null){
-            $purifiedContent = vtlib_purify(decode_html($fieldValue));
-            // Purify malicious html event attributes
-            $fieldValue = purifyHtmlEventAttributes(decode_html($purifiedContent),true);
-        }
-        return $fieldValue;
-    }
+
+	/**
+	 * purifyCkeditorField
+	 *
+	 * @param  mixed $fieldName
+	 * @param  mixed $fieldValue
+	 * @return void
+	 */
+	public function purifyCkeditorField($fieldName, $fieldValue)
+	{
+		$ckeditorFields = ['commentcontent', 'notecontent', 'signature'];
+		if ((in_array($fieldName, $ckeditorFields)) && $fieldValue !== null) {
+			$purifiedContent = vtlib_purify(decode_html($fieldValue));
+			// Purify malicious html event attributes
+			$fieldValue = purifyHtmlEventAttributes(decode_html($purifiedContent), true);
+		}
+
+		return $fieldValue;
+	}
 }

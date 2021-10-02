@@ -6,21 +6,34 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-class Vtiger_DownloadAttachment_Action extends Vtiger_Action_Controller {
-
-	public function requiresPermission(Vtiger_Request $request){
+class Vtiger_DownloadAttachment_Action extends Vtiger_Action_Controller
+{
+	/**
+	 * requiresPermission
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function requiresPermission(Vtiger_Request $request)
+	{
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		
+		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record'];
+
 		return $permissions;
 	}
 
-	public function process(Vtiger_Request $request) {
+	/**
+	 * process
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function process(Vtiger_Request $request)
+	{
 		$moduleName = $request->getModule();
 		$recordModel = Vtiger_Record_Model::getInstanceById($request->get('record'), $moduleName);
 		$recordModel->downloadFile($request->get('attachmentid'));
 	}
-
 }
