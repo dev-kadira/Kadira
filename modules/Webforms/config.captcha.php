@@ -6,14 +6,12 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- ************************************************************************************/
+ */
 
 /*Config file for captcha
  * enabled webforms.
  */
 global $captchaConfig;
-$captchaConfig=array(
-        'VTIGER_RECAPTCHA_PUBLIC_KEY'=>'RECAPTCHA PUBLIC KEY FOR THIS DOMAIN',//RECAPTCHA PUBLIC KEY FOR THIS DOMAIN
-'VTIGER_RECAPTCHA_PRIVATE_KEY'=>'RECAPTCHA PRIVATE KEY FOR THIS DOMAIN');//RECAPTCHA PRIVATE KEY FOR THIS DOMAIN
-
-
+$captchaConfig=[
+	'VTIGER_RECAPTCHA_PUBLIC_KEY'=>'RECAPTCHA PUBLIC KEY FOR THIS DOMAIN', //RECAPTCHA PUBLIC KEY FOR THIS DOMAIN
+	'VTIGER_RECAPTCHA_PRIVATE_KEY'=>'RECAPTCHA PRIVATE KEY FOR THIS DOMAIN'];//RECAPTCHA PRIVATE KEY FOR THIS DOMAIN
