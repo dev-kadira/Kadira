@@ -45,7 +45,7 @@
 						{assign var=PARENT_ID value=$RECORD->getId()}
 						<div class="pull-right">
 							<div class="dropdown">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<button type="button" class="btn btn-lg btn-outline-primary dropdown-toggle" data-toggle="dropdown">
 									<span class="fa fa-plus" title="{vtranslate('LBL_NEW_DOCUMENT', $MODULE_NAME)}"></span>&nbsp;{vtranslate('LBL_NEW_DOCUMENT', 'Documents')}&nbsp; <span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">

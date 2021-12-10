@@ -31,7 +31,7 @@
                 <div class="pull-right col-md-7 detailViewButtoncontainer">
                     <div class="btn-group pull-right">
                         {foreach item=DETAIL_VIEW_BASIC_LINK from=$DETAILVIEW_LINKS['DETAILVIEWBASIC']}
-                            <button class="btn btn-default {if $DETAIL_VIEW_BASIC_LINK->getLabel() eq 'LBL_EDIT'}{/if}" id="{$MODULE}_detailView_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($DETAIL_VIEW_BASIC_LINK->getLabel())}"
+                            <button class="btn btn-outline-primary {if $DETAIL_VIEW_BASIC_LINK->getLabel() eq 'LBL_EDIT'}{/if}" id="{$MODULE}_detailView_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($DETAIL_VIEW_BASIC_LINK->getLabel())}"
                                     {if $DETAIL_VIEW_BASIC_LINK->isPageLoadLink()}
                                         onclick="window.location.href='{$DETAIL_VIEW_BASIC_LINK->getUrl()}'"
                                     {else}
@@ -41,7 +41,7 @@
                             </button>
                         {/foreach}
                         {if $DETAILVIEW_LINKS['DETAILVIEW']|@count gt 0}
-                            <button class="btn btn-default" data-toggle="dropdown" href="javascript:void(0);">
+                            <button class="btn btn-outline-primary" data-toggle="dropdown" href="javascript:void(0);">
                                 {vtranslate('LBL_MORE', $MODULE)}&nbsp;<i class="caret"></i>
                             </button>
                             <ul class="dropdown-menu pull-right">

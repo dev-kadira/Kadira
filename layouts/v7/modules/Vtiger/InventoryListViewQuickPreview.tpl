@@ -59,10 +59,10 @@
                                     <button class="btn btn-success btn-lg" style ="margin-right:10px">{vtranslate('LBL_DETAILS',$MODULE)}</button>
                                 {/if}
                                 {if $NAVIGATION}
-                                    <button class="btn btn-default btn-sm" id="quickPreviewPreviousRecordButton" data-id = '{$PREVIOUS_RECORD_ID}' {if empty($PREVIOUS_RECORD_ID)} disabled="disabled"{else} onclick="return false"{/if} >
+                                    <button class="btn btn-outline-primary btn-sm" id="quickPreviewPreviousRecordButton" data-id = '{$PREVIOUS_RECORD_ID}' {if empty($PREVIOUS_RECORD_ID)} disabled="disabled"{else} onclick="return false"{/if} >
                                         <i class="fa fa-chevron-left"></i>
                                     </button>
-                                    <button class="btn btn-default btn-sm" id="quickPreviewNextRecordButton" data-id = '{$NEXT_RECORD_ID}' {if empty($NEXT_RECORD_ID)} disabled="disabled"{else} onclick="return false"{/if}>
+                                    <button class="btn btn-outline-primary btn-sm" id="quickPreviewNextRecordButton" data-id = '{$NEXT_RECORD_ID}' {if empty($NEXT_RECORD_ID)} disabled="disabled"{else} onclick="return false"{/if}>
                                         <i class="fa fa-chevron-right"></i>
                                     </button>
                                 {/if}

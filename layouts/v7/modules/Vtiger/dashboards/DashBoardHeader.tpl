@@ -14,7 +14,7 @@
 	<div class="buttonGroups pull-right">
 		<div class="btn-group">
 			{if $SELECTABLE_WIDGETS|count gt 0}
-				<button class='btn btn-default addButton dropdown-toggle' data-toggle='dropdown'>
+				<button class='btn btn-outline-primary addButton dropdown-toggle' data-toggle='dropdown'>
 					{vtranslate('LBL_ADD_WIDGET')}&nbsp;&nbsp;<i class="caret"></i>
 				</button>
 
@@ -50,7 +50,7 @@
 
 				</ul>
 			{else if $MODULE_PERMISSION}
-				<button class='btn btn-default addButton dropdown-toggle' disabled="disabled" data-toggle='dropdown'>
+				<button class='btn btn-outline-primary addButton dropdown-toggle' disabled="disabled" data-toggle='dropdown'>
 					<strong>{vtranslate('LBL_ADD_WIDGET')}</strong> &nbsp;&nbsp;
 					<i class="caret"></i>
 				</button>

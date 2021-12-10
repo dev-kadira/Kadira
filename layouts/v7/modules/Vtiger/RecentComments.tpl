@@ -27,16 +27,18 @@
 				</div>
 				<div class='row'>
 					<div class="col-xs-6 pull-right paddingTop10 paddingLeft0">
-						<div style="text-align: right;">
-							{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
-								<div class="" style="margin: 7px 0;">
-									<label>
-										<input type="checkbox" id="is_private" style="margin:2px 0px -2px 0px">&nbsp;&nbsp;{vtranslate('LBL_INTERNAL_COMMENT')}
-									</label>&nbsp;&nbsp;
-									<i class="fa fa-question-circle cursorPointer" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_INFO')}"></i>&nbsp;&nbsp;
-								</div>
-							{/if}
-							<button class="btn btn-success btn-lg detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
+						<div class="paddingTop5">
+							<div style="text-align: right;">
+								{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
+									<div class="" style="margin: 7px 0;">
+										<label>
+											<input type="checkbox" id="is_private" style="margin:2px 0px -2px 0px">&nbsp;&nbsp;{vtranslate('LBL_INTERNAL_COMMENT')}
+										</label>&nbsp;&nbsp;
+										<i class="fa fa-question-circle cursorPointer" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_INFO')}"></i>&nbsp;&nbsp;
+									</div>
+								{/if}
+								<button class="btn btn-success btn-lg detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
+							</div>
 						</div>
 					</div>
 					{if $FIELD_MODEL->getProfileReadWritePermission()}

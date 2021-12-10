@@ -15,7 +15,7 @@
 			<div class="listViewActionsDiv row-fluid">
 				<span class="btn-toolbar span4">
 					<span class="btn-group listViewMassActions">
-                        <button class="btn dropdown-toggle" data-toggle="dropdown"><strong>{vtranslate('LBL_ACTIONS', $MODULE)}</strong>&nbsp;&nbsp;<i class="caret"></i></button>
+                        <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"><strong>{vtranslate('LBL_ACTIONS', $MODULE)}</strong>&nbsp;&nbsp;<i class="caret"></i></button>
                         <ul class="dropdown-menu">
                             <li id="massDelete"><a href="javascript:void(0);" onclick="Portal_List_Js.massDeleteRecords();">{vtranslate('LBL_DELETE', $MODULE)}</a></li>
                         </ul>

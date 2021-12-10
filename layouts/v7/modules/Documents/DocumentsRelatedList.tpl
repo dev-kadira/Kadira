@@ -38,7 +38,7 @@
                                 {elseif $RELATED_LINK->get('_linklabel') === '_add_task'}
                                     {assign var=RELATED_MODULE_NAME value='Calendar'}
                                 {/if}
-                                <button type="button" module="{$RELATED_MODULE_NAME}"  class="btn addButton btn-default
+                                <button type="button" module="{$RELATED_MODULE_NAME}"  class="btn addButton btn-outline-primary
                                     {if $IS_SELECT_BUTTON eq true} selectRelation {/if} "
                                     {if $IS_SELECT_BUTTON eq true} data-moduleName={$RELATED_LINK->get('_module')->get('name')} {/if}
                                     {if ($RELATED_LINK->isPageLoadLink())}
@@ -53,7 +53,7 @@
 								{if $IS_CREATE_PERMITTED}
 									<div class="col-sm-3">
 										<div class="dropdown">
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+											<button type="button" class="btn btn-lg btn-outline-primary dropdown-toggle" data-toggle="dropdown">
 												<span class="fa fa-plus" title="{vtranslate('LBL_NEW_DOCUMENT', $MODULE)}"></span>&nbsp;&nbsp;{vtranslate('LBL_NEW_DOCUMENT', $RELATED_MODULE_NAME)}&nbsp; <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu">

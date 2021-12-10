@@ -41,7 +41,7 @@
             </div>
             <div class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div class="btn-group pull-right">
-                <button id="googlesync_addcustommapping" class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                <button id="googlesync_addcustommapping" class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                     <span class="caret"></span>&nbsp;{vtranslate('LBL_ADD_CUSTOM_FIELD_MAPPING',$MODULENAME)}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-left" role="menu">

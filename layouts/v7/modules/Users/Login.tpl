@@ -166,7 +166,7 @@
 			outline: 0;
 		}
 		.buttonBlue {
-			background: #007bff;
+			background: #292961;
 		}
 		.ripples {
 			position: absolute;

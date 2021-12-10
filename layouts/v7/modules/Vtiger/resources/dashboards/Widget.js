@@ -32,6 +32,7 @@ Vtiger.Class('Vtiger_Widget_Js',{
 	}
 },{
 
+	chartjs: null,
 	container : false,
 	plotContainer : false,
 
@@ -44,6 +45,10 @@ Vtiger.Class('Vtiger_Widget_Js',{
 
 	getContainer : function() {
 		return this.container;
+	},
+
+	setChartObject: function (element){
+		this.chartjs = element;
 	},
 
 	setContainer : function(element) {
@@ -60,6 +65,9 @@ Vtiger.Class('Vtiger_Widget_Js',{
 		return jQuery('#userDateFormat').val();
 	},
 
+	getChartObject: function (){
+		return this.chartjs;
+	},
 
 	getPlotContainer : function(useCache) {
 		if(typeof useCache == 'undefined'){
@@ -510,20 +518,56 @@ Vtiger_Widget_Js('Vtiger_Pie_Widget_Js',{},{
     },
     
     postInitializeCalls: function() {
-        var thisInstance = this;
-        this.getPlotContainer(false).off('vtchartClick').on('vtchartClick',function(e,data){
-            if(data.url)
-                thisInstance.openUrl(data.url);
-        });
+		var thisInstance = this;
+        jQuery('.widgetChartContainer').on('click', function(evt) {
+			var chartjs = thisInstance.getChartObject();
+			var activePoints = chartjs.getElementsAtEvent(evt);
+			var firstPoint = activePoints[0];
+			var url = chartjs.data.links[firstPoint._index];
+			if (firstPoint !== undefined){
+				thisInstance.openUrl(url);
+			}
+        })	
     },
 
 	loadChart : function() {
-		var chartData = this.generateData();
-        var chartOptions = {
-            renderer:'pie',
-            links: this.generateLinks()
-        };
-        this.getPlotContainer(false).vtchart(chartData,chartOptions);
+		var data = this.generateData();
+        
+		var jData = {
+			labels: ["Open"],
+			values: [data['chartData'][0][1]],
+			links: this.generateLinks(),
+			colors: "#1d74c2",
+		};
+
+		var container = this.getContainer();
+		var ctx = container.find('.widgetChartContainer');
+
+		var myChart = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+			  labels: jData.labels,
+			  links: jData.links,
+			  datasets: [{
+				data: jData.values,
+				backgroundColor: jData.colors,
+			  }]
+			},
+			options: {
+				segmentShowStroke : true,
+				segmentStrokeColor : "rgba(0,0,0,0)",
+				segmentStrokeWidth : 1,		
+				percentageInnerCutout : 50,
+				animationSteps : 30,
+				animationEasing : "none",
+				animateRotate : true,
+				animateScale : true,
+				responsive:true,
+				maintainAspectRatio: false,
+			}
+		});
+
+		this.setChartObject(myChart);
 	}
 });
 
@@ -535,8 +579,9 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
 		var jData = container.find('.widgetData').val();
 		var data = JSON.parse(jData);
 		var chartData = [];
-		var xLabels = new Array();
+		var xLabels = [];
 		var yMaxValue = 0;
+		
 		for(var index in data) {
 			var row = data[index];
 			row[0] = parseFloat(row[0]);
@@ -548,7 +593,8 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
 		}
         // yMaxValue Should be 25% more than Maximum Value
 		yMaxValue = yMaxValue + 2 + (yMaxValue/100)*25;
-		return {'chartData':[chartData], 'yMaxValue':yMaxValue, 'labels':xLabels};
+
+		return {'chartData':chartData, 'yMaxValue':yMaxValue, 'labels':xLabels};
 	},
     
     generateLinks : function() {
@@ -563,22 +609,82 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
     },
     
     postInitializeCalls : function() {
-        var thisInstance = this;
-        this.getPlotContainer(false).off('vtchartClick').on('vtchartClick',function(e,data){
-            if(data.url)
-                thisInstance.openUrl(data.url);
-        });
+		var thisInstance = this;
+        jQuery('.widgetChartContainer').on('click', function(evt) {
+			var chartjs = thisInstance.getChartObject();
+			var activePoints = chartjs.getElementsAtEvent(evt);
+			var firstPoint = activePoints[0];
+			var url = chartjs.data.links[firstPoint._index];
+			if (firstPoint !== undefined){
+				thisInstance.openUrl(url);
+			}
+        })		
     },
 
 	loadChart : function() {
 		var data = this.generateChartData();
-        var chartOptions = {
-            renderer:'bar',
-            links: this.generateLinks()
-        };
-        this.getPlotContainer(false).vtchart(data,chartOptions);
+		
+		var jData = {
+			labels: data['labels'],
+			values: data['chartData'],
+			links: this.generateLinks(),
+			colors: palette("mpn65", data['chartData'].length).map(function(color) {
+				return "#" + color;
+			})
+		};
+
+		console.log(jData);
+		var container = this.getContainer();
+		var ctx = container.find('.widgetChartContainer');
+
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+			  labels: jData.labels,
+			  links: jData.links,
+			  datasets: [{
+				label: 'Num.',
+				data: jData.values,
+				backgroundColor: jData.colors,
+				borderWidth: 1
+			  }]
+			},
+			options: {
+				responsive:true,
+				maintainAspectRatio: false,
+				layout: {
+					padding: 10,
+				},
+				legend: {
+					position: 'top',
+					display: false
+				},
+				scales: {	
+                    yAxes: [{
+						scaleLabel: {
+							display: false,
+						},						
+                        ticks: {
+							suggestedMax: data['yMaxValue'],
+                            beginAtZero: true
+                        }
+					}],
+				},
+				plugins: {
+					datalabels: {
+					  anchor: 'end',
+					  align: 'top',
+					  formatter: Math.round,
+					  font: {
+						weight: 'bold'
+					  }
+					}
+				  },
+			}
+		});
+
+		this.setChartObject(myChart);
 	}
-    
 });
 
 Vtiger_Widget_Js('Vtiger_MultiBarchat_Widget_Js',{
