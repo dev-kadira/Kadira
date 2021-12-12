@@ -81,7 +81,6 @@ body > .mCSB_inside > .mCSB_container {
   border-top: 0;
 }
 .global-nav {
-  background-color: #292961;
   position: relative;
 }
 .global-nav .global-actions {
@@ -129,8 +128,8 @@ body > .mCSB_inside > .mCSB_container {
     height: 43px;
   }
   .app-nav .module-action-bar .module-action-content {
-    background: #eaeaea;
-    height: 45px;
+    background: #FBFBFB;
+    height: 41px;
     /*        border-bottom: 1px solid #eee;*/
   }
   .app-nav .module-action-bar .module-action-content .navbar-right {
@@ -165,8 +164,6 @@ body > .mCSB_inside > .mCSB_container {
   .main-container .content-area {
     width: 100%;
     padding-left: 283px;
-    padding-top: 15px;
-    min-height: 768px;
   }
   .main-container .settingsPageDiv {
     padding-left: 230px;
@@ -271,7 +268,6 @@ body > .mCSB_inside > .mCSB_container {
   vertical-align: top;
   border: 1px solid #DDDDDD;
   border-width: thin;
-  background-color: white;
 }
 .search-link .adv-search {
   margin-top: 9px;
@@ -396,8 +392,8 @@ body > .mCSB_inside > .mCSB_container {
   height: 50px;
 }
 .app-nav .app-indicator-icon-container {
-  top: 1px;
-  height: 45px;
+  top: 0px;
+  height: 42px;
   text-align: center;
   line-height: 42px;
   color: #ffffff;
@@ -551,8 +547,8 @@ a.menu-item:hover {
 .active-app-item,
 .app-item:hover {
   opacity: 1;
-  background: #d2d2d2;
-  color: #000000;
+  background: #596875;
+  color: #f2f1f1;
 }
 .app-item-color-MARKETING {
   border-left: 4px solid #EF5E29;
@@ -605,7 +601,8 @@ a.menu-item:hover {
 .app-menu .app-modules-dropdown li a {
   background: transparent;
   padding-left: 20px;
-  color: #525252;
+  color: #fff;
+  text-shadow: 0 0 1px #000;
   display: block;
 }
 .app-menu .app-modules-dropdown li a .module-name {
@@ -618,7 +615,7 @@ a.menu-item:hover {
 }
 .app-menu .app-modules-dropdown li:hover {
   opacity: 1;
-  background: #d2d2d2;
+  background: #596875;
   color: #f2f1f1;
 }
 .app-menu .app-modules-dropdown li:hover .module-icon {
@@ -626,13 +623,13 @@ a.menu-item:hover {
 }
 .app-menu .app-modules-dropdown .module-icon {
   font-size: 1.2em;
+  opacity: 0.2;
 }
 .app-menu .app-list {
   margin-top: -10px;
 }
 .app-menu .app-list-divider {
   border-top: 1px solid;
-  color: #2a6192;
 }
 .app-menu .menu-items-wrapper {
   padding-left: 8px;
@@ -1500,6 +1497,7 @@ ul.unstyled {
   vertical-align: middle;
   width: 80%;
   display: inline-block;
+  max-width: 300px;
 }
 .floatThead-table {
   background: #fff;
@@ -1775,18 +1773,9 @@ th {
 }
 .detailview-table .fieldLabel {
   width: 20%;
-  background-color: #f7f7f7;
-  border-top: 1px solid #e4e4e4;
-  border-bottom: 1px solid #e4e4e4;
-  border-left: 1px solid #e4e4e4;
-  border-right: 1px solid #e4e4e4;
 }
 .detailview-table .fieldValue {
   width: 30%;
-  border-top: 1px solid #e4e4e4;
-  border-bottom: 1px solid #e4e4e4;
-  border-left: 1px solid #e4e4e4;
-  border-right: 1px solid #e4e4e4;  
 }
 #detailView td.fieldValue .action {
   display: none;
@@ -1857,7 +1846,6 @@ th {
 }
 .referencefield-wrapper {
   display: table-cell;
-  width: 80%;
   max-width: 325px;
 }
 .record-header {
@@ -2378,7 +2366,8 @@ th {
   color: #3498DB;
 }
 .fieldLabel {
-  color: #525252;
+  color: #2c3b49;
+  opacity: 0.8;
 }
 .fieldLabel label {
   font-weight: 100;
@@ -2414,18 +2403,9 @@ th {
   min-width: 100px;
   width: 20%;
   word-break: break-all;
-  background-color: #f7f7f7;
-  border-top: 1px solid #e4e4e4;
-  border-bottom: 1px solid #e4e4e4;
-  border-left: 1px solid #e4e4e4;
-  border-right: 1px solid #e4e4e4;
 }
 .editViewContents .fieldValue {
   width: 30%;
-  border-top: 1px solid #e4e4e4;
-  border-bottom: 1px solid #e4e4e4;
-  border-left: 1px solid #e4e4e4;
-  border-right: 1px solid #e4e4e4;
 }
 .editViewContents td.fieldValue[colspan="3"] {
   width: 80%;
@@ -2441,6 +2421,11 @@ th {
 .input-group.inputElement .input-group-addon {
   border: none;
   border-left: 1px solid #ddd;
+}
+.input-group.inputElement .input-group-addon-right{
+    border:none;
+    border-left:0px;
+    border-right:1px solid #ddd;
 }
 .fieldBlockContainer textarea.inputElement {
   height: auto;
@@ -3316,7 +3301,7 @@ th {
   text-transform: uppercase;
 }
 .settingsgroup {
-  background: #e8e8e8;
+  background: #2C3B49;
   height: 100%;
 }
 .settingsgroup .panel-group .panel {
@@ -3873,6 +3858,7 @@ th {
 }
 .calendarview {
   width: 100%;
+  padding-top: 15px;
 }
 .calendar-sidebar-tabs {
   font-size: 14px;
@@ -5105,7 +5091,7 @@ hr {
 .related-tabs.row .nav > li {
   padding: 0 10px;
   margin: 0 2px 3px 2px;
-  width: auto;
+  width: 90px;
   text-align: center;
 }
 .massEditTabs.nav > li {
@@ -5608,6 +5594,9 @@ TN-34230 .row .nav > li > a:hover {
 }
 .width75per {
   width: 75%;
+}
+.width100per{
+    width: 100% !important;
 }
 #_mbox_pwd {
   padding: 3px 8px;
@@ -6160,14 +6149,13 @@ div.tooltip-inner {
   border-left: 0;
 }
 .editViewContents .fieldValue .referencefield-wrapper {
-  width: 100%;
   display: inline-block;
 }
 .fieldValueWidth80{
     width:80% !important;
 }
 .input-group-addon {
-  line-height: 1.5;
+  line-height: inherit;
   border-width: thin;
 }
 .input-group {
@@ -6185,7 +6173,6 @@ div.tooltip-inner {
 }
 .summaryViewEntries .inputElement.form-control,
 .detailview-table .inputElement.form-control {
-  width: 80%;
   max-width: 300px;
 }
 .detailview-table input[type="checkbox"] {
@@ -6657,6 +6644,7 @@ li.select2-search-choice div {
 }
 .related-list-actions {
   width: 100px;
+  padding-left: 15px ! important;
 }
 .fa-star.active {
   color: #FFC600;
@@ -7003,7 +6991,6 @@ a.btnReport:hover {
 .MultiFile-wrap {
   display: inline-block;
   margin-right: 3px;
-  margin-top: 5px;
 }
 .commentContainer .detailViewSaveComment {
   width: 102px;
@@ -7621,6 +7608,7 @@ body .fc {
   margin-left: 1px;
 }
 .navbar {
+  border: 0;
   border-width: thin;
 }
 #appnav .navbar {
@@ -7750,8 +7738,28 @@ body .fc {
     padding: 30px;
   }
 }
-.actionImages {
-  color: #292961;
-  font-size: 20px;
+#vt-mask{
+    border: 0;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    opacity: 0;
+    z-index: 10001;
+    background-color: #fff;
+ }
+ .fieldBlockContainer .inputElement.textAreaElement {
+    max-width:none;
+    width: 100%;
+}
+
+.detailview-table textarea.inputElement.form-control {
+    max-width:none;
+    width: 90%;
 }
 /*# sourceMappingURL=style.css.map */

@@ -92,7 +92,6 @@ body > .mCSB_inside > .mCSB_container{
     border-top: 0;
 }
 .global-nav{
-    background-color: #292961;
     position: relative;
 }
 .global-nav .global-actions{
@@ -141,7 +140,7 @@ body > .mCSB_inside > .mCSB_container{
     }
     .app-nav .module-action-bar .module-action-content{
         background: @blockBackground;
-        height: 45px;
+        height:41px;
 /*        border-bottom: 1px solid #eee;*/
     }
     .app-nav .module-action-bar .module-action-content .navbar-right{
@@ -293,7 +292,6 @@ body > .mCSB_inside > .mCSB_container{
     .adv-search {
         margin-top:9px;
     }
-    background-color: white;
 }
 .search-link:hover, 
 .search-link:active, 
@@ -422,8 +420,8 @@ body > .mCSB_inside > .mCSB_container{
 }
 
 .app-nav .app-indicator-icon-container {
-    top: 1px;
-    height: 45px;
+    top: 0px;
+    height: 42px;
     text-align: center;
     line-height: 42px;
     color: #ffffff;
@@ -521,7 +519,8 @@ body > .mCSB_inside > .mCSB_container{
     position: fixed;
     border: 0;
     top: 0px !important;
-    background: #e8e8e8;
+    box-shadow: 0px 5px 14px #555;
+    background: @moduleNav;
     z-index: 1102;
     display: none;
 }
@@ -574,12 +573,14 @@ a.menu-item:hover{
 
 .app-item{
     font-size: 14px;
-    color: #525252;
+    color: #fff;
     cursor: pointer;
     display: block;
+    background-color: #2c3b49;
     padding: 2.5% 2% !important;
     margin-left: 2px;
     opacity: 0.8;
+    text-shadow: 0 0 1px #000;
 }
 .app-item div{
     -webkit-transition: all 0.25s ease-in;
@@ -633,7 +634,7 @@ a.menu-item:hover{
     height: 100vh;
     font-size: 1.2em;
     overflow-x: hidden;
-    background-color: #e8e8e8;
+    background-color: @moduleNav;
     box-shadow: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -660,7 +661,7 @@ a.menu-item:hover{
     li:hover {
         opacity: 1;
         background: @menuBackGround;
-        color: #525252;
+        color: #f2f1f1;
         .module-icon {
             opacity: 1;
         }
@@ -2068,7 +2069,6 @@ strong, b, th{
 
 .referencefield-wrapper{
     display: table-cell;
-    width: 80%;
     max-width: 325px;
 }
 //removed styles for reference field 
@@ -4308,6 +4308,7 @@ font-family: 'OpenSans-Semibold', sans-serif;
 
 .calendarview {
     width: 100%;
+    padding-top: 15px;
 }
 
 .calendar-sidebar-tabs {
@@ -6896,7 +6897,6 @@ div.tooltip-inner{
     border-left:0;
 }
 .editViewContents .fieldValue .referencefield-wrapper {
-    width: 100%;
     display: inline-block;
 }
 .fieldValueWidth80{
@@ -6921,7 +6921,6 @@ div.tooltip-inner{
     }
 .summaryViewEntries .inputElement.form-control,
 .detailview-table .inputElement.form-control{
-    width:80%;
     max-width: 300px;
 }
 .detailview-table input[type="checkbox"]{ //TN-#34172
@@ -7837,7 +7836,6 @@ a.btnReport, a.btnReport:hover{
 .MultiFile-wrap{
     display:inline-block;
     margin-right:3px;
-    margin-top: 5px;
 }
 .commentContainer .detailViewSaveComment{
     width:102px;
@@ -8541,7 +8539,7 @@ body .fc {
     margin-left: 1px;
 }
 .navbar {
-    border: 1px solid @detailViewContainerBorderColor;
+    border: 0;
     border-width: thin;
 }
 #appnav .navbar {
@@ -8689,4 +8687,13 @@ body .fc {
     opacity: 0;
     z-index: 10001;
     background-color: #fff;
+}
+.fieldBlockContainer .inputElement.textAreaElement {
+    max-width:none;
+    width: 100%;
+}
+
+.detailview-table textarea.inputElement.form-control {
+    max-width:none;
+    width: 90%;
 }
