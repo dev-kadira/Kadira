@@ -25,7 +25,7 @@
 				<div class='fieldBlockContainer' data-block="{$BLOCK_LABEL}">
 					<h4 class='fieldBlockHeader'>{vtranslate($BLOCK_LABEL, $MODULE)}</h4>
 					<hr>
-					<table class="table">
+					<table class="table no-border">
 						<tr>
 							{assign var=COUNTER value=0}
 							{foreach key=FIELD_NAME item=FIELD_MODEL from=$BLOCK_FIELDS name=blockfields}
