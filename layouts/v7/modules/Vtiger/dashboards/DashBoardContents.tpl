@@ -32,7 +32,7 @@
                 {/foreach}
                 <div class="moreSettings pull-right">
                     <div class="dropdown dashBoardDropDown">
-                        <button class="btn btn-lg btn-primary reArrangeTabs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{vtranslate('LBL_MORE',$MODULE)}
+                        <button class="btn btn-lg reArrangeTabs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{vtranslate('LBL_MORE',$MODULE)}
                             &nbsp;&nbsp;<span class="caret"></span></button>
                         <div class="dropdown-menu dropdown-menu-right moreDashBoards">
                             <li id="newDashBoardLi"{if count($DASHBOARD_TABS) eq $DASHBOARD_TABS_LIMIT}class="disabled"{/if}><a class = "addNewDashBoard" href="#">{vtranslate('LBL_ADD_NEW_DASHBOARD',$MODULE)}</a></li>
