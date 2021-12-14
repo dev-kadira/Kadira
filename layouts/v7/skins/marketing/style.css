@@ -144,8 +144,8 @@ body > .mCSB_inside > .mCSB_container {
     top: 0;
     left: 0;
     min-height: 100%;
-    background-color: #2C3B49;
-    background: #2C3B49;
+    background-color: #005191;
+    background: #005191;
   }
   .main-container .sidebar-essentials {
     display: inline-block;
@@ -179,7 +179,7 @@ body > .mCSB_inside > .mCSB_container {
   margin-left: 5px;
 }
 .vt-notification {
-  background-color: #2C3B49;
+  background-color: #005191;
   border-color: #2C3B49;
   padding: 10px 15px;
   font-size: 15px;
@@ -445,14 +445,14 @@ body > .mCSB_inside > .mCSB_container {
   background-color: #010101 !important;
 }
 .app-switcher-container .app-navigator {
-  background-color: #2C3B49;
+  background-color: #005191;
 }
 .app-switcher-container .app-navigator .app-icon {
   color: white;
   opacity: 0.8;
 }
 .global-nav .app-switcher-container .app-navigator:hover {
-  background: #596875;
+  background: #2478bb;
   opacity: 1;
 }
 .global-nav .app-switcher-container .app-navigator:hover .app-icon {
@@ -479,7 +479,7 @@ body > .mCSB_inside > .mCSB_container {
   border: 0;
   top: 0px !important;
   box-shadow: 0px 5px 14px #555;
-  background: #2C3B49;
+  background: #005191;
   z-index: 1102;
   display: none;
 }
@@ -532,7 +532,7 @@ a.menu-item:hover {
   color: #fff;
   cursor: pointer;
   display: block;
-  background-color: #2c3b49;
+  background-color: #005191;
   padding: 2.5% 2% !important;
   margin-left: 2px;
   opacity: 0.8;
@@ -547,7 +547,7 @@ a.menu-item:hover {
 .active-app-item,
 .app-item:hover {
   opacity: 1;
-  background: #596875;
+  background: #2478bb;
   color: #f2f1f1;
 }
 .app-item-color-MARKETING {
@@ -588,7 +588,7 @@ a.menu-item:hover {
   height: 100vh;
   font-size: 1.2em;
   overflow-x: hidden;
-  background-color: #2C3B49;
+  background-color: #005191;
   box-shadow: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -615,7 +615,7 @@ a.menu-item:hover {
 }
 .app-menu .app-modules-dropdown li:hover {
   opacity: 1;
-  background: #596875;
+  background: #2478bb;
   color: #f2f1f1;
 }
 .app-menu .app-modules-dropdown li:hover .module-icon {
@@ -709,7 +709,7 @@ a.menu-item:hover {
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
   transition: all 0.2s ease;
-  background: #2c3b49;
+  background: #005191;
   padding: 6px;
   border-radius: 20px;
   margin-top: -2px;
@@ -930,7 +930,7 @@ input[type="password"].inputElement {
   width: 100%;
   height: 100%;
   float: left;
-  background: #2C3B49;
+  background: #005191;
   position: absolute;
   z-index: 10;
   left: 0;
@@ -987,14 +987,14 @@ input[type="password"].inputElement {
   white-space: nowrap;
 }
 .modules-menu ul li:hover {
-  background: #596875;
+  background: #2478bb;
   opacity: 1;
 }
 .modules-menu ul li:hover a {
   opacity: 1;
 }
 .modules-menu ul li.active {
-  background: #010101;
+  background: #2478bb;
 }
 .modules-menu ul li.active a {
   opacity: 1;
@@ -1161,7 +1161,7 @@ input[type="password"].inputElement {
 }
 .integrations-container > div:hover,
 .common-links-container > div:hover {
-  background: #2c3b49;
+  background: #005191;
 }
 .integrations-container > div a,
 .common-links-container > div a {
@@ -1767,15 +1767,24 @@ th {
 }
 .detailview-table {
   table-layout: fixed;
+  border-spacing: 3px 3px;
+  border-collapse: separate;
 }
 .detailViewInfo .fieldLabel {
   text-align: right;
 }
 .detailview-table .fieldLabel {
   width: 20%;
+  border: 0px;
+  background-color: #ededed;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 .detailview-table .fieldValue {
   width: 30%;
+  border: 0.5px solid #f1f1f1;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 #detailView td.fieldValue .action {
   display: none;
@@ -2751,7 +2760,7 @@ th {
 ********************************************/
 .modal-header {
   padding: 5px 15px;
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
 }
 .modal-footer {
@@ -2775,14 +2784,14 @@ th {
   display: inline-block;
   width: 100%;
   float: left;
-  background: #596875;
+  background: #2478bb;
   /*    height: 100%;*/
 }
 .settings-menu {
   display: inline-block;
   width: 100%;
   float: left;
-  background: #2c3b49;
+  background: #005191;
   height: 100%;
 }
 .settings-flip {
@@ -3084,7 +3093,7 @@ th {
   width: 100px;
 }
 .updates_timeline #more_button .update_icon .moreRecentUpdates {
-  background: #2c3b49;
+  background: #005191;
   border-radius: 15%;
 }
 .updates_timeline .update_icon img {
@@ -3283,7 +3292,7 @@ th {
   color: #FFFFFF;
 }
 .settingsgroup div.panel-collapse {
-  background-color: #2C3B49;
+  background-color: #005191;
 }
 .settingsgroup-accordion {
   color: #FFFFFF;
@@ -3301,11 +3310,11 @@ th {
   text-transform: uppercase;
 }
 .settingsgroup {
-  background: #2C3B49;
+  background: #005191;
   height: 100%;
 }
 .settingsgroup .panel-group .panel {
-  background-color: #2C3B49;
+  background-color: #005191;
 }
 .userDefaultIcon {
   font-size: 30px;
@@ -3566,7 +3575,7 @@ th {
   border: 1px solid #D7D7D7;
 }
 .portal-annoucement-widget {
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
   min-height: 20px;
   padding: 5px;
@@ -3579,7 +3588,7 @@ th {
   padding: 10px;
 }
 .portal-chart-header {
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
   min-height: 20px;
   padding: 5px;
@@ -3593,7 +3602,7 @@ th {
   margin-bottom: 10px;
 }
 .portal-record-widget-content {
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
   min-height: 10px;
   padding: 4px;
@@ -3606,7 +3615,7 @@ th {
   width: 285px !important;
 }
 .portal-shortcuts-header {
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
   min-height: 20px;
   padding: 5px;
@@ -3624,7 +3633,7 @@ th {
   width: 285px !important;
 }
 .portal-helpdesk-widget-header {
-  background: #596875;
+  background: #2478bb;
   color: #FFFFFF;
   min-height: 20px;
   padding: 5px;
@@ -5073,7 +5082,7 @@ hr {
   padding: 4px 6px;
 }
 .panel-collapse ul li a:hover {
-  background: #596875;
+  background: #2478bb;
   opacity: 1;
 }
 .panel-collapse ul li a:hover a {
@@ -5788,7 +5797,7 @@ TN-34230 .row .nav > li > a:hover {
   margin: 20px 0px 20px 0px;
 }
 .highLightMail {
-  background-color: #2C3B49;
+  background-color: #005191;
 }
 .whiteFont {
   color: #FFFFFF;
@@ -6017,7 +6026,7 @@ div.tooltip-inner {
   font-size: 2em;
 }
 .menuEditorModuleItem {
-  background: #2C3B49;
+  background: #005191;
   border-bottom: 1px solid #DDDDDD;
   cursor: move;
 }
@@ -6026,7 +6035,7 @@ div.tooltip-inner {
   cursor: pointer;
 }
 .menuEditorModuleItem.active {
-  background: #010101;
+  background: #2478bb;
 }
 .reports-content-area {
   padding-top: 15px;
@@ -6388,7 +6397,7 @@ div.tooltip-inner {
   background-color: white;
 }
 .help_header {
-  background-color: #2c3b49;
+  background-color: #005191;
   cursor: move;
   box-shadow: 0 0px 5px 0 #ccc;
   padding: 5px 10px;
@@ -6405,7 +6414,7 @@ div.tooltip-inner {
   position: relative;
   top: 10px;
   border: 0px;
-  background-color: #2c3b49;
+  background-color: #005191;
 }
 .help_close_area {
   margin: 5px 15px;
@@ -7209,7 +7218,7 @@ input:focus:-ms-input-placeholder {
 }
 #OnBoardLayout #OnBoardPageContainer .step-tracker {
   padding: 1%;
-  background: #2C3B49;
+  background: #005191;
   min-height: 100px;
   width: 100%;
   z-index: 1;

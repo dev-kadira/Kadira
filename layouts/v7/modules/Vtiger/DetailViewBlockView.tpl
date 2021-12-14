@@ -28,7 +28,7 @@
 			</div>
 			<hr>
 			<div class="blockData">
-				<table class="table detailview-table no-border">
+				<table class="table detailview-table">
 					<tbody {if $IS_HIDDEN} class="hide" {/if}>
 						{assign var=COUNTER value=0}
 						<tr>
