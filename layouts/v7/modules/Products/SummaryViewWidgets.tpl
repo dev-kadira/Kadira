@@ -77,6 +77,26 @@
 </div>
 
 <div class="middle-block col-lg-7">
+    <div class="summaryWidgetContainer">
+        <div class="summaryViewHeader">
+            <h4 class="display-inline-block">{vtranslate('LBL_PRODUCT_INFORMATION', $MODULE_NAME)}</h4>
+        </div>
+        <div class="summaryViewFields">
+            <div class="row">
+                <div class="column">
+                    <div id="qrcode"></div>
+                    {strip}
+                        <script type="text/javascript" src="libraries/qrcode/qrcode.js"></script>
+                        <script type="text/javascript">new QRCode(document.getElementById("qrcode"), "{$RECORD->get('productcode')}");</script>
+                    {/strip}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="middle-block col-lg-7">
     
     {* Summary View Related Activities Widget*}
         <div id="relatedActivities">
