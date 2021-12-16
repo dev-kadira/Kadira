@@ -682,6 +682,10 @@ body{
     font-size: 16px;
 }
 
+.listViewContentHeader{
+    background-color: #efefef;
+}
+
 .listViewContentHeaderValues .customsort{
     opacity:0.5;
 }

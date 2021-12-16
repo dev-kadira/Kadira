@@ -799,6 +799,7 @@ a.menu-item:hover {
   height: inherit;
 }
 .viewContent .content-area {
+  padding-top: 10px;
   padding-left: 3%;
 }
 .viewContent .content-area.full-width {
@@ -902,6 +903,9 @@ input[type="password"].inputElement {
   min-height: 28px;
   width: 100%;
   min-width: 100px;
+}
+.listViewContentHeader{
+    background-color: #efefef;
 }
 .listViewContentHeaderValues {
   vertical-align: middle;
