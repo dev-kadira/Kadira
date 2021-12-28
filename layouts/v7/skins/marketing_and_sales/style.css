@@ -7755,7 +7755,8 @@ body .fc {
     border: 0;
     margin: 0;
     padding: 0;
-    position: fixed;
+    position: relative;
+    display: inline-flex;
     left: 0;
     top: 0;
     min-height: 100%;
