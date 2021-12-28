@@ -6138,12 +6138,12 @@ div.tooltip-inner {
 }
 #detailView .detailview-table .input-group.editElement,
 .calendar-timezone .input-group.editElement {
-  width: 100%;
-  display: inline-block;
+    width: auto;
+    display: inline-flex;
 }
 .summaryViewEntries .input-group.editElement {
-  width: 100%;
-  display: flex;
+  width: auto;
+  display: inline-flex;
 }
 .summaryView .summaryViewFields .input-group {
   line-height: 0;
