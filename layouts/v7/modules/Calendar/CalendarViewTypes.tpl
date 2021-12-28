@@ -11,6 +11,12 @@
 <div class="sidebar-widget-contents" name='calendarViewTypes'>
 	<div id="calendarview-feeds">
 		<ul class="list-group feedslist">
+			<li class="activitytype-indicator calendar-feed-indicator mass-edit-option" style="background-color:#2c3b49; color:#FFFFFF;">
+				<span>{vtranslate('LBL_MASS_SELECT')}</span>
+				<span class="activitytype-actions pull-right">
+					<input class="mass-select" type="checkbox">
+				</span>
+			</li>
 		{foreach item=VIEWINFO from=$VIEWTYPES['visible'] name=calendarview}
 			<li class="activitytype-indicator calendar-feed-indicator container-fluid" style="background-color: {$VIEWINFO['color']};">
 				<span>

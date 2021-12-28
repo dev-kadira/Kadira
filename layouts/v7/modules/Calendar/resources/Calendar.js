@@ -911,8 +911,30 @@ Vtiger.Class("Calendar_Calendar_Js", {
 					thisInstance.registerFeedChangeEvent();
 					thisInstance.registerFeedsColorEditEvent();
 					thisInstance.registerFeedDeleteEvent();
+					thisInstance.registerFeedMassSelectEvent();
 				});
 	},
+
+	/**
+	 * Event listener for change on mass select checkbox.
+	 * Click/set true/false on all non-matching checkboxes & 
+	 * trigger change event. Contributed by Libertus Solutions
+	**/
+	registerFeedMassSelectEvent : function() {
+		var container = jQuery('#calendarview-feeds');
+		var calendarFeeds = jQuery('ul.feedslist input.toggleCalendarFeed', container);
+		jQuery('input.mass-select', container).on('change', function() {
+			var massSelectchecked = this.checked;
+			calendarFeeds.each(function(i) {
+				// Only trigger change where necessary
+				if(this.checked != massSelectchecked) {
+					this.checked = massSelectchecked;
+					jQuery(this).change();
+				}
+			});
+		});
+	},
+
 	changeWidgetDisplayState: function (widget, state) {
 		var key = widget.data('widgetName') + '_WIDGET_DISPLAY_STATE';
 		app.storage.set(key, state);
