@@ -93,7 +93,7 @@ class Vtiger_ModuleMeta_Model extends Vtiger_Base_Model
 		$accessibleFields = $this->getAccessibleFields($this->moduleName);
 		$mergableFields = [];
 		foreach ($accessibleFields as $fieldName => $fieldInstance) {
-			if ($fieldInstance->getPresence() === 1) {
+			if (intval($fieldInstance->getPresence()) === 1) {
 				continue;
 			}
 			// We need to avoid Last Modified by or any such User reference field
@@ -151,10 +151,9 @@ class Vtiger_ModuleMeta_Model extends Vtiger_Base_Model
 			$moduleFields = $this->getAccessibleFields($moduleName);
 			$importableFields = [];
 			foreach ($moduleFields as $fieldName => $fieldInstance) {
-				if ((
-					$this->isEditableField($fieldInstance)
-							&& ($fieldInstance->getTableName() != 'vtiger_crmentity' || $fieldInstance->getColumnName() != 'modifiedby')
-				) || ($fieldInstance->getUIType() == '70' && $fieldName != 'modifiedtime')) {
+				if (($this->isEditableField($fieldInstance))|| ($fieldInstance->getUIType() == 4) &&
+					($fieldInstance->getTableName() != 'vtiger_crmentity' || $fieldInstance->getColumnName() != 'modifiedby')
+					 || ($fieldInstance->getUIType() == '70' && $fieldName != 'modifiedtime')) {
 					$importableFields[$fieldName] = $fieldInstance;
 				}
 			}
