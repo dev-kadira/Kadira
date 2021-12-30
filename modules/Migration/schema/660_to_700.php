@@ -108,8 +108,10 @@ if(defined('VTIGER_UPGRADE')) {
 	$result = $db->pquery('SELECT relation_id FROM vtiger_relatedlists ORDER BY relation_id DESC LIMIT 1', array());
 	$db->pquery('UPDATE vtiger_relatedlists_seq SET id=?', array($db->query_result($result, 0, 'relation_id')));
 
-	$accountsTabId = getTabId('Accounts');
-	$db->pquery('UPDATE vtiger_relatedlists SET name=? WHERE name=? and tabid=?', array('get_merged_list', 'get_dependents_list', $accountsTabId));
+        $accountsTabId = getTabId('Accounts');
+        $query = "UPDATE vtiger_relatedlists INNER JOIN vtiger_tab ON vtiger_tab.tabid = vtiger_relatedlists.related_tabid  SET vtiger_relatedlists.name = ? 
+          WHERE vtiger_relatedlists.name = ? AND vtiger_relatedlists.tabid = ? AND customized = 0";
+        $db->pquery($query, array('get_merged_list', 'get_dependents_list', $accountsTabId));
 
 	$invoiceModuleInstance = Vtiger_Module::getInstance('Invoice');
 	$blockInstance = Vtiger_Block::getInstance('LBL_INVOICE_INFORMATION', $invoiceModuleInstance);
