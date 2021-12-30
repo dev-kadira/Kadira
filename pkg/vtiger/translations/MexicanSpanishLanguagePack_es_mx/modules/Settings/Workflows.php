@@ -74,7 +74,7 @@ $languageStrings = array(
 	'LBL_EXAMPLE_FIELD_NAME'       => 'Campo'                       , 
 	'LBL_NOTIFY_OWNER'             => 'notificar_propietario'                , 
 	'LBL_ANNUAL_REVENUE'           => 'ingreso_anual'              , 
-	'LBL_EXPRESSION_EXAMPLE2'      => 'si el paísdeenvíodecorreos == \'India\' etnonces concat(nombre,\' \',apellido) sino concat(apellido,\' \',nombre) fin',
+	'LBL_EXPRESSION_EXAMPLE2'      => "if mailingcountry == 'India' then concat(firstname,' ',lastname) else concat(lastname,' ',firstname) end",
 	'LBL_FROM' => 'De',
 	'Optional' => 'Opcional',
 	'LBL_ADD_TASK'                 => 'Agregar acción'             ,

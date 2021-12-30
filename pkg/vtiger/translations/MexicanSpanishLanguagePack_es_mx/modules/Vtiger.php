@@ -122,6 +122,7 @@ $languageStrings = array(
     'LBL_REPLY_ALL'                => 'Responder a todos'           ,
     'LBL_INTERNAL_COMMENT_TOOTLTIP' => 'El cliente no puede ver este comentario',
     'LBL_EXTERNAL_COMMENT_TOOTLTIP' => 'El cliente podría llegar a ver este comentario a través de notificaciones o del portal de clientes',
+    'LBL_INTERNAL_COMMENT_INFO' => 'El comentario será visto solamente por los usuarios de CRM si la casilla está habilitada. Para que el cliente pueda ver el comentarios (a través de flujos de trabajo, si hubiera alguno configurado, o del portal de clientes), deshabilita la casilla.',
 	'Accounts'                     => 'Cuenta'                     ,
 	'Assets'                       => 'Activos'                     , 
 	'Calendar'                     => 'Calendario'                  , 
@@ -1301,7 +1302,6 @@ $jsLanguageStrings = array(
 	'JS_SELECTED_LEAD_DOES_NOT_HAVE_AN_ADDRESS' => 'El Prospecto seleccionado no contiene una dirección para ser copiada',
     'JS_INVALID_EMAILS' => 'Los correos electrónicos no válidos',
     'JS_INTERNAL_COMMENT' => 'Comentario interno',
-    'JS_INTERNAL_COMMENT_INFO' => 'El comentario sólo será visto por los usuarios de CRM si la casilla de verificación comentario interno está activada. Para notificar a los clientes (a través de flujos de trabajo configurables o del portal de clientes) deje esta casilla deshabilitada',
     'JS_NO_LINE_ITEM' =>'Los artículos no pueden estar vacíos.',
 
 	//More currencies message

@@ -4,9 +4,9 @@
 	<name>Mexican Spanish</name>
 	<label>ES Mexico</label>
 	<prefix>es_mx</prefix>
-	<version>1.0</version>
+	<version>1.1</version>
 	<dependencies>
-		<vtiger_version>7.2</vtiger_version>
+		<vtiger_version>7.4</vtiger_version>
 		<vtiger_max_version>7.*</vtiger_max_version>
 	</dependencies>
 	<license>
@@ -19,9 +19,9 @@
  * the specific language governing rights and limitations under the License.
  ********************************************************************************
  *  Language     : Español es_mx
- *  Version      : 1.0
- *  Author       : Aimée Valckx - simplesistemas.com (Simple - Sistemas e Implementos Empresariales SA de CV)
+ *  Version      : 1.1
  *  Author       : Rubén Estrada - simplesistemas.com (Simple - Sistemas e Implementos Empresariales SA de CV)
+ *  Author       : Aimée Valckx - simplesistemas.com (Simple - Sistemas e Implementos Empresariales SA de CV)
  *  Author       : Francisco Hernandez Odin Consultores S de RL de CV
  *  Author       : Joe Bordes JPL TSolucio, S. L. 5.2.1
  ********************************************************************************
