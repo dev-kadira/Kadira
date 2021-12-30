@@ -24,19 +24,10 @@ require_once 'config.php';
 global $PERFORMANCE_CONFIG;
 
 define('LOG4PHP_DEFAULT_INIT_OVERRIDE', true);
+define('LOG4PHP_DIR', 'libraries/log4php.debug');
 
-if (isset($PERFORMANCE_CONFIG, $PERFORMANCE_CONFIG['LOG4PHP_DEBUG']) && $PERFORMANCE_CONFIG['LOG4PHP_DEBUG']) {
-	define('LOG4PHP_DIR', 'libraries/log4php.debug');
-	require_once LOG4PHP_DIR.'/Logger.php';
-	Logger::configure('log4php.properties');
-} else {
-	define('LOG4PHP_DIR', 'libraries/log4php');
-	require_once LOG4PHP_DIR.'/Logger.php';
-	require_once LOG4PHP_DIR.'/LoggerPropertyConfigurator.php';
-
-	$config = new LoggerPropertyConfigurator();
-	$config->configure('log4php.properties');
-}
+require_once LOG4PHP_DIR . '/Logger.php';
+Logger::configure('log4php.properties');
 
 global $logbg;
 if (empty($logbg)) {
