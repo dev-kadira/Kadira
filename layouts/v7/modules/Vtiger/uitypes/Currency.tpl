@@ -27,8 +27,8 @@
     />
 </div>
 {else if ($FIELD_MODEL->get('uitype') eq '72') && ($FIELD_NAME eq 'unit_price')}
-	<div class="input-group" style="float:none;">
-        <span class="input-group-addon" id="baseCurrencySymbol">{$BASE_CURRENCY_SYMBOL}</span>
+	<div class="input-group inputElement" style="float:none;">
+        <span class="input-group-addon input-group-addon-right" id="baseCurrencySymbol">{$BASE_CURRENCY_SYMBOL}</span>
         <input id="{$MODULE}-editview-fieldname-{$FIELD_NAME}"  type="text" class="inputElement unitPrice currencyField" name="{$FIELD_NAME}"
             value="{$FIELD_MODEL->getDisplayValue($FIELD_MODEL->get('fieldvalue'))}" {if !empty($SPECIAL_VALIDATOR)}data-validator='{Zend_Json::encode($SPECIAL_VALIDATOR)}'{/if}
             data-decimal-separator='{$USER_MODEL->get('currency_decimal_separator')}' data-group-separator='{$USER_MODEL->get('currency_grouping_separator')}' data-number-of-decimal-places='{$USER_MODEL->get('no_of_currency_decimals')}'

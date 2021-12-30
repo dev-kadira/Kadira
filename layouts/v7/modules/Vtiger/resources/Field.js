@@ -187,7 +187,7 @@ Vtiger_Field_Js('Vtiger_Reference_Field_Js',{},{
 	getUi : function(){
 		var referenceModules = this.getReferenceModules();
 		var value = this.getValue();
-		var html = '<div class="referencefield-wrapper';
+		var html = '<div class="';
 		if(value){
 			html += ' selected';
 		} else {
@@ -497,7 +497,7 @@ Vtiger_Field_Js('Vtiger_Currency_Field_Js',{},{
 		//wrappig with another div for consistency
 		var html = '<div class=""><div class="input-group">'+
 						'<span class="input-group-addon" id="basic-addon1">'+this.getCurrencySymbol()+'</span>'+
-						'<input class="inputElement width100per" type="text" name="'+ this.getName() +'" data-rule-currency="true" value="'+ this.getValue() + '" />'+
+						'<input class="inputElement" type="text" name="'+ this.getName() +'" data-rule-currency="true" value="'+ this.getValue() + '" />'+
 					'</div></div>';
 		var element = jQuery(html);
 		return this.addValidationToElement(element);
