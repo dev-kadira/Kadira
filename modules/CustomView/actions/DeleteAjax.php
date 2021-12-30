@@ -38,7 +38,7 @@ class CustomView_DeleteAjax_Action extends Vtiger_Action_Controller
 		$customViewModel = CustomView_Record_Model::getInstanceById($request->get('record'));
 		$customViewOwner = $customViewModel->getOwnerId();
 		$currentUser = Users_Record_Model::getCurrentUserModel();
-		if ((! $currentUser->isAdminUser()) || ($customViewOwner != $currentUser->getId())) {
+		if ((! $currentUser->isAdminUser()) && ($customViewOwner != $currentUser->getId())) {
 			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
 		}
 		$customViewModel->delete();
