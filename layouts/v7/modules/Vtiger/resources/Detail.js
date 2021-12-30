@@ -2880,7 +2880,7 @@ Vtiger.Class("Vtiger_Detail_Js",{
 					var commentTextAreaElement = closestAddCommentBlock.find('.commentcontent');
 					var commentInfoBlock = currentTarget.closest('.singleComment');
 					commentTextAreaElement.val('');
-					closestAddCommentBlock.find('#is_private').removeAttr('checked');
+
 					if(mode == "add"){
 						var commentId = data['id'];
 						var commentHtml = self.getCommentUI(commentId);

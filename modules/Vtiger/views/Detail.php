@@ -574,11 +574,13 @@ class Vtiger_Detail_View extends Vtiger_Index_View {
 		$childComments = $parentCommentModel->getChildComments();
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 		$modCommentsModel = Vtiger_Module_Model::getInstance('ModComments');
+		$moduleName = $parentCommentModel->getParentRecordModel()->getModuleName();
 
 		$viewer = $this->getViewer($request);
 		$viewer->assign('PARENT_COMMENTS', $childComments);
 		$viewer->assign('CURRENTUSER', $currentUserModel);
 		$viewer->assign('COMMENTS_MODULE_MODEL', $modCommentsModel);
+		$viewer->assign('MODULE_NAME', $moduleName);
 
 		return $viewer->view('CommentsList.tpl', $moduleName, 'true');
 	}

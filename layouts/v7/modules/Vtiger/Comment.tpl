@@ -7,6 +7,8 @@
  * All Rights Reserved.
  ************************************************************************************}
 {strip}
+	{assign var="PRIVATE_COMMENT_MODULES" value=Vtiger_Functions::getPrivateCommentModules()}
+	
 	<div class="commentDiv {if $COMMENT->get('is_private')}privateComment{/if}">
 		<div class="singleComment">
 			<input type="hidden" name="is_private" value="{$COMMENT->get('is_private')}">
@@ -47,7 +49,18 @@
 									{/if}
 									<span class="commentTime text-muted cursorDefault">
 										<small title="{Vtiger_Util_Helper::formatDateTimeIntoDayString($COMMENT->getCommentedTime())}">{Vtiger_Util_Helper::formatDateDiffInStrings($COMMENT->getCommentedTime())}</small>
-									</span>
+									</span>&nbsp;&nbsp;
+									
+									{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
+										<span>
+											{if $COMMENT->get('is_private')}
+												<i class="fa fa-lock" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_TOOTLTIP',$MODULE)}"></i>
+											{else}
+												<i class="fa fa-unlock" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_EXTERNAL_COMMENT_TOOTLTIP',$MODULE)}"></i>
+											{/if}
+										</span>
+									{/if}
+									
 									<div class="commentInfoContentBlock">
 										<span class="commentInfoContent">
 											{nl2br($COMMENT->get('commentcontent'))}
