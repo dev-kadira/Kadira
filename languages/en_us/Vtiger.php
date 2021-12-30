@@ -182,6 +182,8 @@ $languageStrings = array(
 	'LBL_NO_COMMENTS' => 'No comments',
 	'LBL_REPLIES' => 'replies',
 	'LBL_REPLY_ALL' => 'Reply all',
+	'LBL_INTERNAL_COMMENT_TOOTLTIP' => 'Customers cannot see this comment',
+	'LBL_EXTERNAL_COMMENT_TOOTLTIP' => 'Customers might see this comment via notifications or customer portal',
 
 	//Translation for all modules
 	'Accounts' => 'Organizations',
