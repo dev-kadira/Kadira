@@ -95,7 +95,7 @@ function vtws_history($element, $user) {
 	while ($row = $adb->fetch_array($result)) {
 		$orderedIds[] = $row['id'];
         
-        if ($row['status'] === ModTracker::$LINK) {
+        if ($row['status'] === ModTracker::$LINK || $row['status'] === ModTracker::$UNLINK) {
 			$relationOrderedIds[] = $row['id'];
 		} else {
 			$updatesOrderedIds[] = $row['id'];
