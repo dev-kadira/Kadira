@@ -51,6 +51,7 @@ Vtiger_Edit_Js("Users_Edit_Js",{},{
                             }
                             if(newPassword != confirmPassword){
                                 app.helper.showErrorNotification({message :app.vtranslate('JS_REENTER_PASSWORDS')});
+                                editForm.find('.saveButton').removeAttr('disabled');
                                 e.preventDefault();
                             }
 

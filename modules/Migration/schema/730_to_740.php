@@ -35,17 +35,11 @@ if (defined('VTIGER_UPGRADE')) {
             echo "<br>Successfully added <b>$fieldName</b> field to <b>$moduleName</b><br>";
         }
     }
-    $db->pquery("UPDATE vtiger_users SET $fieldName=TRIM(CONCAT(first_name, ' ' , last_name))", array());
-    echo "<br>Successfully updated <b>$fieldName</b> value as concatenate of firstname and lastname for <b>$moduleName</b> module<br>";
-
-    vimport('~modules/Users/CreateUserPrivilegeFile.php');
-    $result = $db->pquery('SELECT id FROM vtiger_users', array());
-    $count = $db->num_rows($result);
-    while ($row = $db->fetch_array($result)) {
-        $userId = $row['id'];
-        createUserPrivilegesfile($userId);
-        echo "<br>Successfully recreated <b>User's privileges</b> file for id:<b>$userId</b><br>";
-    }
-    echo "<br>Successfully completed concatenate of firstname and lastname as label in <b>$moduleName</b> module<br>";
-
+    
+    $entityFields = Vtiger_Functions::getEntityModuleInfo($moduleName);
+    $entityFieldNames  = explode(',', $entityFields['fieldname']);
+    $sql = "UPDATE vtiger_users SET $fieldName = TRIM(CONCAT(".implode(' ', $entityFieldNames)."))";
+    $db->pquery($sql, array());
+    
+    Vtiger_Access::syncSharingAccess();
 }
