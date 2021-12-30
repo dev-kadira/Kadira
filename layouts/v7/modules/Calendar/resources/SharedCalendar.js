@@ -12,7 +12,8 @@ Calendar_Calendar_Js('Calendar_SharedCalendar_Js', {
 	},
 
 	getFeedRequestParams : function(start,end,feedCheckbox) {
-		var dateFormat = 'YYYY-MM-DD';
+		var userFormat = jQuery('body').data('userDateformat').toUpperCase();
+		var dateFormat = userFormat;
 		var startDate = start.format(dateFormat);
 		var endDate = end.format(dateFormat);
 		return {
