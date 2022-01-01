@@ -30,8 +30,6 @@ if(isset($PERFORMANCE_CONFIG) && isset($PERFORMANCE_CONFIG['LOG4PHP_DEBUG']) && 
 // END
 
 define('LOG4PHP_DEFAULT_INIT_OVERRIDE', true);
-define('LOG4PHP_DIR', 'libraries/log4php.debug');
-
 require_once LOG4PHP_DIR . '/Logger.php';
 Logger::configure('log4php.properties');
 
