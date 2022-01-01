@@ -357,7 +357,7 @@ class Vtiger_RelationListView_Model extends Vtiger_Base_Model
 					}
 					$query = "${query} ORDER BY ${qualifiedOrderBy} ${sortOrder}";
 				}
-			} elseif ($relationModuleName == 'HelpDesk' && empty($orderBy) && empty($sortOrder) && $moduleName != 'Users') {
+			} elseif (empty($orderBy) && empty($sortOrder) && $parentModuleName != 'Users') {
 				$query .= ' ORDER BY vtiger_crmentity.modifiedtime DESC';
 			}
 
