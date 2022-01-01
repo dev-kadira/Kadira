@@ -118,7 +118,8 @@
 						{/foreach}
 					</table>
 					{if $IS_CAPTCHA_ENABLED}
-						<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+						{# vscript - custom script tag to avoid loading when form popup is displayed #}
+						<vscript src="https://www.google.com/recaptcha/api.js" async defer></vscript>
 						<div class="g-recaptcha" data-sitekey="{$CAPTCHA_CONFIG['VTIGER_RECAPTCHA_PUBLIC_KEY']}" data-callback="enableSubmitBtn"></div>
 					{/if}
 					<input type="submit" value="Submit" ></input>
