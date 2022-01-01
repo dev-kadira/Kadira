@@ -8,8 +8,6 @@
  * All Rights Reserved.
  */
 
- ************************************************************************************/
-
 $patch_version = '20210723'; // -ve timestamp before release, +ve timestamp after release.
 $modified_database = '';
 $dogicrm_current_version = '1.1';
