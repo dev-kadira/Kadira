@@ -407,6 +407,7 @@ var vtUtils = {
                 var isStrong = strongPasswordRegex.test(password)? true : false; 
                 return isStrong;
            }
-           return false;
+	   // If password regex is not set - consider it as strong.
+           return true;
     },
 }
