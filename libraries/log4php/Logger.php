@@ -9,6 +9,7 @@
  *************************************************************************************/
 
 /** Classes to avoid logging */
+include_once dirname(__FILE__) . '/LoggerPropertyConfigurator.php';
 
 /**
  * Core logging class.
@@ -98,6 +99,10 @@ class Logger {
         static function getlogger($name = 'ROOT') {
 		$configinfo = LoggerPropertyConfigurator::getInstance()->getConfigInfo($name);
 		return new Logger($name, $configinfo);
+	}
+
+	static function configure($config) {
+		// Do nothing
 	}
 }
 
