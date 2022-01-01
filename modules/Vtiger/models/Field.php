@@ -24,6 +24,86 @@ class Vtiger_Field_Model extends Vtiger_Field
 	const QUICKCREATE_ENABLED = 2;
 	const QUICKCREATE_NOT_PERMITTED = 3;
 
+	const DISPLAYTYPE_ALL = 1;
+	const DISPLAYTYPE_DETAIL_AND_LIST = 2; //e.g. Created time, Modified time
+	const DISPLAYTYPE_LIST = 3;//e.g. Total, Subtotal in Inventory modules
+	const DISPLAYTYPE_PASSWORD = 4;
+	const DISPLAYTYPE_LINEITEM = 5;
+	const DISPLAYTYPE_STARRED = 6;//show on List View and as separate button on Detail View
+
+	const PRESENCE_ALWAYS_VISIBLE = 0;//cannot be hidden by user
+	const PRESENCE_HIDDEN = 1;
+	const PRESENCE_VISIBLE = 2;//can be hidden by user
+
+	//UITYPES
+	const UITYPE_TEXT = 1;
+	const UITYPE_NAME = 2;
+	const UITYPE_RECORD_NO = 4; //auto increment
+	const UITYPE_DATE = 5;
+	const UITYPE_ACTIVITY_DATE_START = 6;
+	const UITYPE_NUMERIC = 7; //same for float and integer
+	const UITYPE_EMAIL_RECIPIENT_ADDRESS = 8;
+	const UITYPE_PERCENTAGE = 9;
+	const UITYPE_RECORD_RELATION = 10;
+	const UITYPE_PHONE = 11;
+	const UITYPE_FROM_EMAIL = 12;
+	const UITYPE_EMAIL = 13;
+	const UITYPE_TIME = 14;
+	const UITYPE_ROLE_BASED_PICKLIST = 15;
+	const UITYPE_PICKLIST = 16; //non-role based picklist
+	const UITYPE_URL = 17;
+	const UITYPE_FULL_WIDTH_TEXT_AREA = 19;
+	const UITYPE_FAQ = 20;
+	const UITYPE_HALF_WIDTH_TEXT_AREA = 21;
+	const UITYPE_TICKET_TITLE = 22;
+	const UITYPE_DATE_2 = 23;
+	const UITYPE_STREET_ADDRESS = 24;
+	const UITYPE_COUNTER = 25; //e.g. click count & access count
+	const UITYPE_FOLDER_NAME = 26;
+	const UITYPE_DOWNLOAD_TYPE = 27;
+	const UITYPE_FILENAME = 28;
+	const UITYPE_ACTIVITY_SEND_REMINDER = 30;
+	const UITYPE_MULTI_SELECT = 33;
+	const UITYPE_ACCOUNT_REFERENCE = 51;
+	const UITYPE_USER_REFERENCE = 52;//e.g. assigned to
+	const UITYPE_ASSIGNED_TO_PICKLIST = 53;
+	const UITYPE_SALUTATION_OR_FIRSTNAME = 55;
+	const UITYPE_CHECKBOX = 56;
+	const UITYPE_CONTACT = 57;
+	const UITYPE_CAMPAIGN_REFERENCE = 58;
+	const UITYPE_PRODUCT_REFERENCE = 59;
+	const UITYPE_ATTACHMENT = 61;
+	const UITYPE_ACTIVITY_DURATION = 63;
+	const UITYPE_ACTIVITY_PARENT_REFERENCE = 66;
+	const UITYPE_IMAGE = 69;//e.g. product image & contact image
+	const UITYPE_DATE_TIME = 70;
+	const UITYPE_CURRENCY_AMOUNT = 71;
+	const UITYPE_LINEITEMS_CURRENCY_AMOUNT = 72;
+	const UITYPE_ACCOUNT_REFERENCE_2 = 73;
+	const UITYPE_POTENTIAL_REFERENCE = 76;
+	const UITYPE_QUOTES_INVENTORY_MANAGER = 77;
+	const UITYPE_QUOTES_REFERENCE = 78;
+	const UITYPE_SALESORDER_REFERENCE = 80;
+	const UITYPE_VENDOR_REFERENCE = 81;
+	const UITYPE_TAX = 83;
+	const UITYPE_SKYPE = 85;
+	const UITYPE_CURRENCY_CODE = 117;//picklist with currencies
+	const UITYPE_LASTNAME = 255;//last name in contacts and leads
+	const UITYPE_EMAIL_PARENT_RECORD = 357;
+
+	//UITYPES for Users module
+	const UITYPE_USER_ACCESS_KEY = 3;
+	const UITYPE_USER_THEME = 31;
+	const UITYPE_USER_PICKLIST = 32;
+	const UITYPE_USER_ROLE = 98;
+	const UITYPE_USER_PASSWORD = 98;
+	const UITYPE_USER_REPORTS_TO = 101;
+	const UITYPE_USER_EMAIL = 104;
+	const UITYPE_USER_USERNAME = 106;
+	const UITYPE_USER_STATUS = 115;
+	const UITYPE_USER_END_HOUR = 116;
+	const UITYPE_USER_IS_ADMIN = 156;
+
 	public $webserviceField = false;
 
 	public function __update()
@@ -47,11 +127,12 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$db->pquery($query, $params);
 	}
 
+
 	/**
 	 * Function to get the value of a given property
 	 * @param <String> $propertyName
-	 * @throws Exception
 	 * @return <Object>
+	 * @throws Exception
 	 */
 	public function get($propertyName)
 	{
@@ -105,7 +186,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 
 	public function getModule()
 	{
-		if (! $this->module) {
+		if (! isset($this->module) || ! $this->module) {
 			$moduleObj = $this->block->module;
 			if (empty($moduleObj)) {
 				return false;
@@ -113,7 +194,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 			$this->module = Vtiger_Module_Model::getInstanceFromModuleObject($moduleObj);
 		}
 
-		return $this->module;
+		return isset($this->module) ? $this->module : null;
 	}
 
 	public function setModule($moduleInstance)
@@ -124,13 +205,11 @@ class Vtiger_Field_Model extends Vtiger_Field
 	/**
 	 * Function to retieve display value for a value
 	 * @param <String> $value - value which need to be converted to display value
-	 * @param mixed $record
-	 * @param mixed $recordInstance
 	 * @return <String> - converted display value
 	 */
-	public function getDisplayValue($value, $record = false, $recordInstance = false)
+	public function getDisplayValue($value, $record=false, $recordInstance = false)
 	{
-		if (! $this->uitype_instance) {
+		if (! isset($this->uitype_instance) || ! $this->uitype_instance) {
 			$this->uitype_instance = Vtiger_Base_UIType::getInstanceFromField($this);
 		}
 		$uiTypeInstance = $this->uitype_instance;
@@ -184,27 +263,27 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function getFieldDataType()
 	{
-		if (! $this->fieldDataType) {
+		if (! isset($this->fieldDataType) || ! $this->fieldDataType) {
 			$uiType = $this->get('uitype');
-			if ($uiType == '69') {
+			if ($uiType == self::UITYPE_IMAGE) {
 				$fieldDataType = 'image';
-			} elseif ($uiType == '26') {
+			} elseif ($uiType == self::UITYPE_FOLDER_NAME) {
 				$fieldDataType = 'documentsFolder';
-			} elseif ($uiType == '27') {
+			} elseif ($uiType == self::UITYPE_DOWNLOAD_TYPE) {
 				$fieldDataType = 'fileLocationType';
-			} elseif ($uiType == '9') {
+			} elseif ($uiType == self::UITYPE_PERCENTAGE) {
 				$fieldDataType = 'percentage';
-			} elseif ($uiType == '28') {
+			} elseif ($uiType == self::UITYPE_FILENAME) {
 				$fieldDataType = 'documentsFileUpload';
-			} elseif ($uiType == '83') {
+			} elseif ($uiType == self::UITYPE_TAX) {
 				$fieldDataType = 'productTax';
-			} elseif ($uiType == '117') {
+			} elseif ($uiType == self::UITYPE_CURRENCY_CODE) {
 				$fieldDataType = 'currencyList';
-			} elseif ($uiType == '55' && stripos($this->getName(), 'salutationtype') !== false) {
+			} elseif ($uiType == self::UITYPE_SALUTATION_OR_FIRSTNAME && stripos($this->getName(), 'salutationtype') !== false) {
 				$fieldDataType = 'picklist';
-			} elseif ($uiType == '55' && stripos($this->getName(), 'firstname') !== false) {
+			} elseif ($uiType == self::UITYPE_SALUTATION_OR_FIRSTNAME && stripos($this->getName(), 'firstname') !== false) {
 				$fieldDataType = 'salutation';
-			} elseif ($uiType == '55' && stripos($this->getName(), 'roundrobin_userid') !== false) {
+			} elseif ($uiType == self::UITYPE_SALUTATION_OR_FIRSTNAME && stripos($this->getName(), 'roundrobin_userid') !== false) {
 				$fieldDataType = 'multiowner';
 			} else {
 				$webserviceField = $this->getWebserviceFieldObject();
@@ -213,13 +292,11 @@ class Vtiger_Field_Model extends Vtiger_Field
 			$this->fieldDataType = $fieldDataType;
 		}
 
-		return $this->fieldDataType;
+		return isset($this->fieldDataType) ? $this->fieldDataType : null;
 	}
 
 	/**
 	 * Function to get list of modules the field refernced to
-	 * @param mixed $hideDisabledModules
-	 * @param mixed $presenceZero
 	 * @return <Array> -  list of modules for which field is refered to
 	 */
 	public function getReferenceList($hideDisabledModules = true, $presenceZero = true)
@@ -229,7 +306,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		if ($presenceZero && is_array($referenceList) && count($referenceList) > 0) {
 			foreach ($referenceList as $key => $referenceModule) {
 				$moduleModel = Vtiger_Module_Model::getInstance($referenceModule);
-				if ($moduleModel && $moduleModel->get('presence') != 0) {
+				if ($moduleModel && $moduleModel->get('presence') != self::PRESENCE_ALWAYS_VISIBLE) {
 					unset($referenceList[$key]);
 				}
 			}
@@ -290,7 +367,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 
 	public function isRoleBased()
 	{
-		if ($this->get('uitype') == '15' || $this->get('uitype') == '33' || ($this->get('uitype') == '55' && $this->getFieldName() == 'salutationtype')) {
+		if ($this->get('uitype') == self::UITYPE_ROLE_BASED_PICKLIST || $this->get('uitype') == self::UITYPE_MULTI_SELECT || ($this->get('uitype') == SELF::UITYPE_SALUTATION_OR_FIRSTNAME && $this->getFieldName() == 'salutationtype')) {
 			return true;
 		}
 
@@ -337,6 +414,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		return null;
 	}
 
+
 	/**
 	 * Function to get all editable  picklist values for the current user
 	 * @return <Array> List of picklist values if the field is of type picklist or multipicklist, null otherwise.
@@ -345,6 +423,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$fieldDataType = $this->getFieldDataType();
 		$fieldName = $this->getName();
+		$permission = true;
 
 		// for reference fields the field name will be in the format of (referencefieldname;(module)fieldname)
 		preg_match('/(\w+) ; \((\w+)\) (\w+)/', $fieldName, $matches);
@@ -382,9 +461,9 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function isMandatory()
 	{
-		list($type, $mandatory) = explode('~', $this->get('typeofdata'));
+		list($type, $mandatory)= explode('~', $this->get('typeofdata'));
 
-		return $mandatory == 'M' ? true : false;
+		return $mandatory=='M' ? true : false;
 	}
 
 	/**
@@ -405,12 +484,13 @@ class Vtiger_Field_Model extends Vtiger_Field
 	public function isViewEnabled()
 	{
 		$permision = $this->getPermissions();
-		if ($this->getDisplayType() == '4' || in_array($this->get('presence'), [1, 3])) {
+		if ($this->getDisplayType() == self::DISPLAYTYPE_PASSWORD || in_array($this->get('presence'), [self::PRESENCE_HIDDEN, 3])) {
 			return false;
 		}
 
 		return $permision;
 	}
+
 
 	/**
 	 * Function to check if the field is shown in detail view
@@ -431,7 +511,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function isViewableInDetailView()
 	{
-		if (! $this->isViewable() || $this->getDisplayType() == '3' || $this->getDisplayType() == '5' || $this->getDisplayType() == '6') {
+		if (! $this->isViewable() || $this->getDisplayType() == self::DISPLAYTYPE_LIST || $this->getDisplayType() == self::DISPLAYTYPE_LINEITEM || $this->getDisplayType() == self::DISPLAYTYPE_STARRED) {
 			return false;
 		}
 
@@ -443,7 +523,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		if (! $this->isViewable()) {
 			return false;
 		}
-		if ($this->getDisplayType() == '6' && $this->getName() == 'tags') {
+		if ($this->getDisplayType() == self::DISPLAYTYPE_STARRED && $this->getName() =='tags') {
 			return false;
 		}
 
@@ -454,10 +534,10 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$displayType = (int)$this->get('displaytype');
 		$restrictedFields = ['isconvertedfrompotential', 'isconvertedfromlead'];
-		$editEnabledDisplayTypes = [1, 3, 5];
+		$editEnabledDisplayTypes = [self::DISPLAYTYPE_ALL, self::DISPLAYTYPE_LIST, self::DISPLAYTYPE_LINEITEM];
 		if (! $this->isViewEnabled() ||
 				! in_array($displayType, $editEnabledDisplayTypes) ||
-				strcasecmp($this->getFieldDataType(), 'autogenerated') === 0 ||
+				strcasecmp($this->getFieldDataType(), 'autogenerated') ===0 ||
 				strcasecmp($this->getFieldDataType(), 'id') === 0 || in_array($this->getName(), $restrictedFields)) {
 			return false;
 		}
@@ -469,8 +549,8 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$moduleModel = $this->getModule();
 		$quickCreate = $this->get('quickcreate');
-		if (($quickCreate == self::QUICKCREATE_MANDATORY || $quickCreate == self::QUICKCREATE_ENABLED
-				|| $this->isMandatory()) && $this->get('uitype') != 69) {
+		if ($moduleModel && ($quickCreate == self::QUICKCREATE_MANDATORY || $quickCreate == self::QUICKCREATE_ENABLED
+				|| $this->isMandatory()) && $this->get('uitype') != self::UITYPE_IMAGE) {
 			//isQuickCreateSupported will not be there for settings
 			if (method_exists($moduleModel, 'isQuickCreateSupported') && $moduleModel->isQuickCreateSupported()) {
 				return true;
@@ -497,9 +577,9 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		if (! $this->isEditEnabled()
 				|| ! $this->isViewable()
-				|| ! in_array(((int)$this->get('displaytype')), [1, 5])
+				|| ! in_array(((int)$this->get('displaytype')), [self::DISPLAYTYPE_ALL, self::DISPLAYTYPE_LINEITEM])
 				|| $this->isReadOnly() == true
-				|| $this->get('uitype') == 4) {
+				|| $this->get('uitype') ==  self::UITYPE_RECORD_NO) {
 			return false;
 		}
 
@@ -512,7 +592,13 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function isAjaxEditable()
 	{
-		$ajaxRestrictedFields = ['4', '72', '61', '27', '28'];
+		$ajaxRestrictedFields = [
+			self::UITYPE_RECORD_NO,
+			self::UITYPE_CURRENCY_AMOUNT,
+			self::UITYPE_ATTACHMENT,
+			self::UITYPE_DOWNLOAD_TYPE,
+			self::UITYPE_FILENAME
+		];
 		if (! $this->isEditable() || in_array($this->get('uitype'), $ajaxRestrictedFields)) {
 			return false;
 		}
@@ -550,9 +636,9 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$fieldLabel = $this->get('label');
 
 		$escapedFieldLabel = str_replace(' ', '_', $fieldLabel);
-		$moduleFieldLabel = $moduleName.'_'.$escapedFieldLabel;
+		$moduleFieldLabel = $moduleName . '_' . $escapedFieldLabel;
 
-		return $tableName.':'.$columnName.':'.$fieldName.':'.$moduleFieldLabel;
+		return $tableName . ':' . $columnName . ':' . $fieldName . ':' . $moduleFieldLabel;
 	}
 
 	/**
@@ -579,14 +665,14 @@ class Vtiger_Field_Model extends Vtiger_Field
 		}
 
 		$escapedFieldLabel = str_replace(' ', '_', $fieldLabel);
-		$moduleFieldLabel = $moduleName.'_'.$escapedFieldLabel;
+		$moduleFieldLabel = $moduleName . '_' . $escapedFieldLabel;
 		// for reference field we store field name in the format (parentReferenceFieldName ; (referenceModule) referenceFieldName)
 		$referenceFieldName = $this->get('reference_fieldname');
 		if (! empty($referenceFieldName)) {
 			$fieldName = $referenceFieldName;
 		}
 
-		return $tableName.':'.$columnName.':'.$fieldName.':'.$moduleFieldLabel.':'.$fieldType;
+		return $tableName . ':' . $columnName . ':' . $fieldName . ':' . $moduleFieldLabel . ':' . $fieldType;
 	}
 
 	/**
@@ -613,16 +699,16 @@ class Vtiger_Field_Model extends Vtiger_Field
 		if ($moduleName == 'Events') {
 			$moduleName = 'Calendar';
 		}
-		$moduleFieldLabel = $moduleName.'_'.$escapedFieldLabel;
+		$moduleFieldLabel = $moduleName . '_' . $escapedFieldLabel;
 
-		if ($tableName == 'vtiger_crmentity' && $columnName != 'smownerid') {
-			$tableName = 'vtiger_crmentity'.$moduleName;
+		if ($tableName == 'vtiger_crmentity' && $columnName !='smownerid') {
+			$tableName = 'vtiger_crmentity' . $moduleName;
 		} elseif ($columnName == 'smownerid') {
-			$tableName = 'vtiger_users'.$moduleName;
-			$columnName = 'user_name';
+			$tableName = 'vtiger_users' . $moduleName;
+			$columnName ='user_name';
 		}
 
-		return $tableName.':'.$columnName.':'.$moduleFieldLabel.':'.$fieldName.':'.$fieldType;
+		return $tableName . ':' . $columnName . ':' . $moduleFieldLabel . ':' . $fieldName . ':' . $fieldType;
 	}
 
 	/**
@@ -742,37 +828,37 @@ class Vtiger_Field_Model extends Vtiger_Field
 	public static function getDateFilterTypes()
 	{
 		$dateFilters = ['lessthandaysago' => ['label' => 'LBL_LESS_THAN_DAYS_AGO'],
-			'morethandaysago'                => ['label' => 'LBL_MORE_THAN_DAYS_AGO'],
-			'inlessthan'                     => ['label' => 'LBL_IN_LESS_THAN'],
-			'inmorethan'                     => ['label'  => 'LBL_IN_MORE_THAN'],
-			'daysago'                        => ['label' => 'LBL_DAYS_AGO'],
-			'dayslater'                      => ['label' => 'LBL_DAYS_LATER'],
-			'custom'                         => ['label' => 'LBL_CUSTOM'],
-			'prevfy'                         => ['label' => 'LBL_PREVIOUS_FY'],
-			'thisfy'                         => ['label' => 'LBL_CURRENT_FY'],
-			'nextfy'                         => ['label' => 'LBL_NEXT_FY'],
-			'prevfq'                         => ['label' => 'LBL_PREVIOUS_FQ'],
-			'thisfq'                         => ['label' => 'LBL_CURRENT_FQ'],
-			'nextfq'                         => ['label' => 'LBL_NEXT_FQ'],
-			'yesterday'                      => ['label' => 'LBL_YESTERDAY'],
-			'today'                          => ['label' => 'LBL_TODAY'],
-			'tomorrow'                       => ['label' => 'LBL_TOMORROW'],
-			'lastweek'                       => ['label' => 'LBL_LAST_WEEK'],
-			'thisweek'                       => ['label' => 'LBL_CURRENT_WEEK'],
-			'nextweek'                       => ['label' => 'LBL_NEXT_WEEK'],
-			'lastmonth'                      => ['label' => 'LBL_LAST_MONTH'],
-			'thismonth'                      => ['label' => 'LBL_CURRENT_MONTH'],
-			'nextmonth'                      => ['label' => 'LBL_NEXT_MONTH'],
-			'last7days'                      => ['label' => 'LBL_LAST_7_DAYS'],
-			'last14days'                     => ['label' => 'LBL_LAST_14_DAYS'],
-			'last30days'                     => ['label' => 'LBL_LAST_30_DAYS'],
-			'last60days'                     => ['label' => 'LBL_LAST_60_DAYS'],
-			'last90days'                     => ['label' => 'LBL_LAST_90_DAYS'],
-			'last120days'                    => ['label' => 'LBL_LAST_120_DAYS'],
-			'next30days'                     => ['label' => 'LBL_NEXT_30_DAYS'],
-			'next60days'                     => ['label' => 'LBL_NEXT_60_DAYS'],
-			'next90days'                     => ['label' => 'LBL_NEXT_90_DAYS'],
-			'next120days'                    => ['label' => 'LBL_NEXT_120_DAYS']
+			'morethandaysago' => ['label' => 'LBL_MORE_THAN_DAYS_AGO'],
+			'inlessthan' => ['label' => 'LBL_IN_LESS_THAN'],
+			'inmorethan' => ['label'  => 'LBL_IN_MORE_THAN'],
+			'daysago' => ['label' => 'LBL_DAYS_AGO'],
+			'dayslater' => ['label' => 'LBL_DAYS_LATER'],
+			'custom' => ['label' => 'LBL_CUSTOM'],
+			'prevfy' => ['label' => 'LBL_PREVIOUS_FY'],
+			'thisfy' => ['label' => 'LBL_CURRENT_FY'],
+			'nextfy' => ['label' => 'LBL_NEXT_FY'],
+			'prevfq' => ['label' => 'LBL_PREVIOUS_FQ'],
+			'thisfq' => ['label' => 'LBL_CURRENT_FQ'],
+			'nextfq' => ['label' => 'LBL_NEXT_FQ'],
+			'yesterday' => ['label' => 'LBL_YESTERDAY'],
+			'today' => ['label' => 'LBL_TODAY'],
+			'tomorrow' => ['label' => 'LBL_TOMORROW'],
+			'lastweek' => ['label' => 'LBL_LAST_WEEK'],
+			'thisweek' => ['label' => 'LBL_CURRENT_WEEK'],
+			'nextweek' => ['label' => 'LBL_NEXT_WEEK'],
+			'lastmonth' => ['label' => 'LBL_LAST_MONTH'],
+			'thismonth' => ['label' => 'LBL_CURRENT_MONTH'],
+			'nextmonth' => ['label' => 'LBL_NEXT_MONTH'],
+			'last7days' => ['label' => 'LBL_LAST_7_DAYS'],
+			'last14days' => ['label' => 'LBL_LAST_14_DAYS'],
+			'last30days' => ['label' => 'LBL_LAST_30_DAYS'],
+			'last60days' => ['label' => 'LBL_LAST_60_DAYS'],
+			'last90days' => ['label' => 'LBL_LAST_90_DAYS'],
+			'last120days' => ['label' => 'LBL_LAST_120_DAYS'],
+			'next30days' => ['label' => 'LBL_NEXT_30_DAYS'],
+			'next60days' => ['label' => 'LBL_NEXT_60_DAYS'],
+			'next90days' => ['label' => 'LBL_NEXT_90_DAYS'],
+			'next120days' => ['label' => 'LBL_NEXT_120_DAYS']
 		];
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 		$userPeferredDayOfTheWeek = $currentUserModel->get('dayoftheweek');
@@ -792,27 +878,28 @@ class Vtiger_Field_Model extends Vtiger_Field
 	public static function getAdvancedFilterOptions()
 	{
 		return [
-			'e'                   => 'LBL_EQUALS',
-			'n'                   => 'LBL_NOT_EQUAL_TO',
-			's'                   => 'LBL_STARTS_WITH',
-			'ew'                  => 'LBL_ENDS_WITH',
-			'c'                   => 'LBL_CONTAINS',
-			'k'                   => 'LBL_DOES_NOT_CONTAIN',
-			'l'                   => 'LBL_LESS_THAN',
-			'g'                   => 'LBL_GREATER_THAN',
-			'm'                   => 'LBL_LESS_THAN_OR_EQUAL',
-			'h'                   => 'LBL_GREATER_OR_EQUAL',
-			'b'                   => 'LBL_BEFORE',
-			'a'                   => 'LBL_AFTER',
-			'bw'                  => 'LBL_BETWEEN',
-			'y'                   => 'LBL_IS_EMPTY',
-			'ny'                  => 'LBL_IS_NOT_EMPTY',
+			'e' => 'LBL_EQUALS',
+			'n' => 'LBL_NOT_EQUAL_TO',
+			's' => 'LBL_STARTS_WITH',
+			'ew' => 'LBL_ENDS_WITH',
+			'c' => 'LBL_CONTAINS',
+			'k' => 'LBL_DOES_NOT_CONTAIN',
+			'l' => 'LBL_LESS_THAN',
+			'g' => 'LBL_GREATER_THAN',
+			'm' => 'LBL_LESS_THAN_OR_EQUAL',
+			'h' => 'LBL_GREATER_OR_EQUAL',
+			'b' => 'LBL_BEFORE',
+			'a' => 'LBL_AFTER',
+			'bw' => 'LBL_BETWEEN',
+			'y' => 'LBL_IS_EMPTY',
+			'ny'=> 'LBL_IS_NOT_EMPTY',
 			'lessthanhoursbefore' => 'LBL_LESS_THAN_HOURS_BEFORE',
-			'lessthanhourslater'  => 'LBL_LESS_THAN_HOURS_LATER',
+			'lessthanhourslater' => 'LBL_LESS_THAN_HOURS_LATER',
 			'morethanhoursbefore' => 'LBL_MORE_THAN_HOURS_BEFORE',
-			'morethanhourslater'  => 'LBL_MORE_THAN_HOURS_LATER',
+			'morethanhourslater' => 'LBL_MORE_THAN_HOURS_LATER',
 		];
 	}
+
 
 	/**
 	 * Function to get the advanced filter option names by Field type
@@ -821,22 +908,22 @@ class Vtiger_Field_Model extends Vtiger_Field
 	public static function getAdvancedFilterOpsByFieldType()
 	{
 		return [
-			'V'  => ['e', 'n', 's', 'ew', 'c', 'k', 'y', 'ny'],
-			'N'  => ['e', 'n', 'l', 'g', 'm', 'h', 'y', 'ny'],
-			'T'  => ['e', 'n', 'l', 'g', 'm', 'h', 'bw', 'b', 'a', 'y', 'ny'],
-			'I'  => ['e', 'n', 'l', 'g', 'm', 'h', 'y', 'ny'],
-			'C'  => ['e', 'n', 'y', 'ny'],
-			'D'  => ['e', 'n', 'bw', 'b', 'a', 'y', 'ny'],
+			'V' => ['e', 'n', 's', 'ew', 'c', 'k', 'y', 'ny'],
+			'N' => ['e', 'n', 'l', 'g', 'm', 'h', 'y', 'ny'],
+			'T' => ['e', 'n', 'l', 'g', 'm', 'h', 'bw', 'b', 'a', 'y', 'ny'],
+			'I' => ['e', 'n', 'l', 'g', 'm', 'h', 'y', 'ny'],
+			'C' => ['e', 'n', 'y', 'ny'],
+			'D' => ['e', 'n', 'bw', 'b', 'a', 'y', 'ny'],
 			'DT' => ['e', 'n', 'bw', 'b', 'a', 'y', 'ny', 'lessthanhoursbefore', 'lessthanhourslater', 'morethanhoursbefore', 'morethanhourslater'],
 			'NN' => ['e', 'n', 'l', 'g', 'm', 'h', 'y', 'ny'],
-			'E'  => ['e', 'n', 's', 'ew', 'c', 'k', 'y', 'ny']
+			'E' => ['e', 'n', 's', 'ew', 'c', 'k', 'y', 'ny']
 		];
 	}
+
 
 	/**
 	 * Function to retrieve field model for specific block and module
 	 * @param <Vtiger_Module_Model> $blockModel - block instance
-	 * @param mixed $moduleModel
 	 * @return <array> List of field model
 	 */
 	public static function getAllForModule($moduleModel)
@@ -852,10 +939,13 @@ class Vtiger_Field_Model extends Vtiger_Field
 			}
 
 			foreach ($fieldObjects as $fieldObject) {
-				$fieldModelObject = self::getInstanceFromFieldObject($fieldObject);
-				$fieldModelList[$fieldModelObject->get('block')->id][] = $fieldModelObject;
-				Vtiger_Cache::set('field-'.$moduleModel->getId(), $fieldModelObject->getId(), $fieldModelObject);
-				Vtiger_Cache::set('field-'.$moduleModel->getId(), $fieldModelObject->getName(), $fieldModelObject);
+				$fieldModelObject= self::getInstanceFromFieldObject($fieldObject);
+				$block = $fieldModelObject->get('block');
+				if ($block) {
+					$fieldModelList[$block->id][] = $fieldModelObject;
+				}
+				Vtiger_Cache::set('field-' . $moduleModel->getId(), $fieldModelObject->getId(), $fieldModelObject);
+				Vtiger_Cache::set('field-' . $moduleModel->getId(), $fieldModelObject->getName(), $fieldModelObject);
 			}
 
 			Vtiger_Cache::set('ModuleFields', $moduleModel->id, $fieldModelList);
@@ -874,12 +964,12 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$fieldObject = null;
 		if ($module) {
-			$fieldObject = Vtiger_Cache::get('field-'.$module->getId(), $value);
+			$fieldObject = Vtiger_Cache::get('field-' . $module->getId(), $value);
 		}
 		if (! $fieldObject) {
 			$fieldObject = parent::getInstance($value, $module);
 			if ($module) {
-				Vtiger_Cache::set('field-'.$module->getId(), $value, $fieldObject);
+				Vtiger_Cache::set('field-' . $module->getId(), $value, $fieldObject);
 			}
 		}
 
@@ -900,7 +990,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$result = $db->pquery('SELECT * FROM vtiger_attachmentsfolder', []);
 		$rows = $db->num_rows($result);
 		$folders = [];
-		for ($i = 0; $i < $rows; $i++) {
+		for ($i=0; $i<$rows; $i++) {
 			$folderId = $db->query_result($result, $i, 'folderid');
 			$folderName = $db->query_result($result, $i, 'foldername');
 			$folders[$folderId] = $folderName;
@@ -928,65 +1018,81 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$validator = [];
 		$fieldName = $this->getName();
 		switch ($fieldName) {
-			case 'birthday':	$funcName = ['name'=>'lessThanToday'];
+			case 'birthday':
+				$funcName = ['name'=>'lessThanToday'];
 
-											break;
-			case 'support_end_date':	$funcName = ['name' => 'greaterThanDependentField', 'params' => ['support_start_date']];
+				break;
+			case 'support_end_date':
+				$funcName = ['name' => 'greaterThanDependentField', 'params' => ['support_start_date']];
 
-											break;
-			case 'support_start_date':	$funcName = ['name' => 'lessThanDependentField', 'params' => ['support_end_date']];
+				break;
+			case 'support_start_date':
+				$funcName = ['name' => 'lessThanDependentField', 'params' => ['support_end_date']];
 
-											break;
+				break;
 			case 'targetenddate':
 			case 'actualenddate':
-			case 'enddate':	$funcName = ['name' => 'greaterThanDependentField', 'params' => ['startdate']];
+			case 'enddate':
+				$funcName = ['name' => 'greaterThanDependentField', 'params' => ['startdate']];
 
-											break;
+				break;
 			case 'start_date':
-			case 'startdate':	if ($this->getModule()->get('name') == 'Project') {
-				$params = ['targetenddate'];
-			} elseif ($this->getModule()->get('name') == 'Products' || $this->getModule()->get('name') == 'Services') {
-				$params = ['expiry_date'];
-			} elseif ($this->getModule()->get('name') == 'ServiceContracts') {
-				$params = ['due_date'];
-			} else {
-				//for project task
-				$params = ['enddate'];
-			}
-											$funcName = ['name' => 'lessThanDependentField', 'params' => $params];
+			case 'startdate':
+				if ($this->getModule()->get('name') == 'Project') {
+					$params = ['targetenddate'];
+				} elseif ($this->getModule()->get('name') == 'Products' || $this->getModule()->get('name') == 'Services') {
+					$params = ['expiry_date'];
+				} elseif ($this->getModule()->get('name') == 'ServiceContracts') {
+					$params = ['due_date'];
+				} else {
+					//for project task
+					$params = ['enddate'];
+				}
 
-											break;
+				$funcName = ['name' => 'lessThanDependentField', 'params' => $params];
+
+				break;
 			case 'expiry_date':
-			case 'due_date':	$funcName = ['name' => 'greaterThanDependentField', 'params' => ['start_date']];
+				break;
+			case 'due_date':
+				$funcName = ['name' => 'greaterThanDependentField', 'params' => ['start_date']];
 
-											break;
-			case 'sales_end_date':	$funcName = ['name' => 'greaterThanDependentField', 'params' => ['sales_start_date']];
+				break;
+			case 'sales_end_date':
+				$funcName = ['name' => 'greaterThanDependentField', 'params' => ['sales_start_date']];
 
-											break;
-			case 'sales_start_date':	$funcName = ['name' => 'lessThanDependentField', 'params' => ['sales_end_date']];
+				break;
+			case 'sales_start_date':
+				$funcName = ['name' => 'lessThanDependentField', 'params' => ['sales_end_date']];
 
-											break;
+				break;
 			case 'hours':
-			case 'days':	$funcName = ['name'=>'PositiveNumber'];
+				break;
+			case 'days':
+				$funcName = ['name'=>'PositiveNumber'];
 
-											break;
-			case 'employees':	$funcName = ['name'=>'WholeNumber'];
+				break;
+			case 'employees':
+				$funcName = ['name'=>'WholeNumber'];
 
-											break;
-			case 'related_to':	$funcName = ['name'=>'ReferenceField'];
+				break;
+			case 'related_to':
+				$funcName = ['name'=>'ReferenceField'];
 
-											break;
+				break;
 			//SalesOrder field sepecial validators
-			case 'end_period':	$funcName1 = ['name' => 'greaterThanDependentField', 'params' => ['start_period']];
-											array_push($validator, $funcName1);
-											$funcName = ['name' => 'lessThanDependentField', 'params' => ['duedate']];
+			case 'end_period':
+				$funcName1 = ['name' => 'greaterThanDependentField', 'params' => ['start_period']];
+				array_push($validator, $funcName1);
+				$funcName = ['name' => 'lessThanDependentField', 'params' => ['duedate']];
 
-											break;
-			case 'start_period':	$funcName = ['name' => 'lessThanDependentField', 'params' => ['end_period']];
+				break;
+			case 'start_period':
+				$funcName = ['name' => 'lessThanDependentField', 'params' => ['end_period']];
 
-											break;
+				break;
 		}
-		if ($funcName) {
+		if (isset($funcName) && $funcName) {
 			array_push($validator, $funcName);
 		}
 
@@ -1000,7 +1106,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function getEditViewDisplayValue($value)
 	{
-		if (! $this->uitype_instance) {
+		if (! isset($this->uitype_instance) || ! $this->uitype_instance) {
 			$this->uitype_instance = Vtiger_Base_UIType::getInstanceFromField($this);
 		}
 		$uiTypeInstance = $this->uitype_instance;
@@ -1025,8 +1131,9 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$db = PearDatabase::getInstance();
 		// Not a good approach to get all the fields if not required(May leads to Performance issue)
-		$result = $db->pquery('SELECT id, currency_name FROM vtiger_currency_info WHERE currency_status = ? AND deleted=0', ['Active']);
-		for ($i = 0; $i < $db->num_rows($result); $i++) {
+		$query = 'SELECT id, currency_name FROM vtiger_currency_info WHERE currency_status = ? AND deleted=0';
+		$result = $db->pquery($query, ['Active']);
+		for ($i=0; $i<$db->num_rows($result); $i++) {
 			$currencyId = $db->query_result($result, $i, 'id');
 			$currencyName = $db->query_result($result, $i, 'currency_name');
 			$currencies[$currencyId] = $currencyName;
@@ -1059,6 +1166,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		return $this->defaultvalue;
 	}
 
+
 	/**
 	 * Function whcih will get the databse insert value format from user format
 	 * @param type $value in user format
@@ -1066,7 +1174,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function getDBInsertValue($value)
 	{
-		if (! $this->uitype_instance) {
+		if (! isset($this->uitype_instance) || ! $this->uitype_instance) {
 			$this->uitype_instance = Vtiger_Base_UIType::getInstanceFromField($this);
 		}
 		$uiTypeInstance = $this->uitype_instance;
@@ -1086,7 +1194,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		if ($privileges->hasGlobalReadPermission()) {
 			return true;
 		} else {
-			$modulePermission = Vtiger_Cache::get('modulePermission-'.$accessmode, $this->getModuleId());
+			$modulePermission = Vtiger_Cache::get('modulePermission-' . $accessmode, $this->getModuleId());
 			if (! $modulePermission) {
 				$modulePermission = self::preFetchModuleFieldPermission($this->getModuleId(), $accessmode);
 			}
@@ -1110,19 +1218,39 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$user = Users_Record_Model::getCurrentUserModel();
 		$privileges = $user->getPrivileges();
 		$profilelist = $privileges->get('profiles');
+		$visiblePresenceList = trim(implode(',', self::getVisiblePresenceCodesList()), ',');
 
 		if (count($profilelist) > 0) {
 			if ($accessmode == 'readonly') {
-				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_def_org_field.visible=0  AND vtiger_profile2field.profileid in ('.generateQuestionMarks($profilelist).') AND vtiger_field.presence in (0,2) GROUP BY vtiger_field.fieldid';
+				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field 
+					INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid 
+					INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid 
+					WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_def_org_field.visible=0  
+					AND vtiger_profile2field.profileid in (' . generateQuestionMarks($profilelist) . ") AND 
+					vtiger_field.presence in ({$visiblePresenceList}) GROUP BY vtiger_field.fieldid";
 			} else {
-				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_profile2field.readonly=0 AND vtiger_def_org_field.visible=0  AND vtiger_profile2field.profileid in ('.generateQuestionMarks($profilelist).') AND vtiger_field.presence in (0,2) GROUP BY vtiger_field.fieldid';
+				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field 
+					INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid 
+					INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid 
+					WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_profile2field.readonly=0 
+					AND vtiger_def_org_field.visible=0  AND vtiger_profile2field.profileid in (' . generateQuestionMarks($profilelist) . ") 
+					AND vtiger_field.presence in ({$visiblePresenceList}) GROUP BY vtiger_field.fieldid";
 			}
 			$params = [$tabid, $profilelist];
 		} else {
 			if ($accessmode == 'readonly') {
-				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_def_org_field.visible=0  AND vtiger_field.presence in (0,2) GROUP BY vtiger_field.fieldid';
+				$query = "SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field 
+					INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid 
+					INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid 
+					WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_def_org_field.visible=0  
+					AND vtiger_field.presence in ({$visiblePresenceList}) GROUP BY vtiger_field.fieldid";
 			} else {
-				$query = 'SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_profile2field.readonly=0 AND vtiger_def_org_field.visible=0  AND vtiger_field.presence in (0,2) GROUP BY vtiger_field.fieldid';
+				$query = "SELECT vtiger_profile2field.visible,vtiger_field.fieldid FROM vtiger_field 
+					INNER JOIN vtiger_profile2field ON vtiger_profile2field.fieldid=vtiger_field.fieldid 
+					INNER JOIN vtiger_def_org_field ON vtiger_def_org_field.fieldid=vtiger_field.fieldid 
+					WHERE vtiger_field.tabid=? AND vtiger_profile2field.visible=0 AND vtiger_profile2field.readonly=0 
+					AND vtiger_def_org_field.visible=0  AND vtiger_field.presence in ({$visiblePresenceList}) 
+					GROUP BY vtiger_field.fieldid";
 			}
 			$params = [$tabid];
 		}
@@ -1134,12 +1262,12 @@ class Vtiger_Field_Model extends Vtiger_Field
 			$row = $adb->query_result_rowdata($result, $i);
 			$modulePermission[$row['fieldid']] = $row['visible'];
 		}
-		Vtiger_Cache::set('modulePermission-'.$accessmode, $tabid, $modulePermission);
+		Vtiger_Cache::set('modulePermission-' . $accessmode, $tabid, $modulePermission);
 
 		return $modulePermission;
 	}
 
-	public function updateTypeofDataFromMandatory($mandatoryValue = 'O')
+	public function updateTypeofDataFromMandatory($mandatoryValue='O')
 	{
 		$mandatoryValue = strtoupper($mandatoryValue);
 		$supportedMandatoryLiterals = ['O', 'M'];
@@ -1168,7 +1296,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 	{
 		$presence = $this->get('presence');
 
-		return in_array($presence, [0, 2]);
+		return in_array($presence, self::getVisiblePresenceCodesList());
 	}
 
 	public function isMassEditable()
@@ -1202,11 +1330,12 @@ class Vtiger_Field_Model extends Vtiger_Field
 			$fieldId = [$fieldId];
 		}
 
-		$query = 'SELECT * FROM vtiger_field WHERE fieldid IN ('.generateQuestionMarks($fieldId).') AND tabid=?';
+		$query = 'SELECT * FROM vtiger_field WHERE fieldid IN (' . generateQuestionMarks($fieldId) . ') AND tabid=?';
 		$result = $db->pquery($query, [$fieldId, $moduleTabId]);
 		$fieldModelList = [];
 		$num_rows = $db->num_rows($result);
-		for ($i = 0; $i < $num_rows; $i++) {
+
+		for ($i=0; $i<$num_rows; $i++) {
 			$row = $db->query_result_rowdata($result, $i);
 			$fieldModel = new self();
 			$fieldModel->initialize($row);
@@ -1325,7 +1454,8 @@ class Vtiger_Field_Model extends Vtiger_Field
 				$tableName = "vtiger_${fieldName}";
 				if (Vtiger_Utils::CheckTable($tableName)) {
 					if (is_array($picklistValues) && count($picklistValues)) {
-						$result = $db->pquery("SELECT ${fieldName}, color FROM ${tableName} WHERE ${fieldName} IN (".generateQuestionMarks($picklistValues).')', array_keys($picklistValues));
+						$query = "SELECT ${fieldName}, color FROM ${tableName} WHERE ${fieldName} IN (" . generateQuestionMarks($picklistValues) . ')';
+						$result = $db->pquery($query, array_keys($picklistValues));
 						while ($row = $db->fetch_row($result)) {
 							$picklistColors[$row[$fieldName]] = $row['color'];
 						}
@@ -1345,7 +1475,6 @@ class Vtiger_Field_Model extends Vtiger_Field
 	/**
 	 * Function to get the date values for the given type of Standard filter
 	 * @param <String> $type
-	 * @param mixed $userPeferredDayOfTheWeek
 	 * @return <Array> - 2 date values representing the range for the given type of Standard filter
 	 */
 	protected static function getDateForStdFilterBytype($type, $userPeferredDayOfTheWeek = false)
@@ -1356,7 +1485,7 @@ class Vtiger_Field_Model extends Vtiger_Field
 		$y = $date->format('Y');
 
 		$today = date('Y-m-d', mktime(0, 0, 0, $m, $d, $y));
-		$todayName = date('l', strtotime($today));
+		$todayName =  date('l', strtotime($today));
 
 		$tomorrow = date('Y-m-d', mktime(0, 0, 0, $m, $d + 1, $y));
 		$yesterday = date('Y-m-d', mktime(0, 0, 0, $m, $d - 1, $y));
@@ -1534,5 +1663,10 @@ class Vtiger_Field_Model extends Vtiger_Field
 		}
 
 		return $dateValues;
+	}
+
+	private static function getVisiblePresenceCodesList()
+	{
+		return [self::PRESENCE_ALWAYS_VISIBLE, self::PRESENCE_VISIBLE];
 	}
 }
