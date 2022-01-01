@@ -38,7 +38,7 @@ if (defined('VTIGER_UPGRADE')) {
     
     $entityFields = Vtiger_Functions::getEntityModuleInfo($moduleName);
     $entityFieldNames  = explode(',', $entityFields['fieldname']);
-    $sql = "UPDATE vtiger_users SET $fieldName = TRIM(CONCAT(".implode(' ', $entityFieldNames)."))";
+    $sql = "UPDATE vtiger_users SET $fieldName = TRIM(CONCAT_WS(' ',".implode(',', $entityFieldNames)."))";
     $db->pquery($sql, array());
     
     Vtiger_Access::syncSharingAccess();

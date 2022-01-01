@@ -10,4 +10,4 @@
 
 //7.3_to_7.4.0 (to overcome 730 package glitch)
 
-include_once dirname(__FILE__)."730_to_740.php";
+include_once dirname(__FILE__)."/730_to_740.php";
