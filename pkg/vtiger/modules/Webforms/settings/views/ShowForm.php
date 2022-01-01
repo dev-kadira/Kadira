@@ -8,6 +8,8 @@
  * All Rights Reserved.
  *************************************************************************************/
 
+require_once 'modules/Webforms/config.captcha.php';
+
 Class Settings_Webforms_ShowForm_View extends Settings_Vtiger_IndexAjax_View {
 
 	public function checkPermission(Vtiger_Request $request) {
@@ -20,10 +22,11 @@ Class Settings_Webforms_ShowForm_View extends Settings_Vtiger_IndexAjax_View {
 		if(!$recordId || !$currentUserPrivilegesModel->hasModulePermission($moduleModel->getId())) {
 			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
 		}
-        return true;
+		return true;
 	}
 
 	public function process(Vtiger_Request $request) {
+		global $captchaConfig;
 		$recordId = $request->get('record');
 		$qualifiedModuleName = $request->getModule(false);
 		$moduleName = $request->getModule();
@@ -44,6 +47,7 @@ Class Settings_Webforms_ShowForm_View extends Settings_Vtiger_IndexAjax_View {
 		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
 		$viewer->assign('DOCUMENT_FILE_FIELDS', $recordModel->getFileFields());
 		$viewer->assign('ALLOWED_ALL_FILES_SIZE', $recordModel->getModule()->allowedAllFilesSize());
+		$viewer->assign('CAPTCHA_CONFIG', $captchaConfig);
 
 		echo $viewer->view('ShowForm.tpl', $qualifiedModuleName);
 	}

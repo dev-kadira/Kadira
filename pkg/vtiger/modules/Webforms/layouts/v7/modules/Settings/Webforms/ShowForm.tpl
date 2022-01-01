@@ -118,15 +118,13 @@
 						{/foreach}
 					</table>
 					{if $IS_CAPTCHA_ENABLED}
-						<div id="captchaField"></div>
-						<input type="hidden" id="captchaUrl" value="{$CAPTCHA_PATH}">
-						<input type="hidden" id="recaptcha_validation_value" >
+						<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+						<div class="g-recaptcha" data-sitekey="{$CAPTCHA_CONFIG['VTIGER_RECAPTCHA_PUBLIC_KEY']}" data-callback="enableSubmitBtn"></div>
 					{/if}
 					<input type="submit" value="Submit" ></input>
 				</form>
 				</pre>
 			</code>
-			<input type="hidden" name="isCaptchaEnabled" value="{$IS_CAPTCHA_ENABLED}">
 		</div>
 		<div class="modal-footer">
 			<center>

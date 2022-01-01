@@ -10,17 +10,18 @@
 // Switch the working directory to base
 chdir(dirname(__FILE__) . '/../..');
 
-include_once 'includes/Loader.php';
-include_once 'include/Zend/Json.php';
-include_once 'vtlib/Vtiger/Module.php';
-include_once 'include/utils/VtlibUtils.php';
-include_once 'include/Webservices/Create.php';
-include_once 'modules/Webforms/model/WebformsModel.php';
-include_once 'modules/Webforms/model/WebformsFieldModel.php';
-include_once 'include/QueryGenerator/QueryGenerator.php';
-include_once 'includes/runtime/EntryPoint.php';
-include_once 'includes/main/WebUI.php';
-include_once 'include/Webservices/AddRelated.php';
+require_once 'includes/Loader.php';
+require_once 'include/Zend/Json.php';
+require_once 'vtlib/Vtiger/Module.php';
+require_once 'include/utils/VtlibUtils.php';
+require_once 'include/Webservices/Create.php';
+require_once 'modules/Webforms/model/WebformsModel.php';
+require_once 'modules/Webforms/model/WebformsFieldModel.php';
+require_once 'include/QueryGenerator/QueryGenerator.php';
+require_once 'includes/runtime/EntryPoint.php';
+require_once 'includes/main/WebUI.php';
+require_once 'include/Webservices/AddRelated.php';
+require_once 'modules/Webforms/config.captcha.php';
 
 class Webform_Capture {
 
@@ -36,9 +37,15 @@ class Webform_Capture {
 				throw new Exception('webforms is not active');
 
 			$webform = Webforms_Model::retrieveWithPublicId(vtlib_purify($request['publicid']));
-			if (empty($webform))
+			if (empty($webform)) {
 				throw new Exception("Webform not found.");
+			}
 
+			$webformSettingsRecord = Settings_Webforms_Record_Model::getInstanceById($webform->getId(), 'Settings:Webforms');
+			if ($webformSettingsRecord->isCaptchaEnabled()) {
+				$this->validateRecaptcha($request['g-recaptcha-response']);
+			}
+			
 			$returnURL = $webform->getReturnUrl();
 			$roundrobin = $webform->getRoundrobin();
 
@@ -156,6 +163,40 @@ class Webform_Capture {
 		}
 	}
 
+	private function validateRecaptcha($recaptchaResponse)
+	{
+		$recaptchaValidation = $this->postCaptcha($recaptchaResponse);
+		
+		if (!$recaptchaValidation['success']) {
+			throw new Exception("Please verify you are not a robot.");
+		}
+	}
+	
+	private function postCaptcha($recaptchaResponse) {
+		global $captchaConfig;
+		
+		$fields_string = '';
+		$fields = array(
+			'secret' => $captchaConfig['VTIGER_RECAPTCHA_PRIVATE_KEY'],
+			'response' => $recaptchaResponse
+		);
+		foreach($fields as $key=>$value) {
+			$fields_string .= $key . '=' . $value . '&';
+		}
+
+		$fields_string = rtrim($fields_string, '&');
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+		curl_setopt($ch, CURLOPT_POST, count($fields));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+		
+		$result = curl_exec($ch);
+		curl_close($ch);
+		
+		return json_decode($result, true);
+	}
 }
 
 // NOTE: Take care of stripping slashes...
@@ -179,4 +220,3 @@ if ($isURLEncodeEnabled == 1) {
 } else {
 	$webformCapture->captureNow($request);
 }
-?>

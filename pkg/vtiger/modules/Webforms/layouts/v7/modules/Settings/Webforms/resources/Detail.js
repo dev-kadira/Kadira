@@ -124,15 +124,10 @@ Settings_Vtiger_Detail_Js('Settings_Webforms_Detail_Js', {
 							'if(totalFileSize > '+allowedAllFilesSize+') {'+
 								'alert("Maximum allowed file size including all files is 50MB.");'+
 								'return false;'+
-							'}';
-                    if(container.find('[name=isCaptchaEnabled]').val() == true) {
-                        showFormContents = Settings_Webforms_Detail_Js.getCaptchaCode(showFormContents);
-                    } else {
-                        showFormContents = showFormContents +
+							'}'+
 						'}; '+
-                        '}'+
+					'}'+
 					'</script>';
-                    }
 					//Html contents should be placed inside textarea element
 					container.find('#showFormContent').text(showFormContents);
 					//Rendering content has been removed from container
@@ -173,70 +168,6 @@ Settings_Vtiger_Detail_Js('Settings_Webforms_Detail_Js', {
 			}
 		});
 	},
-    
-    /**
-     * Function get Captcha Code
-     * @param <string> showFormContents
-     * @return <string> showFormContents
-     */
-    getCaptchaCode : function(showFormContents) {
-        var captchaContents = '<script type="text/javascript">'+
-        'var RecaptchaOptions = { theme : "clean" };' +
-        '</script>'+
-        '<script type="text/javascript"'+
-        'src="http://www.google.com/recaptcha/api/challenge?k=6Lchg-wSAAAAAIkV51_LSksz6fFdD2vgy59jwa38">'+
-        '</script>'+
-        '<noscript>'+
-            '<iframe src="http://www.google.com/recaptcha/api/noscript?k=6Lchg-wSAAAAAIkV51_LSksz6fFdD2vgy59jwa38"'+
-                'height="300" width="500" frameborder="0"></iframe><br>'+
-            '<textarea name="recaptcha_challenge_field" rows="3" cols="40">'+
-            '</textarea>'+
-            '<input type="hidden" name="recaptcha_response_field" value="manual_challenge">'+
-        '</noscript>';
-        showFormContents = showFormContents.replace('<div id="captchaField"></div>',captchaContents);
-        showFormContents = showFormContents +
-                'var recaptchaValidationValue = document.getElementById("recaptcha_validation_value").value;'+
-                'if (recaptchaValidationValue!= true){'+
-                    'var recaptchaResponseElement = document.getElementsByName("recaptcha_response_field")[0].value;'+
-                    'var recaptchaChallengeElement = document.getElementsByName("recaptcha_challenge_field")[0].value;'+
-                    'var captchaUrl = document.getElementById("captchaUrl").value;'+
-                    'var url = captchaUrl+"?recaptcha_response_field="+recaptchaResponseElement;'+
-                    'url = url + "&recaptcha_challenge_field="+recaptchaChallengeElement+"&callback=JSONPCallback";'+
-                    'jsonp.fetch(url);'+
-                    'return false;'+
-                '}'+
-            '}; '+
-        '};'+
-        'var jsonp = {' +
-            'callbackCounter: 0,'+
-
-            'fetch: function(url) {'+
-                'url = url +"&callId="+this.callbackCounter;'+
-                'var scriptTag = document.createElement("SCRIPT");'+
-                'scriptTag.src = url;'+
-                'scriptTag.async = true;'+
-                'scriptTag.id = "JSONPCallback_"+this.callbackCounter;'+
-                'scriptTag.type = "text/javascript";'+
-                'document.getElementsByTagName("HEAD")[0].appendChild(scriptTag);'+
-                'this.callbackCounter++;'+
-            '}'+
-        '};'+
-        'function JSONPCallback(data) {'+
-            'if(data.result.success == true) {'+
-                'document.getElementById("recaptcha_validation_value").value = true;'+
-                'var form = document.getElementById("__vtigerWebForm");'+
-                'form.submit();'+
-            '} else {'+
-                'document.getElementById("recaptcha_reload").click();'+
-                'alert("you entered wrong captcha");'+
-            '}'+
-            'var element = document.getElementById("JSONPCallback_"+data.result.callId);'+
-            'element.parentNode.removeChild(element);'+
-        '}'+
-        '</script>';
-  
-        return showFormContents;
-    }
 }, {
 	/**
 	 * Function which will handle the registrations for the elements
