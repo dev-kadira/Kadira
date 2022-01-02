@@ -180,10 +180,10 @@ function vtlib_toggleModuleAccess($modules, $enable_disable)
 		$enable_disable = 1;
 		$event_type = Vtiger_Module::EVENT_MODULE_DISABLED;
 		//Update default landing page to dashboard if module is disabled.
-		$adb->pquery('UPDATE vtiger_users SET defaultlandingpage = ? WHERE defaultlandingpage IN('.generateQuestionMarks($modules).')', array_merge(['Home'], $modules));
+		$adb->pquery('UPDATE vtiger_users SET defaultlandingpage = ? WHERE defaultlandingpage IN(' . generateQuestionMarks($modules) . ')', array_merge(['Home'], $modules));
 	}
 
-	$checkResult = $adb->pquery('SELECT name FROM vtiger_tab WHERE name IN ('.generateQuestionMarks($modules).')', [$modules]);
+	$checkResult = $adb->pquery('SELECT name FROM vtiger_tab WHERE name IN (' . generateQuestionMarks($modules) . ')', [$modules]);
 	$rows = $adb->num_rows($checkResult);
 	for ($i = 0; $i < $rows; $i++) {
 		$existingModules[] = $adb->query_result($checkResult, $i, 'name');
@@ -681,7 +681,7 @@ function vtlib_isDirWriteable($dirpath)
 {
 	if (is_dir($dirpath)) {
 		do {
-			$tmpfile = 'vtiger'.time().'-'.rand(1, 1000).'.tmp';
+			$tmpfile = 'vtiger' . time() . '-' . rand(1, 1000) . '.tmp';
 			// Continue the loop unless we find a name that does not exists already.
 			$usefilename = "${dirpath}/${tmpfile}";
 			if (! file_exists($usefilename)) {
@@ -735,7 +735,7 @@ function vtlib_purify($input, $ignore = false)
 				$use_charset = 'UTF-8';
 			}
 			if (empty($use_root_directory)) {
-				$use_root_directory = dirname(__FILE__).'/../..';
+				$use_root_directory = dirname(__FILE__) . '/../..';
 			}
 
 			$allowedSchemes = [
@@ -748,7 +748,7 @@ function vtlib_purify($input, $ignore = false)
 				'data'   => true
 			];
 
-			include_once __DIR__.'/../../libraries/htmlpurifier410/library/HTMLPurifier.auto.php';
+			include_once __DIR__ . '/../../libraries/htmlpurifier410/library/HTMLPurifier.auto.php';
 
 			$config = HTMLPurifier_Config::createDefault();
 			$config->set('Core.Encoding', $use_charset);
@@ -786,21 +786,21 @@ function vtlib_purify($input, $ignore = false)
  */
 function purifyHtmlEventAttributes($value, $replaceAll = false)
 {
-	$htmlEventAttributes = 'onerror|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onresize|onauxclick|oncancel|oncanplay|oncanplaythrough|'.
-			'onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclose|oncuechange|ondurationchange|onemptied|onended|'.
-			'onclick|ondblclick|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragexit|onformdata|onloadeddata|onloadedmetadata|'.
-			'ondragstart|ondrop|onmousedown|onmousemove|onmouseout|onmouseover|onmouseenter|onmouseleave|onpause|onplay|onplaying|'.
-			'onmouseup|onmousewheel|onscroll|onwheel|oncopy|oncut|onpaste|onload|onprogress|onratechange|onsecuritypolicyviolation|'.
-			'onselectionchange|onabort|onselectstart|onstart|onfinish|onloadstart|onshow|onreadystatechange|onseeked|onslotchange|'.
-			'onseeking|onstalled|onsubmit|onsuspend|ontimeupdate|ontoggle|onvolumechange|onwaiting|onwebkitanimationend|onstorage|'.
-			'onwebkitanimationiteration|onwebkitanimationstart|onwebkittransitionend|onafterprint|onbeforeprint|onbeforeunload|'.
-			'onhashchange|onlanguagechange|onmessage|onmessageerror|onoffline|ononline|onpagehide|onpageshow|onpopstate|onunload'.
+	$htmlEventAttributes = 'onerror|onblur|onchange|oncontextmenu|onfocus|oninput|oninvalid|onresize|onauxclick|oncancel|oncanplay|oncanplaythrough|' .
+			'onreset|onsearch|onselect|onsubmit|onkeydown|onkeypress|onkeyup|onclose|oncuechange|ondurationchange|onemptied|onended|' .
+			'onclick|ondblclick|ondrag|ondragend|ondragenter|ondragleave|ondragover|ondragexit|onformdata|onloadeddata|onloadedmetadata|' .
+			'ondragstart|ondrop|onmousedown|onmousemove|onmouseout|onmouseover|onmouseenter|onmouseleave|onpause|onplay|onplaying|' .
+			'onmouseup|onmousewheel|onscroll|onwheel|oncopy|oncut|onpaste|onload|onprogress|onratechange|onsecuritypolicyviolation|' .
+			'onselectionchange|onabort|onselectstart|onstart|onfinish|onloadstart|onshow|onreadystatechange|onseeked|onslotchange|' .
+			'onseeking|onstalled|onsubmit|onsuspend|ontimeupdate|ontoggle|onvolumechange|onwaiting|onwebkitanimationend|onstorage|' .
+			'onwebkitanimationiteration|onwebkitanimationstart|onwebkittransitionend|onafterprint|onbeforeprint|onbeforeunload|' .
+			'onhashchange|onlanguagechange|onmessage|onmessageerror|onoffline|ononline|onpagehide|onpageshow|onpopstate|onunload' .
 			'onrejectionhandled|onunhandledrejection|onloadend';
 
 	// remove malicious html attributes with its value.
 	if ($replaceAll) {
 		$regex = '\s*[=&%#]\s*(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^]*[\s\/>])*/i';
-		$value = preg_replace('/\\s*('.$htmlEventAttributes.')'.$regex, '', $value);
+		$value = preg_replace('/\\s*(' . $htmlEventAttributes . ')' . $regex, '', $value);
 
 		/**
 		 * If anchor tag having 'javascript:' string then remove the tag contents.
@@ -810,7 +810,7 @@ function purifyHtmlEventAttributes($value, $replaceAll = false)
 		$javaScriptRegex = '/<a [^>]*(j[\s]?a[\s]?v[\s]?a[\s]?s[\s]?c[\s]?r[\s]?i[\s]?p[\s]?t[\s]*[=&%#:])[^>]*?>/i';
 		$value = preg_replace($javaScriptRegex, '<a>', $value);
 	} else {
-		if (preg_match('/\\s*('.$htmlEventAttributes.')\\s*=/i', $value)) {
+		if (preg_match('/\\s*(' . $htmlEventAttributes . ')\\s*=/i', $value)) {
 			$value = str_replace('=', '&equals;', $value);
 		}
 	}
@@ -937,7 +937,7 @@ function vtlib_addSettingsLink($linkName, $linkURL, $blockName = false)
 if (! function_exists('split')) {
 	function split($pattern, $string, $limit = null)
 	{
-		$regex = '/'.preg_replace('/\//', '\\/', $pattern).'/';
+		$regex = '/' . preg_replace('/\//', '\\/', $pattern) . '/';
 
 		return preg_split($regex, $string, $limit);
 	}
@@ -945,7 +945,7 @@ if (! function_exists('split')) {
 
 function php7_compat_ereg($pattern, $str, $ignore_case = false)
 {
-	$regex = '/'.preg_replace('/\//', '\\/', $pattern).'/'.($ignore_case ? 'i' : '');
+	$regex = '/' . preg_replace('/\//', '\\/', $pattern) . '/' . ($ignore_case ? 'i' : '');
 
 	return preg_match($regex, $str);
 }
@@ -956,9 +956,20 @@ if (! function_exists('ereg')) {
 		return php7_compat_ereg($pattern, $str);
 	}
 }
+
 if (! function_exists('eregi')) {
 	function eregi($pattern, $str)
 	{
 		return php7_compat_ereg($pattern, $str, true);
+	}
+}
+
+/**
+ * PHP8 support
+ */
+if (! function_exists('get_magic_quotes_gpc')) {
+	function get_magic_quotes_gpc()
+	{
+		return false;
 	}
 }

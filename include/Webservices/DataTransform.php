@@ -125,7 +125,7 @@
 				if (isset($row['parent_id'])) {
 					if ($associatedToUser === true) {
 						$_REQUEST['module'] = 'Emails';
-						$row['parent_id'] = $row['parent_id'].'@-1|';
+						$row['parent_id'] = $row['parent_id'] . '@-1|';
 						$_REQUEST['parent_id'] = $row['parent_id'];
 					} else {
 						$referenceHandler = vtws_getModuleHandlerFromId(
@@ -328,14 +328,14 @@
 				if (! empty($row[$fieldName])) {
 					if ($fieldObj->getFieldDataType() == 'currency') {
 						if ($fieldObj->getUIType() == '71') {
-							$row[$fieldName.'_raw'] = $row[$fieldName];
+							$row[$fieldName . '_raw'] = $row[$fieldName];
 							$row[$fieldName] = CurrencyField::convertToUserFormat($row[$fieldName], $current_user);
 						} elseif ($fieldObj->getUIType() == '72') {
 							$currencyConversionRate = $row['conversion_rate'];
 							if (! empty($currencyConversionRate)) {
 								$rawBaseCurrencyValue = CurrencyField::convertToDollar($row[$fieldName], $currencyConversionRate);
-								$row[$fieldName.'_raw'] = $rawBaseCurrencyValue;
-								$row[$fieldName.'_raw_converted'] = CurrencyField::convertToUserFormat($rawBaseCurrencyValue, $current_user);
+								$row[$fieldName . '_raw'] = $rawBaseCurrencyValue;
+								$row[$fieldName . '_raw_converted'] = CurrencyField::convertToUserFormat($rawBaseCurrencyValue, $current_user);
 							}
 							$row[$fieldName] = CurrencyField::convertToUserFormat($row[$fieldName], $current_user, true);
 						}
