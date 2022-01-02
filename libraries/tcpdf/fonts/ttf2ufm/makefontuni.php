@@ -38,8 +38,8 @@ function ReadUFM($file, &$cidtogidmap)
           
         // Set GID
         if ($cc >= 0 && $cc < 0xFFFF && $glyph) {
-          $cidtogidmap{$cc*2} = chr($glyph >> 8);
-          $cidtogidmap{$cc*2 + 1} = chr($glyph & 0xFF);
+          $cidtogidmap[$cc*2] = chr($glyph >> 8);
+          $cidtogidmap[$cc*2 + 1] = chr($glyph & 0xFF);
         }        
       }
       if($gn=='.notdef' && !isset($fm['MissingWidth']))

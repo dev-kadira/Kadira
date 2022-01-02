@@ -15,7 +15,7 @@ function ReadMap($enc)
 	$cc2gn=array();
 	foreach($a as $l)
 	{
-		if($l{0}=='!')
+		if($l[0]=='!')
 		{
 			$e=preg_split('/[ \\t]+/',rtrim($l));
 			$cc=hexdec(substr($e[0],1));
@@ -289,9 +289,9 @@ function CheckTTF($file)
 }
 
 /*******************************************************************************
-* $fontfile : chemin du fichier TTF (ou chaîne vide si pas d'incorporation)    *
+* $fontfile : chemin du fichier TTF (ou chaï¿½ne vide si pas d'incorporation)    *
 * $afmfile :  chemin du fichier AFM                                            *
-* $enc :      encodage (ou chaîne vide si la police est symbolique)            *
+* $enc :      encodage (ou chaï¿½ne vide si la police est symbolique)            *
 * $patch :    patch optionnel pour l'encodage                                  *
 * $type :     type de la police si $fontfile est vide                          *
 *******************************************************************************/
@@ -363,7 +363,7 @@ function MakeFont($fontfile,$afmfile,$enc='cp1252',$patch=array(),$type='TrueTyp
 		if($type=='Type1')
 		{
 			//Find first two sections and discard third one
-			$header=(ord($file{0})==128);
+			$header=(ord($file[0])==128);
 			if($header)
 			{
 				//Strip first binary header
@@ -373,7 +373,7 @@ function MakeFont($fontfile,$afmfile,$enc='cp1252',$patch=array(),$type='TrueTyp
 			if(!$pos)
 				die('<B>Error:</B> font file does not seem to be valid Type1');
 			$size1=$pos+6;
-			if($header and ord($file{$size1})==128)
+			if($header and ord($file[$size1])==128)
 			{
 				//Strip second binary header
 				$file=substr($file,0,$size1).substr($file,$size1+6);
