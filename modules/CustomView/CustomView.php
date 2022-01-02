@@ -1412,7 +1412,8 @@ class CustomView extends CRMEntity
 			$value = $this->getSalesRelatedName($comparator, $value, $datatype, $tablename, $fieldname);
 		} else {
 			//For checkbox type values, we have to convert yes/no as 1/0 to get the values
-			$field_uitype = getUItype($this->customviewmodule, $fieldname);
+			$fieldModel = Vtiger_Field_Model::getInstance($fieldname, $this->customviewmodule);
+			$field_uitype = $fieldModel->get('uitype');
 			if ($field_uitype == 56) {
 				if (strtolower($value) == 'yes') {
 					$value = 1;
