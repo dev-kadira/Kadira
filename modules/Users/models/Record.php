@@ -70,7 +70,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view='.$module->getDetailViewName().'&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' . $module->getDetailViewName() . '&record=' . $this->getId();
 	}
 
 	/**
@@ -81,22 +81,22 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&view=PreferenceDetail&parent=Settings&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=PreferenceDetail&parent=Settings&record=' . $this->getId();
 	}
 
 	public function getCalendarSettingsDetailViewUrl()
 	{
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view=Calendar&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=Calendar&record=' . $this->getId();
 	}
 
 	public function getCalendarSettingsEditViewUrl()
 	{
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view=Calendar&mode=Edit&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=Calendar&mode=Edit&record=' . $this->getId();
 	}
 
 	public function getMyTagSettingsListUrl()
 	{
-		return 'index.php?module=Tags&parent=Settings&view=List&record='.$this->getId();
+		return 'index.php?module=Tags&parent=Settings&view=List&record=' . $this->getId();
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view='.$module->getEditViewName().'&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' . $module->getEditViewName() . '&record=' . $this->getId();
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&view=PreferenceEdit&parent=Settings&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=PreferenceEdit&parent=Settings&record=' . $this->getId();
 	}
 
 	/**
@@ -140,17 +140,17 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view='.$module->getDeleteActionName().'User&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' . $module->getDeleteActionName() . 'User&record=' . $this->getId();
 	}
 
 	public function getChangeUsernameUrl()
 	{
-		return 'index.php?module='.$this->getModuleName().'&view=EditAjax&mode=changeUsername&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=EditAjax&mode=changeUsername&record=' . $this->getId();
 	}
 
 	public function getChangePwdUrl()
 	{
-		return 'index.php?module='.$this->getModuleName().'&view=EditAjax&mode=changePassword&recordId='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=EditAjax&mode=changePassword&recordId=' . $this->getId();
 	}
 
 	/**
@@ -458,13 +458,13 @@ class Users_Record_Model extends Vtiger_Record_Model
 			//decode_html - added to handle UTF-8 characters in file names
 			$imageOriginalName = urlencode(decode_html($imageName));
 			if ($url) {
-				$url = $site_URL.'/'.$url;
+				$url = $site_URL . '/' . $url;
 			}
 
 			$imageDetails[] = [
 				'id'      => $imageId,
 				'orgname' => $imageOriginalName,
-				'path'    => $imagePath.$imageId,
+				'path'    => $imagePath . $imageId,
 				'name'    => $imageName,
 				'url'     => $url
 			];
@@ -482,7 +482,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	public function getAccessibleUsers($private = '', $module = false)
 	{
 		$currentUserRoleModel = Settings_Roles_Record_Model::getInstanceById($this->getRole());
-		$accessibleUser = Vtiger_Cache::get('vtiger-'.$this->getRole().'-'.$currentUserRoleModel->get('allowassignedrecordsto'), 'accessibleusers');
+		$accessibleUser = Vtiger_Cache::get('vtiger-' . $this->getRole() . '-' . $currentUserRoleModel->get('allowassignedrecordsto'), 'accessibleusers');
 		if (empty($accessibleUser)) {
 			if ($currentUserRoleModel->get('allowassignedrecordsto') === '1' || $private == 'Public') {
 				$accessibleUser = get_user_array(false, 'ACTIVE', '', $private, $module);
@@ -491,7 +491,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 			} elseif ($currentUserRoleModel->get('allowassignedrecordsto') === '3') {
 				$accessibleUser = $this->getRoleBasedSubordinateUsers();
 			}
-			Vtiger_Cache::set('vtiger-'.$this->getRole().'-'.$currentUserRoleModel->get('allowassignedrecordsto'), 'accessibleusers', $accessibleUser);
+			Vtiger_Cache::set('vtiger-' . $this->getRole() . '-' . $currentUserRoleModel->get('allowassignedrecordsto'), 'accessibleusers', $accessibleUser);
 		}
 
 		return $accessibleUser;
@@ -545,7 +545,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 			return [];
 		}
 
-		$sql = 'SELECT userid FROM vtiger_user2role WHERE roleid IN ('.generateQuestionMarks($roleIds).')';
+		$sql = 'SELECT userid FROM vtiger_user2role WHERE roleid IN (' . generateQuestionMarks($roleIds) . ')';
 		$result = $db->pquery($sql, $roleIds);
 		$noOfUsers = $db->num_rows($result);
 		$userIds = [];
@@ -554,7 +554,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 			for ($i = 0; $i < $noOfUsers; ++$i) {
 				$userIds[] = $db->query_result($result, $i, 'userid');
 			}
-			$query = 'SELECT id, userlabel FROM vtiger_users WHERE status = ? AND id IN ('.generateQuestionMarks($userIds).')';
+			$query = 'SELECT id, userlabel FROM vtiger_users WHERE status = ? AND id IN (' . generateQuestionMarks($userIds) . ')';
 			$result = $db->pquery($query, ['ACTIVE', $userIds]);
 			$noOfUsers = $db->num_rows($result);
 			for ($j = 0; $j < $noOfUsers; ++$j) {
@@ -576,10 +576,10 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		global $default_charset;
 		//TODO:Remove dependence on $_REQUEST for the module name in the below API
-		$accessibleGroups = Vtiger_Cache::get('vtiger-'.$private, 'accessiblegroups');
+		$accessibleGroups = Vtiger_Cache::get('vtiger-' . $private, 'accessiblegroups');
 		if (! $accessibleGroups) {
 			$accessibleGroups = get_group_array(false, 'ACTIVE', '', $private, $module);
-			Vtiger_Cache::set('vtiger-'.$private, 'accessiblegroups', $accessibleGroups);
+			Vtiger_Cache::set('vtiger-' . $private, 'accessiblegroups', $accessibleGroups);
 		}
 		if (! empty($accessibleGroups)) {
 			foreach ($accessibleGroups as $groupId => $groupName) {
@@ -648,10 +648,31 @@ class Users_Record_Model extends Vtiger_Record_Model
 		$hour_format = $fieldModel['hour_format']->getPicklistValues();
 		$start_hour = $fieldModel['start_hour']->getPicklistValues();
 
-		$defaultValues = ['00:00'=> '12:00 AM', '01:00'=>'01:00 AM', '02:00'=>'02:00 AM', '03:00'=>'03:00 AM', '04:00'=>'04:00 AM', '05:00'=>'05:00 AM',
-			'06:00'                 => '06:00 AM', '07:00'=>'07:00 AM', '08:00'=>'08:00 AM', '09:00'=>'09:00 AM', '10:00'=>'10:00 AM', '11:00'=>'11:00 AM', '12:00'=>'12:00 PM',
-			'13:00'                 => '01:00 PM', '14:00'=>'02:00 PM', '15:00'=>'03:00 PM', '16:00'=>'04:00 PM', '17:00'=>'05:00 PM', '18:00'=>'06:00 PM', '19:00'=>'07:00 PM',
-			'20:00'                 => '08:00 PM', '21:00'=>'09:00 PM', '22:00'=>'10:00 PM', '23:00'=>'11:00 PM'];
+		$defaultValues = [
+			'00:00'=> '12:00 AM',
+			'01:00'=>'01:00 AM',
+			'02:00'=>'02:00 AM',
+			'03:00'=>'03:00 AM',
+			'04:00'=>'04:00 AM',
+			'05:00'=>'05:00 AM',
+			'06:00'=> '06:00 AM',
+			'07:00'=>'07:00 AM',
+			'08:00'=>'08:00 AM',
+			'09:00'=>'09:00 AM',
+			'10:00'=>'10:00 AM',
+			'11:00'=>'11:00 AM',
+			'12:00'=>'12:00 PM',
+			'13:00' => '01:00 PM',
+			'14:00'=>'02:00 PM',
+			'15:00'=>'03:00 PM',
+			'16:00'=>'04:00 PM',
+			'17:00'=>'05:00 PM',
+			'18:00'=>'06:00 PM',
+			'19:00'=>'07:00 PM',
+			'20:00' => '08:00 PM',
+			'21:00'=>'09:00 PM',
+			'22:00'=>'10:00 PM',
+			'23:00'=>'11:00 PM'];
 
 		$picklistDependencyData = [];
 		foreach ($hour_format as $value) {
@@ -735,7 +756,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	 */
 	public function getCurrentUserActivityReminderInSeconds()
 	{
-		$activityReminder = $this->reminder_interval;
+		$activityReminder = isset($this->reminder_interval) ? $this->reminder_interval : 0;
 		$activityReminderInSeconds = '';
 		if ($activityReminder != 'None') {
 			preg_match('/([0-9]+)[\s]([a-zA-Z]+)/', $activityReminder, $matches);
@@ -745,16 +766,20 @@ class Users_Record_Model extends Vtiger_Record_Model
 				if ($string) {
 					switch ($string) {
 						case 'Minute':
-						case 'Minutes': $activityReminderInSeconds = $number * 60;
+						case 'Minutes':
+							$activityReminderInSeconds = $number * 60;
 
-break;
-						case 'Hour': $activityReminderInSeconds = $number * 60 * 60;
+							break;
+						case 'Hour':
+							$activityReminderInSeconds = $number * 60 * 60;
 
-break;
-						case 'Day': $activityReminderInSeconds = $number * 60 * 60 * 24;
+							break;
+						case 'Day':
+							$activityReminderInSeconds = $number * 60 * 60 * 24;
 
-break;
-						default: $activityReminderInSeconds = '';
+							break;
+						default:
+							$activityReminderInSeconds = '';
 					}
 				}
 			}
@@ -792,7 +817,8 @@ break;
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&parent=Settings&view='.$module->getEditViewName().'&record='.$this->getId().'&isDuplicate=true';
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' .
+			$module->getEditViewName() . '&record=' . $this->getId() . '&isDuplicate=true';
 	}
 
 	/**

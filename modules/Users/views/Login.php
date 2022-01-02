@@ -9,6 +9,7 @@
  */
 
 vimport('~~/vtlib/Vtiger/Net/Client.php');
+
 class Users_Login_View extends Vtiger_View_Controller
 {
 	public function loginRequired()
@@ -23,6 +24,8 @@ class Users_Login_View extends Vtiger_View_Controller
 
 	public function preProcess(Vtiger_Request $request, $display = true)
 	{
+		global $current_user;
+
 		$viewer = $this->getViewer($request);
 		$viewer->assign('PAGETITLE', $this->getPageTitle($request));
 		$viewer->assign('SCRIPTS', $this->getHeaderScripts($request));
@@ -30,6 +33,16 @@ class Users_Login_View extends Vtiger_View_Controller
 		$viewer->assign('MODULE', $request->getModule());
 		$viewer->assign('VIEW', $request->get('view'));
 		$viewer->assign('LANGUAGE_STRINGS', []);
+
+		$viewer->assign('INVENTORY_MODULES', []);
+		$viewer->assign('SELECTED_MENU_CATEGORY', '');
+		$viewer->assign('QUALIFIED_MODULE', '');
+		$viewer->assign('PARENT_MODULE', '');
+		$viewer->assign('NOTIFIER_URL', '');
+		$viewer->assign('EXTENSION_MODULE', '');
+		$viewer->assign('CURRENT_USER_MODEL', $current_user);
+		$viewer->assign('LANGUAGE', '');
+
 		if ($display) {
 			$this->preProcessDisplay($request);
 		}
@@ -37,12 +50,13 @@ class Users_Login_View extends Vtiger_View_Controller
 
 	public function process(Vtiger_Request $request)
 	{
+		$jsonData = [];
 		$finalJsonData = [];
 
 		$modelInstance = Settings_ExtensionStore_Extension_Model::getInstance();
 		$news = $modelInstance->getNews();
 
-		if ($news && $news['result']) {
+		if ($news && isset($news['result'])) {
 			$jsonData = $news['result'];
 			$oldTextLength = vglobal('listview_max_textlength');
 			foreach ($jsonData as $blockData) {
@@ -72,15 +86,18 @@ class Users_Login_View extends Vtiger_View_Controller
 		$message = '';
 		if ($error) {
 			switch ($error) {
-				case 'login':	$message = 'Invalid credentials';
+				case 'login':
+					$message = 'Invalid credentials';
 
-break;
-				case 'fpError':	$message = 'Invalid Username or Email address';
+					break;
+				case 'fpError':
+					$message = 'Invalid Username or Email address';
 
-break;
-				case 'statusError':	$message = 'Outgoing mail server was not configured';
+					break;
+				case 'statusError':
+					$message = 'Outgoing mail server was not configured';
 
-break;
+					break;
 			}
 		} elseif ($mailStatus) {
 			$message = 'Mail has been sent to your inbox, please check your e-mail';
