@@ -187,53 +187,53 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 			$viewer->assign('VTIGER_DISPLAY_VERSION', $vtiger_display_version);
 			$viewer->assign('ONLY_V7_INSTANCE', $onlyV7Instance);
 			$this->viewer = $viewer;
-		}
 
-		// Defaults to avoid warning
-		// General
-		$viewer->assign('V7_THEME_PATH', '');
-		$viewer->assign('MODULE_NAME', '');
-		$viewer->assign('MODULE', '');
-		$viewer->assign('QUALIFIED_MODULE', '');
-		$viewer->assign('VIEW', '');
-		$viewer->assign('PARENT_MODULE', '');
-		$viewer->assign('EXTENSION_MODULE', '');
-		$viewer->assign('moduleName', '');
+			// Defaults to avoid warning
+			// General
+			$viewer->assign('V7_THEME_PATH', '');
+			$viewer->assign('MODULE_NAME', '');
+			$viewer->assign('MODULE', '');
+			$viewer->assign('QUALIFIED_MODULE', '');
+			$viewer->assign('VIEW', '');
+			$viewer->assign('PARENT_MODULE', '');
+			$viewer->assign('EXTENSION_MODULE', '');
+			$viewer->assign('moduleName', '');
 
-		$viewer->assign('NOTIFIER_URL', '');
-		$viewer->assign('GLOBAL_SEARCH_VALUE', '');
-		$_REQUEST['view'] = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
+			$viewer->assign('NOTIFIER_URL', '');
+			$viewer->assign('GLOBAL_SEARCH_VALUE', '');
+			$_REQUEST['view'] = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
 
-		// Listview
-		$viewer->assign('SEARCH_MODE_RESULTS', null);
-		$viewer->assign('SHARED_MEMBER_COUNT', 0);
-		$viewer->assign('CUSTOM_VIEWS_NAMES', []);
-		$viewer->assign('ACTIVE', false);   // Tag
+			// Listview
+			$viewer->assign('SEARCH_MODE_RESULTS', null);
+			$viewer->assign('SHARED_MEMBER_COUNT', 0);
+			$viewer->assign('CUSTOM_VIEWS_NAMES', []);
+			$viewer->assign('ACTIVE', false);   // Tag
 			$viewer->assign('BUTTON_NAME', ''); // footer Buttom (for custom action)
 			$viewer->assign('BUTTON_ID', '');
-		$viewer->assign('NO_EDIT', '');
-		$viewer->assign('SOURCE_MODULE', '');
-		$viewer->assign('OPERATOR', '');
-		$viewer->assign('LISTVIEW_COUNT', 0);
-		$viewer->assign('FOLDER_ID', 0);
-		$viewer->assign('FOLDER_VALUE', '');
-		$viewer->assign('VIEWTYPE', '');
-		$viewer->assign('PRINT_TEMPLATE', '');
-		$viewer->assign('CLASS_VIEW_ACTION', '');
-		$viewer->assign('RELATED_MODULE_NAME', '');
+			$viewer->assign('NO_EDIT', '');
+			$viewer->assign('SOURCE_MODULE', '');
+			$viewer->assign('OPERATOR', '');
+			$viewer->assign('LISTVIEW_COUNT', 0);
+			$viewer->assign('FOLDER_ID', 0);
+			$viewer->assign('FOLDER_VALUE', '');
+			$viewer->assign('VIEWTYPE', '');
+			$viewer->assign('PRINT_TEMPLATE', '');
+			$viewer->assign('CLASS_VIEW_ACTION', '');
+			$viewer->assign('RELATED_MODULE_NAME', '');
 
-		// Editview
-		$viewer->assign('LEFTPANELHIDE', false);
-		$viewer->assign('RECORD_ID', '');
-		$viewer->assign('RETURN_VIEW', '');
-		$viewer->assign('MASS_EDITION_MODE', false);
-		$viewer->assign('OCCUPY_COMPLETE_WIDTH', true);
-		$viewer->assign('VIEW_SOURCE', false);
+			// Editview
+			$viewer->assign('LEFTPANELHIDE', false);
+			$viewer->assign('RECORD_ID', '');
+			$viewer->assign('RETURN_VIEW', '');
+			$viewer->assign('MASS_EDITION_MODE', false);
+			$viewer->assign('OCCUPY_COMPLETE_WIDTH', true);
+			$viewer->assign('VIEW_SOURCE', false);
 
-		// DetailView
-		$viewer->assign('MORE_TAB_ACTIVE', false);
-		$viewer->assign('NO_DELETE', false);
-		$viewer->assign('IS_EXTERNAL_LOCATION_TYPE', false);
+			// DetailView
+			$viewer->assign('MORE_TAB_ACTIVE', false);
+			$viewer->assign('NO_DELETE', false);
+			$viewer->assign('IS_EXTERNAL_LOCATION_TYPE', false);
+		}
 
 		return $this->viewer;
 	}
