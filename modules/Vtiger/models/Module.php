@@ -1499,7 +1499,7 @@ break;
 	 */
 	public function getSummaryViewFieldsList()
 	{
-		if (! $this->summaryFields) {
+		if (!isset($this->summaryFields) || !$this->summaryFields) {
 			$summaryFields = [];
 			$fields = $this->getFields();
 			foreach ($fields as $fieldName => $fieldModel) {
@@ -1519,7 +1519,7 @@ break;
 	 */
 	public function getHeaderViewFieldsList()
 	{
-		if (! $this->headerFields) {
+		if (!isset($this->headerFields) || !$this->headerFields) {
 			$headerFields = [];
 			$fields = $this->getFields();
 			foreach ($fields as $fieldName => $fieldModel) {
@@ -1539,7 +1539,7 @@ break;
 	 */
 	public function getHeaderAndSummaryViewFieldsList()
 	{
-		if (! $this->relationListViewFields) {
+		if(!isset($this->relationListViewFields) || !$this->relationListViewFields) {
 			$summaryViewFields = $this->getSummaryViewFieldsList();
 			$headerViewFields = $this->getHeaderViewFieldsList();
 			$allRelationListViewFields = array_merge($headerViewFields, $summaryViewFields);

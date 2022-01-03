@@ -115,10 +115,12 @@ class CustomView extends CRMEntity
 	public function getViewId($module)
 	{
 		global $adb, $current_user;
-		$now_action = vtlib_purify($_REQUEST['action']);
+
+		$now_action = vtlib_purify(isset($_REQUEST['action']) ? $_REQUEST['action'] : '');
 		if (! $now_action) {
-			$now_action = vtlib_purify($_REQUEST['view']);
+			$now_action = vtlib_purify(isset($_REQUEST['view']) ? $_REQUEST['view'] : '');
 		}
+
 		if (empty($_REQUEST['viewname'])) {
 			if (isset($_SESSION['lvs'][$module]['viewname']) && $_SESSION['lvs'][$module]['viewname'] != '') {
 				$viewid = $_SESSION['lvs'][$module]['viewname'];
@@ -164,6 +166,13 @@ class CustomView extends CRMEntity
 		return $viewid;
 	}
 
+	/**
+	 * getViewIdByName
+	 *
+	 * @param  mixed $viewname
+	 * @param  mixed $module
+	 * @return void
+	 */
 	public function getViewIdByName($viewname, $module)
 	{
 		global $adb;
@@ -200,12 +209,16 @@ class CustomView extends CRMEntity
 		$sparams = [$cvid];
 
 		if ($is_admin == false) {
-			$ssql .= " and (vtiger_customview.status=0 or vtiger_customview.userid = ? or vtiger_customview.status = 3 or vtiger_customview.userid in(select vtiger_user2role.userid from vtiger_user2role inner join vtiger_users on vtiger_users.id=vtiger_user2role.userid inner join vtiger_role on vtiger_role.roleid=vtiger_user2role.roleid where vtiger_role.parentrole like '" . $current_user_parent_role_seq . "::%'))";
+			$ssql .= " and (vtiger_customview.status=0 or vtiger_customview.userid = ? or vtiger_customview.status = 3 or 
+				vtiger_customview.userid in(select vtiger_user2role.userid from vtiger_user2role inner join vtiger_users on 
+				vtiger_users.id=vtiger_user2role.userid inner join vtiger_role on vtiger_role.roleid=vtiger_user2role.roleid 
+				where vtiger_role.parentrole like '" . $current_user_parent_role_seq . "::%'))";
 			array_push($sparams, $current_user->id);
 		}
 		$result = $adb->pquery($ssql, $sparams);
 
-		$usercv_result = $adb->pquery('select default_cvid from vtiger_user_module_preferences where userid = ? and tabid = ?', [$current_user->id, $tabid]);
+		$query = 'select default_cvid from vtiger_user_module_preferences where userid = ? and tabid = ?';
+		$usercv_result = $adb->pquery($query, [$current_user->id, $tabid]);
 		$def_cvid = $adb->query_result($usercv_result, 0, 'default_cvid');
 
 		while ($cvrow = $adb->fetch_array($result)) {
@@ -231,8 +244,8 @@ class CustomView extends CRMEntity
 	 */
 	public function getCustomViewCombo($viewid = '', $markselected = true)
 	{
-		global $adb, $current_user;
-		global $app_strings;
+		global $adb, $current_user, $app_strings;
+		
 		$tabid = getTabid($this->customviewmodule);
 
 		require 'user_privileges/user_privileges_' . $current_user->id . '.php';
@@ -247,17 +260,24 @@ class CustomView extends CRMEntity
 			$selected = '';
 		}
 
-		$ssql = 'select vtiger_customview.*, vtiger_users.first_name,vtiger_users.last_name,vtiger_users.userlabel from vtiger_customview inner join vtiger_tab on vtiger_tab.name = vtiger_customview.entitytype
-					left join vtiger_users on vtiger_customview.userid = vtiger_users.id ';
+		$ssql = 'select vtiger_customview.*, vtiger_users.first_name,vtiger_users.last_name,vtiger_users.userlabel 
+			from vtiger_customview inner join vtiger_tab on vtiger_tab.name = vtiger_customview.entitytype
+			left join vtiger_users on vtiger_customview.userid = vtiger_users.id ';
+
 		$ssql .= ' where vtiger_tab.tabid=?';
 		$sparams = [$tabid];
 
 		if ($is_admin == false) {
-			$ssql .= " and (vtiger_customview.status=0 or vtiger_customview.userid = ? or vtiger_customview.status = 3 or vtiger_customview.userid in(select vtiger_user2role.userid from vtiger_user2role inner join vtiger_users on vtiger_users.id=vtiger_user2role.userid inner join vtiger_role on vtiger_role.roleid=vtiger_user2role.roleid where vtiger_role.parentrole like '" . $current_user_parent_role_seq . "::%'))";
+			$ssql .= " and (vtiger_customview.status=0 or vtiger_customview.userid = ? or vtiger_customview.status = 3 or 
+				vtiger_customview.userid in(select vtiger_user2role.userid from vtiger_user2role inner join vtiger_users on 
+				vtiger_users.id=vtiger_user2role.userid inner join vtiger_role on vtiger_role.roleid=vtiger_user2role.roleid 
+				where vtiger_role.parentrole like '" . $current_user_parent_role_seq . "::%'))";
 			array_push($sparams, $current_user->id);
 		}
+
 		$ssql .= ' ORDER BY viewname';
 		$result = $adb->pquery($ssql, $sparams);
+
 		while ($cvrow = $adb->fetch_array($result)) {
 			if ($cvrow['viewname'] == 'All') {
 				$cvrow['viewname'] = $app_strings['COMBO_ALL'];
@@ -451,7 +471,6 @@ class CustomView extends CRMEntity
 	 */
 	public function getModuleColumnsList($module)
 	{
-		$module_info = $this->getCustomViewModuleInfo($module);
 		foreach ($this->module_list[$module] as $key => $value) {
 			$columnlist = $this->getColumnsListbyBlock($module, $value);
 
@@ -476,6 +495,7 @@ class CustomView extends CRMEntity
 		global $adb;
 
 		$columnlist = Vtiger_Cache::get('cvColumnListByCvid', $cvid);
+
 		if (! $columnlist) {
 			$sSQL = 'select vtiger_cvcolumnlist.* from vtiger_cvcolumnlist';
 			$sSQL .= ' inner join vtiger_customview on vtiger_customview.cvid = vtiger_cvcolumnlist.cvid';
@@ -519,8 +539,11 @@ class CustomView extends CRMEntity
 			$params = [$tabid, $blockids];
 		} else {
 			$profileList = getCurrentUserProfileList();
-			$sql = 'select * from vtiger_field inner join vtiger_tab on vtiger_tab.tabid = vtiger_field.tabid inner join  vtiger_profile2field on vtiger_profile2field.fieldid=vtiger_field.fieldid inner join vtiger_def_org_field on vtiger_def_org_field.fieldid=vtiger_field.fieldid ';
-			$sql .= ' where vtiger_field.tabid=? and vtiger_field.block in (' . generateQuestionMarks($blockids) . ') and vtiger_field.uitype in (5,6,23,70)';
+			$sql = 'select * from vtiger_field inner join vtiger_tab on vtiger_tab.tabid = vtiger_field.tabid inner join  
+				vtiger_profile2field on vtiger_profile2field.fieldid=vtiger_field.fieldid inner join vtiger_def_org_field on 
+				vtiger_def_org_field.fieldid=vtiger_field.fieldid ';
+			$sql .= ' where vtiger_field.tabid=? and vtiger_field.block in (' . generateQuestionMarks($blockids) . ') 
+				and vtiger_field.uitype in (5,6,23,70)';
 			$sql .= ' and vtiger_profile2field.visible=0 and vtiger_def_org_field.visible=0 and vtiger_field.presence in (0,2)';
 
 			$params = [$tabid, $blockids];
@@ -954,7 +977,7 @@ class CustomView extends CRMEntity
 	 */
 	public function getAdvFilterByCvid($cvid)
 	{
-		global $adb, $log, $default_charset;
+		global $adb, $default_charset;
 
 		$advft_criteria = Vtiger_Cache::get('advftCriteria', $cvid);
 		if (! $advft_criteria) {
@@ -964,34 +987,33 @@ class CustomView extends CRMEntity
 
 			$i = 1;
 			$j = 0;
+
 			while ($relcriteriagroup = $adb->fetch_array($groupsresult)) {
 				$groupId = $relcriteriagroup['groupid'];
 				$groupCondition = $relcriteriagroup['group_condition'];
 
 				$ssql = 'select vtiger_cvadvfilter.* from vtiger_customview
-				inner join vtiger_cvadvfilter on vtiger_cvadvfilter.cvid = vtiger_customview.cvid
-				left join vtiger_cvadvfilter_grouping on vtiger_cvadvfilter.cvid = vtiger_cvadvfilter_grouping.cvid
-				and vtiger_cvadvfilter.groupid = vtiger_cvadvfilter_grouping.groupid';
-				$ssql .= ' where vtiger_customview.cvid = ? AND vtiger_cvadvfilter.groupid = ? order by vtiger_cvadvfilter.columnindex';
+					inner join vtiger_cvadvfilter on vtiger_cvadvfilter.cvid = vtiger_customview.cvid
+					left join vtiger_cvadvfilter_grouping on vtiger_cvadvfilter.cvid = vtiger_cvadvfilter_grouping.cvid
+					and vtiger_cvadvfilter.groupid = vtiger_cvadvfilter_grouping.groupid 
+					where vtiger_customview.cvid = ? AND vtiger_cvadvfilter.groupid = ? 
+					order by vtiger_cvadvfilter.columnindex';
 
 				$result = $adb->pquery($ssql, [$cvid, $groupId]);
 				$noOfColumns = $adb->num_rows($result);
+
 				if ($noOfColumns <= 0) {
 					continue;
 				}
 
 				while ($relcriteriarow = $adb->fetch_array($result)) {
-					$columnIndex = $relcriteriarow['columnindex'];
 					$criteria = [];
 					$criteria['columnname'] = html_entity_decode($relcriteriarow['columnname'], ENT_QUOTES, $default_charset);
 					$criteria['comparator'] = $relcriteriarow['comparator'];
 					$advfilterval = html_entity_decode($relcriteriarow['value'], ENT_QUOTES, $default_charset);
 					$col = explode(':', $relcriteriarow['columnname']);
 					$temp_val = explode(',', $relcriteriarow['value']);
-
 					$advFilterColumn = $criteria['columnname'];
-					$advFilterComparator = $criteria['comparator'];
-					$advFilterColumnCondition = $criteria['column_condition'];
 
 					$columnInfo = explode(':', $advFilterColumn);
 					$fieldName = $columnInfo[2];
@@ -999,6 +1021,7 @@ class CustomView extends CRMEntity
 					$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 					preg_match('/(\w+) ; \((\w+)\) (\w+)/', $fieldName, $matches);
 
+					$referenceParentField = null;
 					if (count($matches) != 0) {
 						list($full, $referenceParentField, $referenceModule, $referenceFieldName) = $matches;
 					}

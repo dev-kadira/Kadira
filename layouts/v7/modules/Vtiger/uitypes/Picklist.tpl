@@ -21,7 +21,7 @@
 	{if $FIELD_MODEL->isEmptyPicklistOptionAllowed()}<option value="">{vtranslate('LBL_SELECT_OPTION','Vtiger')}</option>{/if}
 	{foreach item=PICKLIST_VALUE key=PICKLIST_NAME from=$PICKLIST_VALUES}
 		{assign var=CLASS_NAME value="picklistColor_{$FIELD_MODEL->getFieldName()}_{$PICKLIST_NAME|replace:' ':'_'}"}
-		<option value="{Vtiger_Util_Helper::toSafeHTML($PICKLIST_NAME)}" {if $PICKLIST_COLORS[$PICKLIST_NAME]}class="{$CLASS_NAME}"{/if} {if trim(decode_html($FIELD_MODEL->get('fieldvalue'))) eq trim($PICKLIST_NAME)} selected {/if}>{$PICKLIST_VALUE}</option>
+		<option value="{Vtiger_Util_Helper::toSafeHTML($PICKLIST_NAME)}" {if isset($PICKLIST_COLORS[$PICKLIST_NAME]) && $PICKLIST_COLORS[$PICKLIST_NAME]}class="{$CLASS_NAME}"{/if} {if trim(decode_html($FIELD_MODEL->get('fieldvalue'))) eq trim($PICKLIST_NAME)} selected {/if}>{$PICKLIST_VALUE}</option>
 	{/foreach}
 </select>
 {if $PICKLIST_COLORS}
@@ -29,9 +29,11 @@
 		{foreach item=PICKLIST_VALUE key=PICKLIST_NAME from=$PICKLIST_VALUES}
 		{assign var=CLASS_NAME value="{$FIELD_MODEL->getFieldName()}_{$PICKLIST_NAME|replace:' ':'_'}"}
 		.picklistColor_{$CLASS_NAME} {
-			background-color: {$PICKLIST_COLORS[$PICKLIST_NAME]} !important;
-			{if $PICKLIST_COLORS[$PICKLIST_NAME] eq '#ffffff'}
-			color: #000000 !important;
+			{if isset($PICKLIST_COLORS[$PICKLIST_NAME])}
+				background-color: {$PICKLIST_COLORS[$PICKLIST_NAME]} !important;
+				{if $PICKLIST_COLORS[$PICKLIST_NAME] eq '#ffffff'}
+				color: #000000 !important;
+				{/if}
 			{/if}
 		}
 		.picklistColor_{$CLASS_NAME}.select2-highlighted {

@@ -29,7 +29,6 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model
 	 */
 	public function getSideBarLinks($linkParams)
 	{
-		$linkTypes = ['SIDEBARLINK', 'SIDEBARWIDGET'];
 		$moduleLinks = $this->getModule()->getSideBarLinks($linkParams);
 
 		$listLinkTypes = ['LISTVIEWSIDEBARLINK', 'LISTVIEWSIDEBARWIDGET'];
@@ -143,11 +142,13 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model
 		$module = $this->getModule();
 		$headerFieldModels = [];
 		$headerFields = $listViewContoller->getListViewHeaderFields();
+
 		foreach ($headerFields as $fieldName => $webserviceField) {
 			if ($webserviceField && ! in_array($webserviceField->getPresence(), [0, 2])) {
 				continue;
 			}
-			if ($webserviceField && $webserviceField->parentReferenceField && ! in_array($webserviceField->parentReferenceField->getPresence(), [0, 2])) {
+			if ($webserviceField && isset($webserviceField->parentReferenceField) && 
+				! in_array($webserviceField->parentReferenceField->getPresence(), [0, 2])) {
 				continue;
 			}
 			if ($webserviceField->getDisplayType() == '6') {
@@ -388,6 +389,7 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 		$queryGenerator = new EnhancedQueryGenerator($moduleModel->get('name'), $currentUser);
 		$customView = new CustomView();
+
 		if (! empty($viewId) && $viewId != '0') {
 			$queryGenerator->initForCustomViewById($viewId);
 

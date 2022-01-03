@@ -59,7 +59,7 @@ class WebserviceField{
 		$this->displayType = $row['displaytype'];
 		$this->massEditable = ($row['masseditable'] === '1')? true: false;
 		$this->presence = $row['presence'];
-		$this->isunique = ($row['isunique']) ? true : false;
+		$this->isunique = isset($row['isunique']) && $row['isunique'] ? true : false;
 		$typeOfData = $row['typeofdata'];
 		$this->typeOfData = $typeOfData;
 		$typeOfData = explode("~",$typeOfData);
@@ -258,7 +258,7 @@ class WebserviceField{
 			$referenceTypes = array();
 			if($this->getUIType() != $this->genericUIType){
 				$sql = "select type from vtiger_ws_referencetype where fieldtypeid=?";
-				$params = array($fieldTypeData['fieldtypeid']);
+				$params = array(isset($fieldTypeData['fieldtypeid'])? $fieldTypeData['fieldtypeid'] : 0);
 			}else{
 				$sql = 'SELECT relmodule AS type FROM vtiger_fieldmodulerel WHERE fieldid=? ORDER BY sequence ASC';
 				$params = array($this->getFieldId());

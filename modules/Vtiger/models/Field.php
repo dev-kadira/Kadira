@@ -184,6 +184,11 @@ class Vtiger_Field_Model extends Vtiger_Field
 		return get_object_vars($this);
 	}
 
+	/**
+	 * getModule
+	 *
+	 * @return void
+	 */
 	public function getModule()
 	{
 		if (! isset($this->module) || ! $this->module) {
@@ -816,6 +821,12 @@ class Vtiger_Field_Model extends Vtiger_Field
 		return $this->fieldInfo;
 	}
 
+	/**
+	 * setFieldInfo
+	 *
+	 * @param  mixed $fieldInfo
+	 * @return void
+	 */
 	public function setFieldInfo($fieldInfo)
 	{
 		$this->fieldInfo = $fieldInfo;
@@ -860,8 +871,10 @@ class Vtiger_Field_Model extends Vtiger_Field
 			'next90days' => ['label' => 'LBL_NEXT_90_DAYS'],
 			'next120days' => ['label' => 'LBL_NEXT_120_DAYS']
 		];
+
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 		$userPeferredDayOfTheWeek = $currentUserModel->get('dayoftheweek');
+
 		foreach ($dateFilters as $filterType => $filterDetails) {
 			$dateValues = self::getDateForStdFilterBytype($filterType, $userPeferredDayOfTheWeek);
 			$dateFilters[$filterType]['startdate'] = $dateValues[0];
@@ -1106,11 +1119,11 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function getEditViewDisplayValue($value)
 	{
-		if (! isset($this->uitype_instance) || ! $this->uitype_instance) {
+		if(!isset($this->uitype_instance) || !$this->uitype_instance) {
 			$this->uitype_instance = Vtiger_Base_UIType::getInstanceFromField($this);
 		}
 		$uiTypeInstance = $this->uitype_instance;
-
+		
 		return $uiTypeInstance->getEditViewDisplayValue($value);
 	}
 

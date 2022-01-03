@@ -77,7 +77,7 @@ class Vtiger_Paging_Model extends Vtiger_Base_Model
 	{
 		$rangeInfo = $this->getRecordRange();
 
-		return $rangeInfo['start'];
+		return isset($rangeInfo) ? $rangeInfo['start'] : 0;
 	}
 
 	/**
@@ -88,7 +88,7 @@ class Vtiger_Paging_Model extends Vtiger_Base_Model
 	{
 		$rangeInfo = $this->getRecordRange();
 
-		return $rangeInfo['end'];
+		return isset($rangeInfo) ? $rangeInfo['end'] : 0;
 	}
 
 	/**

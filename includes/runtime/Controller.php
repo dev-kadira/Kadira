@@ -159,10 +159,6 @@ abstract class Vtiger_Action_Controller extends Vtiger_Controller
 		return true;
 	}
 
-	protected function preProcessDisplay(Vtiger_Request $request)
-	{
-	}
-
 	protected function preProcessTplName(Vtiger_Request $request)
 	{
 		return false;
@@ -193,6 +189,52 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 			$this->viewer = $viewer;
 		}
 
+		// Defaults to avoid warning
+		// General
+		$viewer->assign('V7_THEME_PATH', '');
+		$viewer->assign('MODULE_NAME', '');
+		$viewer->assign('MODULE', '');
+		$viewer->assign('QUALIFIED_MODULE', '');
+		$viewer->assign('VIEW', '');
+		$viewer->assign('PARENT_MODULE', '');
+		$viewer->assign('EXTENSION_MODULE', '');
+		$viewer->assign('moduleName', '');
+
+		$viewer->assign('NOTIFIER_URL', '');
+		$viewer->assign('GLOBAL_SEARCH_VALUE', '');
+		$_REQUEST['view'] = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
+
+		// Listview
+		$viewer->assign('SEARCH_MODE_RESULTS', null);
+		$viewer->assign('SHARED_MEMBER_COUNT', 0);
+		$viewer->assign('CUSTOM_VIEWS_NAMES', []);
+		$viewer->assign('ACTIVE', false);   // Tag
+			$viewer->assign('BUTTON_NAME', ''); // footer Buttom (for custom action)
+			$viewer->assign('BUTTON_ID', '');
+		$viewer->assign('NO_EDIT', '');
+		$viewer->assign('SOURCE_MODULE', '');
+		$viewer->assign('OPERATOR', '');
+		$viewer->assign('LISTVIEW_COUNT', 0);
+		$viewer->assign('FOLDER_ID', 0);
+		$viewer->assign('FOLDER_VALUE', '');
+		$viewer->assign('VIEWTYPE', '');
+		$viewer->assign('PRINT_TEMPLATE', '');
+		$viewer->assign('CLASS_VIEW_ACTION', '');
+		$viewer->assign('RELATED_MODULE_NAME', '');
+
+		// Editview
+		$viewer->assign('LEFTPANELHIDE', false);
+		$viewer->assign('RECORD_ID', '');
+		$viewer->assign('RETURN_VIEW', '');
+		$viewer->assign('MASS_EDITION_MODE', false);
+		$viewer->assign('OCCUPY_COMPLETE_WIDTH', true);
+		$viewer->assign('VIEW_SOURCE', false);
+
+		// DetailView
+		$viewer->assign('MORE_TAB_ACTIVE', false);
+		$viewer->assign('NO_DELETE', false);
+		$viewer->assign('IS_EXTERNAL_LOCATION_TYPE', false);
+
 		return $this->viewer;
 	}
 
@@ -214,7 +256,9 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 			return $recordName . ' - ' . vtranslate($moduleName, $moduleName);
 		} else {
 			$currentLang = Vtiger_Language_Handler::getLanguage();
-			$customWebTitle = Vtiger_Language_Handler::getLanguageTranslatedString($currentLang, 'LBL_' . $moduleName . '_WEBTITLE', $request->getModule(false));
+			$customWebTitle = Vtiger_Language_Handler::getLanguageTranslatedString($currentLang, 'LBL_' .
+				$moduleName . '_WEBTITLE', $request->getModule(false));
+
 			if ($customWebTitle) {
 				return $customWebTitle;
 			}
@@ -234,13 +278,6 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 		$viewer->assign('SKIN_PATH', Vtiger_Theme::getCurrentUserThemePath());
 		$viewer->assign('LANGUAGE_STRINGS', $this->getJSLanguageStrings($request));
 		$viewer->assign('LANGUAGE', $currentUser->get('language'));
-
-		$viewer->assign('V7_THEME_PATH', '');
-		$viewer->assign('MODULE_NAME', '');
-		$viewer->assign('MODULE', '');
-		$viewer->assign('VIEW', '');
-		$viewer->assign('PARENT_MODULE', '');
-		$viewer->assign('EXTENSION_MODULE', '');
 
 		if ($request->getModule() != 'Install') {
 			$userCurrencyInfo = getCurrencySymbolandCRate($currentUser->get('currency_id'));
@@ -397,22 +434,9 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 		return 'Header.tpl';
 	}
 
-	//Note : To get the right hook for immediate parent in PHP,
-	// specially in case of deep hierarchy
-	//TODO: Need to revisit this.
-	/*function preProcessParentTplName(Vtiger_Request $request) {
-		return parent::preProcessTplName($request);
-	}*/
-
 	protected function preProcessDisplay(Vtiger_Request $request)
 	{
 		$viewer = $this->getViewer($request);
-		$displayed = $viewer->view($this->preProcessTplName($request), $request->getModule(false));
-		/*if(!$displayed) {
-			$tplName = $this->preProcessParentTplName($request);
-			if($tplName) {
-				$viewer->view($tplName, $request->getModule());
-			}
-		}*/
+		$viewer->view($this->preProcessTplName($request), $request->getModule(false));
 	}
 }

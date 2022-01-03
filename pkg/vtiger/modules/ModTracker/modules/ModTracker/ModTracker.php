@@ -231,7 +231,7 @@ class ModTracker {
 	 */
 	static function getVisibilityForModule($tabid){
 		if (isset(self::$__cache_modtracker[$tabid])) {
-			return $__cache_modtracker[$tabid]['visible'];
+			return self::$__cache_modtracker[$tabid]['visible'];
 		}
 		return false;
 	}

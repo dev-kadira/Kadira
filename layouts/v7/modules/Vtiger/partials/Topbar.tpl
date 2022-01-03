@@ -65,6 +65,7 @@
 												{if $moduleModel->isPermitted('CreateView') || $moduleModel->isPermitted('EditView')}
 													{assign var='quickCreateModule' value=$moduleModel->isQuickCreateSupported()}
 													{assign var='singularLabel' value=$moduleModel->getSingularLabelKey()}
+													{assign var='count' value=0}
 													{assign var=hideDiv value={!$moduleModel->isPermitted('CreateView') && $moduleModel->isPermitted('EditView')}}
 													{if $quickCreateModule == '1'}
 														{if $count % 3 == 0}

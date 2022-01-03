@@ -32,7 +32,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 	}
 
 	public function getModuleFields() {
-		if ($this->moduleFields == null) {
+		if (!isset($this->moduleFields) || $this->moduleFields == null) {
 			$moduleFields = parent::getModuleFields();
 
 			//add reference fields also in the list
@@ -79,7 +79,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 			}
 			$this->moduleFields = $moduleFields;
 		}
-		return $this->moduleFields;
+		return isset($this->moduleFields) ? $this->moduleFields : null;
 	}
 
 	public function parseAdvFilterList($advFilterList, $glue = '') {
@@ -232,7 +232,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 	public function getSelectClauseColumnSQL() {
 		$columns = array();
 		$moduleFields = $this->getModuleFields();
-		$accessibleFieldList = array_keys($moduleFields);
+		$accessibleFieldList = is_array($moduleFields) ? array_keys($moduleFields) : array();
 
 		$moduleFields = $this->getModuleFields();
 
@@ -394,7 +394,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 			if (empty($fieldName))
 				continue;
 
-			$field = $moduleFields[$fieldName];
+			$field = isset($moduleFields) ? $moduleFields[$fieldName] : null;
 			if (empty($field))
 				continue; // not accessible field.
 
@@ -624,7 +624,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 			$parentReferenceField = '';
 			$baseFieldName = $fieldName = $conditionInfo['name'];
 			$parentReferenceField = $referenceModule = '';
-			$field = $moduleFieldList[$fieldName];
+			$field = isset($moduleFieldList) ? $moduleFieldList[$fieldName] : null;
 
 			// if its a reference field then we need to add the fieldname to table name
 			preg_match('/(\w+) ; \((\w+)\) (\w+)/', $baseFieldName, $matches);
