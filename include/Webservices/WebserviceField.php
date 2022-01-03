@@ -49,27 +49,27 @@ class WebserviceField{
 	private $isunique = 0;
 
 	private function __construct($adb,$row){
-		$this->uitype = $row['uitype'];
-		$this->blockId = $row['block'];
+		$this->uitype = isset($row['uitype'])? $row['uitype'] : 0;
+		$this->blockId = isset($row['block'])? $row['block'] : 0;
 		$this->blockName = null;
-		$this->tableName = $row['tablename'];
-		$this->columnName = $row['columnname'];
-		$this->fieldName = $row['fieldname'];
-		$this->fieldLabel = $row['fieldlabel'];
-		$this->displayType = $row['displaytype'];
-		$this->massEditable = ($row['masseditable'] === '1')? true: false;
-		$this->presence = $row['presence'];
+		$this->tableName = isset($row['tablename'])? $row['tablename'] : null;
+		$this->columnName = isset($row['columnname'])? $row['columnname'] : null;
+		$this->fieldName = isset($row['fieldname'])? $row['fieldname'] : null;
+		$this->fieldLabel = isset($row['fieldlabel'])? $row['fieldlabel'] : null;
+		$this->displayType = isset($row['displaytype'])? $row['displaytype'] : null;
+		$this->massEditable = (isset($row['masseditable']) && $row['masseditable'] === '1')? true: false;
+		$this->presence = isset($row['presence'])? $row['presence'] : null;
 		$this->isunique = isset($row['isunique']) && $row['isunique'] ? true : false;
-		$typeOfData = $row['typeofdata'];
+		$typeOfData = isset($row['typeofdata'])? $row['typeofdata'] : null;
 		$this->typeOfData = $typeOfData;
 		$typeOfData = explode("~",$typeOfData);
-		$this->mandatory = ($typeOfData[1] == 'M')? true: false;
+		$this->mandatory = (count($typeOfData) > 1 && $typeOfData[1] == 'M')? true: false;
 		if($this->uitype == 4){
 			$this->mandatory = false;
 		}
 		$this->fieldType = $typeOfData[0];
-		$this->tabid = $row['tabid'];
-		$this->fieldId = $row['fieldid'];
+		$this->tabid = isset($row['tabid'])? $row['tabid']: 0;
+		$this->fieldId = isset($row['fieldid'])? $row['fieldid'] : 0;
 		$this->pearDB = $adb;
 		$this->fieldDataType = null;
 		$this->dataFromMeta = false;

@@ -75,8 +75,8 @@ class VTEntityDelta extends VTEventHandler {
 				$isModified = true;
 			}
 			if($isModified) {
-				$delta[$fieldName] = array('oldValue' => $oldData[$fieldName],
-										'currentValue' => $newData[$fieldName]);
+				$delta[$fieldName] = array('oldValue' => isset($oldData[$fieldName])? $oldData[$fieldName] : null,
+										'currentValue' => $newData[$fieldName] );
 			}
 		}
 		self::$entityDelta[$moduleName][$recordId] = $delta;

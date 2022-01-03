@@ -646,7 +646,7 @@ class EnhancedQueryGenerator extends QueryGenerator {
 				if (count($start) == 2)
 					$conditionInfo['value'][0] = getValidDBInsertDateTimeValue($start[0].' '.$start[1]);
 
-				$end = explode(' ', $conditionInfo['values'][1]);
+				$end = explode(' ', $conditionInfo['value'][1]);
 				// Dates will be equal for Today, Tomorrow, Yesterday.
 				if (count($end) == 2) {
 					if ($start[0] == $end[0]) {

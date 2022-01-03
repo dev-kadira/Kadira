@@ -214,6 +214,7 @@ class Vtiger_Field extends Vtiger_FieldBasic {
 	static function getInstance($value, $moduleInstance=false) {
 		global $adb;
 		$instance = false;
+		if (!$moduleInstance) return $instance;
 		$data = Vtiger_Functions::getModuleFieldInfo($moduleInstance->id, $value);
 		if ($data) {
             $instance = new self();

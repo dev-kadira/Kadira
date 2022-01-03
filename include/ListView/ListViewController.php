@@ -67,7 +67,7 @@ class ListViewController {
 		$rowCount = $this->db->num_rows($result);
 
 		$columnName = $field->getColumnName();
-		if($field->referenceFieldName) {
+		if(isset($field->referenceFieldName) && $field->referenceFieldName) {
 			preg_match('/(\w+) ; \((\w+)\) (\w+)/', $field->referenceFieldName, $matches);
 			if (count($matches) != 0) {
 				list($full, $parentReferenceFieldName, $referenceModule, $referenceFieldName) = $matches;

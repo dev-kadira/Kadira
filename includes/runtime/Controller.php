@@ -233,6 +233,13 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 			$viewer->assign('MORE_TAB_ACTIVE', false);
 			$viewer->assign('NO_DELETE', false);
 			$viewer->assign('IS_EXTERNAL_LOCATION_TYPE', false);
+
+			// EditView
+			$viewer->assign('IGNOREUIREGISTRATION', false);
+			$viewer->assign('IMAGE_DETAILS', null);
+
+			// RelatedLists
+			$viewer->assign('TOTAL_ENTRIES', 0);
 		}
 
 		return $this->viewer;

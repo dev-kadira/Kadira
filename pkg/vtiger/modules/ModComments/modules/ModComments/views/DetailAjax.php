@@ -22,6 +22,8 @@ class ModComments_DetailAjax_View extends Vtiger_IndexAjax_View {
 		$viewer->assign('COMMENT', $recordModel);
 		$viewer->assign('MODULE_NAME', $recordModel->getParentRecordModel()->getModuleName());
         $viewer->assign('COMMENTS_MODULE_MODEL', $modCommentsModel);
+		$viewer->assign('ROLLUP_STATUS', false);
+		$viewer->assign('CHILDS_ROOT_PARENT_MODEL', null);
 		echo $viewer->view('Comment.tpl', $moduleName, true);
 	}
 }

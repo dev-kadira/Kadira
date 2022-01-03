@@ -146,7 +146,7 @@ class ModComments_Record_Model extends Vtiger_Record_Model {
 					INNER JOIN vtiger_crmentity ON vtiger_modcomments.modcommentsid = vtiger_crmentity.crmid
 					WHERE modcommentsid = ? AND deleted = 0', array($record));
 		if($db->num_rows($result)) {
-			$row = $db->query_result_rowdata($result, $i);
+			$row = $db->query_result_rowdata($result, 0);
 			$self = new self();
 			$self->setData($row);
 			return $self;
@@ -265,6 +265,7 @@ class ModComments_Record_Model extends Vtiger_Record_Model {
 	 * @return ModComments_Record_Model(s)
 	 */
 	public static function getAllParentComments($parentId) {
+			$recordInstances = array();
 			$db = PearDatabase::getInstance();
 			$focus = CRMEntity::getInstance('ModComments');
 			$query = $focus->get_comments();
@@ -278,11 +279,8 @@ class ModComments_Record_Model extends Vtiger_Record_Model {
 					$recordInstance->setData($rowData);
 					$recordInstances[] = $recordInstance;
 				}
-
-				return $recordInstances;
-			} else {
-				return array();
 			}
+			return $recordInstances;
 	}
 
 	/**

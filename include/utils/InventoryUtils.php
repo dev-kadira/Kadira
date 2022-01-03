@@ -266,6 +266,7 @@ function getAllTaxes($available='all', $sh='',$mode='',$id='')
 			}
 		} else {
 			//This where condition is added to get all products or only availble products
+			$where = "";
 			if ($available != 'all' && $available == 'available') {
 				$where = " WHERE $tablename.deleted=0";
 			}
@@ -311,6 +312,7 @@ function getAllTaxes($available='all', $sh='',$mode='',$id='')
 			$res = $adb->pquery("select * from $tablename  where $where_ids  deleted=0 order by taxid",$result_ids);
 		} else {
 			//This where condition is added to get all products or only availble products
+			$where = "";
 			if ($available != 'all' && $available == 'available') {
 				$where = " where $tablename.deleted=0";
 			}
