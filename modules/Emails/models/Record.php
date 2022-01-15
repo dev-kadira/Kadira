@@ -21,7 +21,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 			list($parentId, $status) = explode('@', reset(array_filter(explode('|', $this->get('parent_id')))));
 		}
 
-		return 'Javascript:Vtiger_Index_Js.showEmailPreview("'.$this->getId().'","'.$parentId.'")';
+		return 'Javascript:Vtiger_Index_Js.showEmailPreview("' . $this->getId() . '","' . $parentId . '")';
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 
 		$i = 1;
 		foreach ($toFieldData as $value) {
-			$toEmailInfo['to'.$i++] = [$value];
+			$toEmailInfo['to' . $i++] = [$value];
 		}
 		$attachments = $this->getAttachmentDetails();
 		$status = false;
@@ -134,8 +134,8 @@ class Emails_Record_Model extends Vtiger_Record_Model
 					$inReplyToMessageId = $generatedMessageId;
 				}
 				// Apply merge for non-Users module merge tags.
-				$description = getMergedDescription($mergedDescriptionWithHyperLinkConversion, $id, $parentModule);
-				$subject = getMergedDescription($mergedSubject, $id, $parentModule);
+				$description = getMergedDescription($mergedDescriptionWithHyperLinkConversion, $selectedId, $parentModule);
+				$subject = getMergedDescription($mergedSubject, $selectedId, $parentModule);
 			} else {
 				// Re-merge the description for user tags based on actual user.
 				$description = getMergedDescription($mergedDescriptionWithHyperLinkConversion, $id, 'Users');
@@ -172,14 +172,14 @@ class Emails_Record_Model extends Vtiger_Record_Model
 		if ($this->get('signature') == 'Yes') {
 			$mailer->Signature = $currentUserModel->get('signature');
 			if ($mailer->Signature != '') {
-				$mailer->Body .= '<br><br>'.decode_html($mailer->Signature);
+				$mailer->Body .= '<br><br>' . decode_html($mailer->Signature);
 			}
 		}
 		$mailer->Subject = decode_html(strip_tags($subject));
 
 		$plainBody = decode_emptyspace_html($description);
 		$plainBody = preg_replace(['/<p>/i', '/<br>/i', '/<br \\/>/i'], ["\n", "\n", "\n"], $plainBody);
-		$plainBody .= "\n\n".$currentUserModel->get('signature');
+		$plainBody .= "\n\n" . $currentUserModel->get('signature');
 		$plainBody = utf8_encode(strip_tags($plainBody));
 		$plainBody = Emails_Mailer_Model::convertToAscii($plainBody);
 		$plainBody = $this->convertUrlsToTrackUrls($plainBody, $id, 'plain');
@@ -189,7 +189,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 		//Adding attachments to mail
 		if (is_array($attachments)) {
 			foreach ($attachments as $attachment) {
-				$fileNameWithPath = $rootDirectory.$attachment['filenamewithpath'];
+				$fileNameWithPath = $rootDirectory . $attachment['filenamewithpath'];
 				if (is_file($fileNameWithPath)) {
 					$mailer->AddAttachment($fileNameWithPath, $attachment['attachment']);
 				}
@@ -247,7 +247,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 				if (function_exists('mb_convert_encoding')) {
 					$folderName = mb_convert_encoding($folderName, 'UTF7-IMAP', 'UTF-8');
 				}
-				imap_append($connector->mBox, $connector->mBoxUrl.$folderName, $message, '\\Seen');
+				imap_append($connector->mBox, $connector->mBoxUrl . $folderName, $message, '\\Seen');
 			}
 		}
 
@@ -304,8 +304,8 @@ class Emails_Record_Model extends Vtiger_Record_Model
 				$attachmentsList[$i]['fileid'] = $attachmentId;
 				$attachmentsList[$i]['storedname'] = decode_html($storedName);
 				$attachmentsList[$i]['path'] = $path;
-				$saved_filename = $attachmentId.'_'.$filename;
-				$filenamewithpath = $path.$saved_filename;
+				$saved_filename = $attachmentId . '_' . $filename;
+				$filenamewithpath = $path . $saved_filename;
 				$filesize = filesize($filenamewithpath);
 				$attachmentsList[$i]['filenamewithpath'] = $filenamewithpath;
 				$attachmentsList[$i]['size'] = $filesize;
@@ -378,11 +378,11 @@ class Emails_Record_Model extends Vtiger_Record_Model
 	public function getFormattedFileSize($filesize)
 	{
 		if ($filesize < 1024) {
-			$filesize = sprintf('%0.2f', round($filesize, 2)).'B';
+			$filesize = sprintf('%0.2f', round($filesize, 2)) . 'B';
 		} elseif ($filesize > 1024 && $filesize < 1048576) {
-			$filesize = sprintf('%0.2f', round($filesize / 1024, 2)).'KB';
+			$filesize = sprintf('%0.2f', round($filesize / 1024, 2)) . 'KB';
 		} elseif ($filesize > 1048576) {
-			$filesize = sprintf('%0.2f', round($filesize / (1024 * 1024), 2)).'MB';
+			$filesize = sprintf('%0.2f', round($filesize / (1024 * 1024), 2)) . 'MB';
 		}
 
 		return $filesize;
@@ -414,7 +414,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 		$query = 'DELETE FROM vtiger_senotesrel where crmid=?';
 		$params = [$this->getId()];
 		if (count($idList) > 0) {
-			$query .= 'AND notesid IN ('.generateQuestionMarks($idList).')';
+			$query .= 'AND notesid IN (' . generateQuestionMarks($idList) . ')';
 			$params = array_merge($params, $idList);
 		}
 		$db->pquery($query, $params);
@@ -436,10 +436,10 @@ class Emails_Record_Model extends Vtiger_Record_Model
 			$attachmentIdList[] = $attachInfo['fileid'];
 		}
 
-		$db->pquery('UPDATE vtiger_crmentity SET deleted=0 WHERE crmid IN('.generateQuestionMarks($attachmentIdList).')', $attachmentIdList);
-		$db->pquery('DELETE FROM vtiger_attachments WHERE attachmentsid IN('.generateQuestionMarks($attachmentIdList).')', $attachmentIdList);
+		$db->pquery('UPDATE vtiger_crmentity SET deleted=0 WHERE crmid IN(' . generateQuestionMarks($attachmentIdList) . ')', $attachmentIdList);
+		$db->pquery('DELETE FROM vtiger_attachments WHERE attachmentsid IN(' . generateQuestionMarks($attachmentIdList) . ')', $attachmentIdList);
 		$db->pquery(
-			'DELETE FROM vtiger_seattachmentsrel WHERE crmid=? and attachmentsid IN('.generateQuestionMarks($attachmentIdList).')',
+			'DELETE FROM vtiger_seattachmentsrel WHERE crmid=? and attachmentsid IN(' . generateQuestionMarks($attachmentIdList) . ')',
 			array_merge([$this->getId()], $attachmentIdList)
 		);
 	}
@@ -574,7 +574,7 @@ class Emails_Record_Model extends Vtiger_Record_Model
 		}
 		$db = PearDatabase::getInstance();
 
-		$sql = 'SELECT mailid, access_count,click_count FROM vtiger_email_track WHERE crmid = ? AND mailid IN('.generateQuestionMarks($emailIds).')';
+		$sql = 'SELECT mailid, access_count,click_count FROM vtiger_email_track WHERE crmid = ? AND mailid IN(' . generateQuestionMarks($emailIds) . ')';
 		$result = $db->pquery($sql, [$parentId, $emailIds]);
 		$numRows = $db->num_rows($result);
 		if ($numRows > 0) {
@@ -659,10 +659,10 @@ class Emails_Record_Model extends Vtiger_Record_Model
 		if (! $this->trackURL) {
 			$this->trackURL = $this->getTrackingShortUrl($parentModule);
 		}
-		$receiverId = $parentModule[0].$recipientId;
+		$receiverId = $parentModule[0] . $recipientId;
 		$urlParameters = http_build_query(['rid' => $receiverId, 'applicationKey' => $application_unique_key]);
 		$rlock = $this->generateSecureKey($urlParameters);
-		$URL = $this->trackURL."&${urlParameters}"."&rv=${rlock}";
+		$URL = $this->trackURL . "&${urlParameters}" . "&rv=${rlock}";
 
 		return str_replace(EmailTemplates_Module_Model::$BROWSER_MERGE_TAG, $URL, $mergedDescription);
 	}
@@ -758,13 +758,13 @@ class Emails_Record_Model extends Vtiger_Record_Model
 	public function replaceLinkWithShortUrl($content, $toReplace, $search, $type)
 	{
 		if ($type == 'html') {
-			$search = '"'.$search.'"';
-			$toReplace = '"'.$toReplace.'"';
+			$search = '"' . $search . '"';
+			$toReplace = '"' . $toReplace . '"';
 		}
 		$pos = strpos($content, $search);
 
 		if ($pos != false) {
-			return substr_replace($content, $toReplace, $pos).substr($content, $pos + strlen($search));
+			return substr_replace($content, $toReplace, $pos) . substr($content, $pos + strlen($search));
 		}
 
 		return $content;
