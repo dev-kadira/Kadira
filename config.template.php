@@ -175,5 +175,8 @@ if(isset($default_timezone) && function_exists('date_default_timezone_set')) {
 //Set the default layout 
 $default_layout = 'v7';
 
+//Maximum Listview Fields Selection Size
+$maxListFieldsSelectionSize = 15;
+
 include_once 'config.security.php';
 ?>
