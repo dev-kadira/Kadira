@@ -816,7 +816,7 @@ class Products extends CRMEntity {
 			LEFT JOIN vtiger_salesordercf
 				ON vtiger_salesordercf.salesorderid = vtiger_salesorder.salesorderid
 			LEFT JOIN vtiger_invoice_recurring_info
-				ON vtiger_invoice_recurring_info.start_period = vtiger_salesorder.salesorderid
+				ON vtiger_invoice_recurring_info.salesorderid = vtiger_salesorder.salesorderid
 			LEFT JOIN vtiger_sobillads
 				ON vtiger_sobillads.sobilladdressid = vtiger_salesorder.salesorderid
 			LEFT JOIN vtiger_soshipads
