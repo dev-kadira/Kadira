@@ -1425,13 +1425,13 @@ class QueryGenerator
 						}
 					} else {
 						$valueArray[0] = getValidDBInsertDateTimeValue($valueArray[0]);
-						$dateTimeStart = explode(' ', $valueArray[0]);
-						if ($dateTimeStart[1] == '00:00:00' && $operator != 'between' && $field->getFieldDataType() == 'date') {
+						$dateTimeStart = explode(' ',$valueArray[0]);
+						if(isset($dateTimeStart[1]) && $dateTimeStart[1] == '00:00:00' && $operator != 'between' && $field->getFieldDataType()=='date') {
 							$valueArray[0] = $dateTimeStart[0];
 						}
 						$valueArray[1] = getValidDBInsertDateTimeValue($valueArray[1]);
 						$dateTimeEnd = explode(' ', $valueArray[1]);
-						if (($dateTimeEnd[1] == '00:00:00' || $dateTimeEnd[1] == '23:59:59') && $field->getFieldDataType() == 'date') {
+						if(isset($dateTimeEnd[1]) && ($dateTimeEnd[1] == '00:00:00' || $dateTimeEnd[1] == '23:59:59') && $field->getFieldDataType()=='date' ) {
 							$valueArray[1] = $dateTimeEnd[0];
 						}
 					}

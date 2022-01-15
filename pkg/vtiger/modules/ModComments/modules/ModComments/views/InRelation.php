@@ -6,17 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-class ModComments_InRelation_View extends Vtiger_RelatedList_View {
-
-	function process(Vtiger_Request $request) {
+class ModComments_InRelation_View extends Vtiger_RelatedList_View
+{
+	public function process(Vtiger_Request $request)
+	{
 		$startindex = 0;
 		$parentRecordId = $request->get('record');
 		$commentRecordId = $request->get('commentid');
 		$moduleName = $request->getModule();
 		$rollupSettings = $request->get('rollup_settings');
-		$rollupStatus = isset($rollupSettings['rollup_status'])? $rollupSettings['rollup_status'] : false;
+		$rollupStatus = isset($rollupSettings['rollup_status']) ? $rollupSettings['rollup_status'] : false;
 		$rollupid = isset($rollupSettings['rollupid']) ? $rollupSettings['rollupid'] : false;
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 		$modCommentsModel = Vtiger_Module_Model::getInstance('ModComments');
@@ -30,12 +31,12 @@ class ModComments_InRelation_View extends Vtiger_RelatedList_View {
 		}
 
 		$currentCommentModel = null;
-		if (!empty($commentRecordId)) {
+		if (! empty($commentRecordId)) {
 			$currentCommentModel = ModComments_Record_Model::getInstanceById($commentRecordId);
 		}
 
 		// To get field model of filename
-		$fileNameFieldModel = Vtiger_Field::getInstance("filename", $modCommentsModel);
+		$fileNameFieldModel = Vtiger_Field::getInstance('filename', $modCommentsModel);
 		$fileFieldModel = Vtiger_Field_Model::getInstanceFromFieldObject($fileNameFieldModel);
 		$viewer = $this->getViewer($request);
 		$viewer->assign('CURRENTUSER', $currentUserModel);
@@ -54,5 +55,4 @@ class ModComments_InRelation_View extends Vtiger_RelatedList_View {
 
 		return $viewer->view('ShowAllComments.tpl', $moduleName, 'true');
 	}
-
 }

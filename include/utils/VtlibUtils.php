@@ -60,12 +60,10 @@ function vtlib_getModuleNameById($tabid)
  */
 function vtlib_getModuleNameForSharing()
 {
-	global $adb;
 	$std_modules = ['Calendar', 'Leads', 'Accounts', 'Contacts', 'Potentials',
 		'HelpDesk', 'Campaigns', 'Quotes', 'PurchaseOrder', 'SalesOrder', 'Invoice', 'Events'];
-	$modulesList = getSharingModuleList($std_modules);
 
-	return $modulesList;
+	return getSharingModuleList($std_modules);
 }
 
 /**
@@ -108,7 +106,7 @@ function vtlib_prefetchModuleActiveInfo($force = true)
  */
 function vtlib_isModuleActive($module)
 {
-	global $adb, $__cache_module_activeinfo;
+	global $__cache_module_activeinfo;
 
 	if (in_array($module, vtlib_moduleAlwaysActive())) {
 		return true;
@@ -179,8 +177,8 @@ function vtlib_toggleModuleAccess($modules, $enable_disable)
 	} elseif ($enable_disable === false) {
 		$enable_disable = 1;
 		$event_type = Vtiger_Module::EVENT_MODULE_DISABLED;
-		//Update default landing page to dashboard if module is disabled.
-		$adb->pquery('UPDATE vtiger_users SET defaultlandingpage = ? WHERE defaultlandingpage IN(' . generateQuestionMarks($modules) . ')', array_merge(['Home'], $modules));
+		$query = 'UPDATE vtiger_users SET defaultlandingpage = ? WHERE defaultlandingpage IN(' . generateQuestionMarks($modules) . ')';
+		$adb->pquery($query, array_merge(['Home'], $modules));
 	}
 
 	$checkResult = $adb->pquery('SELECT name FROM vtiger_tab WHERE name IN (' . generateQuestionMarks($modules) . ')', [$modules]);
@@ -215,11 +213,13 @@ function vtlib_toggleModuleAccess($modules, $enable_disable)
 function vtlib_getToggleModuleInfo()
 {
 	global $adb;
-
 	$modinfo = [];
 
-	$sqlresult = $adb->pquery("SELECT name, presence, customized, isentitytype FROM vtiger_tab WHERE name NOT IN ('Users','Home') AND presence IN (0,1) ORDER BY name", []);
+	$query = "SELECT name, presence, customized, isentitytype FROM vtiger_tab 
+		WHERE name NOT IN ('Users','Home') AND presence IN (0,1) ORDER BY name";
+	$sqlresult = $adb->pquery($query, []);
 	$num_rows = $adb->num_rows($sqlresult);
+
 	for ($idx = 0; $idx < $num_rows; ++$idx) {
 		$module = $adb->query_result($sqlresult, $idx, 'name');
 		$presence = $adb->query_result($sqlresult, $idx, 'presence');
@@ -227,7 +227,12 @@ function vtlib_getToggleModuleInfo()
 		$isentitytype = $adb->query_result($sqlresult, $idx, 'isentitytype');
 		$hassettings = file_exists("modules/${module}/Settings.php");
 
-		$modinfo[$module] = ['customized'=>$customized, 'presence'=>$presence, 'hassettings'=>$hassettings, 'isentitytype' => $isentitytype];
+		$modinfo[$module] = [
+			'customized'=>$customized,
+			'presence'=>$presence,
+			'hassettings'=>$hassettings,
+			'isentitytype' => $isentitytype
+		];
 	}
 
 	return $modinfo;
@@ -276,7 +281,8 @@ function vtlib_toggleLanguageAccess($langprefix, $enable_disable)
 		$enable_disable = 0;
 	}
 
-	$adb->pquery('UPDATE vtiger_language set active = ? WHERE prefix = ?', [$enable_disable, $langprefix]);
+	$query = 'UPDATE vtiger_language set active = ? WHERE prefix = ?';
+	$adb->pquery($query, [$enable_disable, $langprefix]);
 
 	$adb->dieOnError = $old_dieOnError;
 }
@@ -525,7 +531,7 @@ function __vtlib_get_modulevar_value($module, $varname)
 			return '';
 		}
 		$focus = CRMEntity::getInstance($module);
-		$customFieldTable = $focus->customFieldTable;
+		$customFieldTable = isset($focus->customFieldTable) ? $focus->customFieldTable : null;
 		if (! empty($customFieldTable)) {
 			$returnValue = [];
 			$returnValue['related_tables'][$customFieldTable[0]] = [$customFieldTable[1], $focus->table_name, $focus->table_index];

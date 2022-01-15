@@ -10,6 +10,12 @@
 
 class Inventory_Edit_View extends Vtiger_Edit_View
 {
+	/**
+	 * process
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
 	public function process(Vtiger_Request $request)
 	{
 		$viewer = $this->getViewer($request);
@@ -22,6 +28,9 @@ class Inventory_Edit_View extends Vtiger_Edit_View
 			$sourceRecord = $request->get('returnrecord');
 			$sourceModule = $request->get('returnmodule');
 		}
+
+		$relatedProducts = null;
+		$currencyInfo = null;
 
 		$viewer->assign('MODE', '');
 		$viewer->assign('IS_DUPLICATE', false);
@@ -121,12 +130,12 @@ class Inventory_Edit_View extends Vtiger_Edit_View
 			}
 		}
 
-		$deductTaxes = $relatedProducts[1]['final_details']['deductTaxes'];
+		$deductTaxes = $relatedProducts ? $relatedProducts[1]['final_details']['deductTaxes'] : null;
 		if (! $deductTaxes) {
 			$deductTaxes = Inventory_TaxRecord_Model::getDeductTaxesList();
 		}
 
-		$taxType = $relatedProducts[1]['final_details']['taxtype'];
+		$taxType = $relatedProducts ? $relatedProducts[1]['final_details']['taxtype'] : null;
 		$moduleModel = $recordModel->getModule();
 		$fieldList = $moduleModel->getFields();
 		$requestFieldList = array_intersect_key($request->getAllPurified(), $fieldList);
@@ -199,9 +208,9 @@ class Inventory_Edit_View extends Vtiger_Edit_View
 
 		if ($request->get('displayMode') == 'overlay') {
 			$viewer->assign('SCRIPTS', $this->getOverlayHeaderScripts($request));
-			echo $viewer->view('OverlayEditView.tpl', $moduleName);
+			echo @$viewer->view('OverlayEditView.tpl', $moduleName);
 		} else {
-			$viewer->view('EditView.tpl', 'Inventory');
+			@$viewer->view('EditView.tpl', 'Inventory');
 		}
 	}
 
@@ -215,8 +224,8 @@ class Inventory_Edit_View extends Vtiger_Edit_View
 		$headerScriptInstances = parent::getHeaderScripts($request);
 
 		$moduleName = $request->getModule();
-		$modulePopUpFile = 'modules.'.$moduleName.'.resources.Popup';
-		$moduleEditFile = 'modules.'.$moduleName.'.resources.Edit';
+		$modulePopUpFile = 'modules.' . $moduleName . '.resources.Popup';
+		$moduleEditFile = 'modules.' . $moduleName . '.resources.Edit';
 		unset($headerScriptInstances[$modulePopUpFile], $headerScriptInstances[$moduleEditFile]);
 
 		$jsFileNames = [
@@ -231,11 +240,17 @@ class Inventory_Edit_View extends Vtiger_Edit_View
 		return array_merge($headerScriptInstances, $jsScriptInstances);
 	}
 
+	/**
+	 * getOverlayHeaderScripts
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
 	public function getOverlayHeaderScripts(Vtiger_Request $request)
 	{
 		$moduleName = $request->getModule();
-		$modulePopUpFile = 'modules.'.$moduleName.'.resources.Popup';
-		$moduleEditFile = 'modules.'.$moduleName.'.resources.Edit';
+		$modulePopUpFile = 'modules.' . $moduleName . '.resources.Popup';
+		$moduleEditFile = 'modules.' . $moduleName . '.resources.Edit';
 
 		$jsFileNames = [
 			'modules.Inventory.resources.Popup',

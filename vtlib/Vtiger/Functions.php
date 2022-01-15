@@ -173,8 +173,8 @@ class Vtiger_Functions
 		$currencyInfo = self::getCurrencyInfo($currencyid);
 
 		return [
-			'rate'  => $currencyInfo['conversion_rate'],
-			'symbol'=> $currencyInfo['currency_symbol']
+			'rate' => $currencyInfo ? $currencyInfo['conversion_rate'] : 0,
+			'symbol'=>$currencyInfo ? $currencyInfo['currency_symbol'] : ''
 		];
 	}
 
@@ -357,6 +357,12 @@ class Vtiger_Functions
 		return $result ? array_shift($result) : null;
 	}
 
+	/**
+	 * getOwnerRecordLabels
+	 *
+	 * @param  mixed $ids
+	 * @return void
+	 */
 	public static function getOwnerRecordLabels($ids)
 	{
 		if (! is_array($ids)) {
@@ -381,6 +387,13 @@ class Vtiger_Functions
 		return $nameList;
 	}
 
+	/**
+	 * computeCRMRecordLabels
+	 *
+	 * @param  mixed $module
+	 * @param  mixed $ids
+	 * @return void
+	 */
 	public static function computeCRMRecordLabels($module, $ids)
 	{
 		global $adb;
@@ -414,7 +427,7 @@ class Vtiger_Functions
 					sprintf('concat(%s)', implode(",' ',", $columns));
 
 				$sql = sprintf(
-					'SELECT '.implode(',', $columns).', %s AS id FROM %s WHERE %s IN (%s)',
+					'SELECT ' . implode(',', $columns) . ', %s AS id FROM %s WHERE %s IN (%s)',
 					$idcolumn,
 					$table,
 					$idcolumn,
@@ -438,6 +451,12 @@ class Vtiger_Functions
 		}
 	}
 
+	/**
+	 * getGroupName
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getGroupName($id)
 	{
 		global $adb;
@@ -456,6 +475,12 @@ class Vtiger_Functions
 		return $result;
 	}
 
+	/**
+	 * getUserName
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getUserName($id)
 	{
 		global $adb;
@@ -469,6 +494,12 @@ class Vtiger_Functions
 		return (isset(self::$userIdNameCache[$id])) ? self::$userIdNameCache[$id] : null;
 	}
 
+	/**
+	 * getModuleFieldInfos
+	 *
+	 * @param  mixed $mixed
+	 * @return void
+	 */
 	public static function getModuleFieldInfos($mixed)
 	{
 		global $adb;
@@ -493,6 +524,12 @@ class Vtiger_Functions
 		return $moduleFieldInfo[$module] ? $moduleFieldInfo[$module] : null;
 	}
 
+	/**
+	 * getModuleFieldInfoWithId
+	 *
+	 * @param  mixed $fieldid
+	 * @return void
+	 */
 	public static function getModuleFieldInfoWithId($fieldid)
 	{
 		global $adb;
@@ -501,6 +538,13 @@ class Vtiger_Functions
 		return ($adb->num_rows($result)) ? $adb->fetch_array($result) : null;
 	}
 
+	/**
+	 * getModuleFieldInfo
+	 *
+	 * @param  mixed $moduleid
+	 * @param  mixed $mixed
+	 * @return void
+	 */
 	public static function getModuleFieldInfo($moduleid, $mixed)
 	{
 		$field = null;
@@ -526,6 +570,14 @@ class Vtiger_Functions
 		return $field;
 	}
 
+	/**
+	 * getModuleFieldId
+	 *
+	 * @param  mixed $moduleid
+	 * @param  mixed $mixed
+	 * @param  mixed $onlyactive
+	 * @return void
+	 */
 	public static function getModuleFieldId($moduleid, $mixed, $onlyactive = true)
 	{
 		$field = self::getModuleFieldInfo($moduleid, $mixed, $onlyactive);
@@ -550,6 +602,13 @@ class Vtiger_Functions
 		return rtrim($fld_value, '.');
 	}
 
+	/**
+	 * fromHTML
+	 *
+	 * @param  mixed $string
+	 * @param  mixed $encode
+	 * @return void
+	 */
 	public static function fromHTML($string, $encode = true)
 	{
 		if (is_string($string)) {
@@ -561,6 +620,12 @@ class Vtiger_Functions
 		return $string;
 	}
 
+	/**
+	 * fromHTML_FCK
+	 *
+	 * @param  mixed $string
+	 * @return void
+	 */
 	public static function fromHTML_FCK($string)
 	{
 		if (is_string($string)) {
@@ -572,6 +637,13 @@ class Vtiger_Functions
 		return $string;
 	}
 
+	/**
+	 * fromHTML_Popup
+	 *
+	 * @param  mixed $string
+	 * @param  mixed $encode
+	 * @return void
+	 */
 	public static function fromHTML_Popup($string, $encode = true)
 	{
 		$popup_toHtml = [
@@ -586,6 +658,12 @@ class Vtiger_Functions
 		return $string;
 	}
 
+	/**
+	 * br2nl
+	 *
+	 * @param  mixed $str
+	 * @return void
+	 */
 	public static function br2nl($str)
 	{
 		$str = preg_replace("/(\r\n)/", '\\r\\n', $str);
@@ -594,11 +672,23 @@ class Vtiger_Functions
 		return preg_replace('/"/', ' ', $str);
 	}
 
+	/**
+	 * suppressHTMLTags
+	 *
+	 * @param  mixed $string
+	 * @return void
+	 */
 	public static function suppressHTMLTags($string)
 	{
 		return preg_replace(['/</', '/>/', '/"/'], ['&lt;', '&gt;', '&quot;'], $string);
 	}
 
+	/**
+	 * getInventoryTermsAndCondition
+	 *
+	 * @param  mixed $moduleName
+	 * @return void
+	 */
 	public static function getInventoryTermsAndCondition($moduleName)
 	{
 		global $adb;
@@ -620,6 +710,11 @@ class Vtiger_Functions
 		return exec("ls -l ${rootDirectory}/config.inc.php | awk 'BEGIN {OFS=\":\"}{print $3,$4}'");
 	}
 
+	/**
+	 * initStorageFileDirectory
+	 *
+	 * @return void
+	 */
 	public static function initStorageFileDirectory()
 	{
 		$filepath = 'storage/';
@@ -629,18 +724,18 @@ class Vtiger_Functions
 		$day = date('j');
 		$week = '';
 		$permissions = self::getGroupPermissionsFromConfigFile();
-		if (! is_dir($filepath.$year)) {
+		if (! is_dir($filepath . $year)) {
 			//create new folder
-			mkdir($filepath.$year);
-			$yearPath = $filepath.$year;
+			mkdir($filepath . $year);
+			$yearPath = $filepath . $year;
 			exec("chown -R ${permissions}  ${yearPath}");
 		}
 
-		if (! is_dir($filepath.$year.'/'.$month)) {
+		if (! is_dir($filepath . $year . '/' . $month)) {
 			//create new folder
 			$monthFilePath = "${year}/${month}";
-			$monthPath = $filepath.$monthFilePath;
-			mkdir($filepath.$monthFilePath);
+			$monthPath = $filepath . $monthFilePath;
+			mkdir($filepath . $monthFilePath);
 			exec("chown -R ${permissions}  ${monthPath}");
 		}
 
@@ -656,17 +751,24 @@ class Vtiger_Functions
 			$week = 'week5';
 		}
 
-		if (! is_dir($filepath.$year.'/'.$month.'/'.$week)) {
+		if (! is_dir($filepath . $year . '/' . $month . '/' . $week)) {
 			//create new folder
 			$weekFilePath = "${year}/${month}/${week}";
-			$weekPath = $filepath.$weekFilePath;
-			mkdir($filepath.$weekFilePath);
+			$weekPath = $filepath . $weekFilePath;
+			mkdir($filepath . $weekFilePath);
 			exec("chown -R ${permissions}  ${weekPath}");
 		}
 
-		return $filepath.$year.'/'.$month.'/'.$week.'/';
+		return $filepath . $year . '/' . $month . '/' . $week . '/';
 	}
 
+	/**
+	 * validateImageMetadata
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $short
+	 * @return void
+	 */
 	public static function validateImageMetadata($data, $short = true)
 	{
 		if (is_array($data)) {
@@ -685,9 +787,15 @@ class Vtiger_Functions
 		return true;
 	}
 
+	/**
+	 * validateImage
+	 *
+	 * @param  mixed $file_details
+	 * @return void
+	 */
 	public static function validateImage($file_details)
 	{
-		global $app_strings, $log;
+		global $log;
 		$allowedImageFormats = ['jpeg', 'png', 'jpg', 'pjpeg', 'x-png', 'gif', 'bmp'];
 
 		$mimeTypesList = array_merge($allowedImageFormats, ['x-ms-bmp']);//bmp another format
@@ -741,15 +849,26 @@ class Vtiger_Functions
 		return $saveimage;
 	}
 
+	/**
+	 * getMergedDescription
+	 *
+	 * @param  mixed $description
+	 * @param  mixed $id
+	 * @param  mixed $parent_type
+	 * @param  mixed $removeTags
+	 * @return void
+	 */
 	public static function getMergedDescription($description, $id, $parent_type, $removeTags = false)
 	{
 		global $current_user;
+
 		$token_data_pair = explode('$', $description);
 		$emailTemplate = new EmailTemplate($parent_type, $description, $id, $current_user);
 		$emailTemplate->removeTags = $removeTags;
 		$description = $emailTemplate->getProcessedDescription();
 		$tokenDataPair = explode('$', $description);
 		$fields = [];
+
 		for ($i = 1; $i < count($token_data_pair); $i++) {
 			$module = explode('-', $tokenDataPair[$i]);
 			$fields[$module[0]][] = $module[1];
@@ -786,7 +905,7 @@ class Vtiger_Functions
 	{
 		$companyModuleModel = Settings_Vtiger_CompanyDetails_Model::getInstance();
 		foreach ($fields['companydetails'] as $columnname) {
-			$token_data = '$companydetails-'.$columnname.'$';
+			$token_data = '$companydetails-' . $columnname . '$';
 			$token_value = $companyModuleModel->get($columnname);
 			if (empty($token_value)) {
 				$token_value = '';
@@ -801,28 +920,33 @@ class Vtiger_Functions
 	{
 		global $site_URL, $PORTAL_URL;
 		foreach ($fields['custom'] as $columnname) {
-			$token_data = '$custom-'.$columnname.'$';
+			$token_data = '$custom-' . $columnname . '$';
 			$token_value = '';
 			switch ($columnname) {
-				case 'currentdate': $token_value = date('F j, Y');
+				case 'currentdate':
+					$token_value = date('F j, Y');
 
-											break;
-				case 'currenttime': $token_value = date('G:i:s T');
+					break;
+				case 'currenttime':
+					$token_value = date('G:i:s T');
 
-											break;
-				case 'siteurl': $token_value = $site_URL;
+					break;
+				case 'siteurl':
+					$token_value = $site_URL;
 
-											break;
-				case 'portalurl':	$token_value = $PORTAL_URL;
+					break;
+				case 'portalurl':
+					$token_value = $PORTAL_URL;
 
-											break;
-				case 'crmdetailviewurl':	if ($module !== 'Users') {
-					$token_value = $site_URL."/index.php?module=${module}&view=Detail&record=${recordId}";
-				} else {
-					$token_value = $token_data;
-				}
+					break;
+				case 'crmdetailviewurl':
+					if ($module !== 'Users') {
+						$token_value = $site_URL . "/index.php?module=${module}&view=Detail&record=${recordId}";
+					} else {
+						$token_value = $token_data;
+					}
 
-										  break;
+					break;
 			}
 			if ($columnname !== 'viewinbrowser') {
 				$description = str_replace($token_data, $token_value, $description);
@@ -832,6 +956,15 @@ class Vtiger_Functions
 		return $description;
 	}
 
+	/**
+	 * getSingleFieldValue
+	 *
+	 * @param  mixed $tablename
+	 * @param  mixed $fieldname
+	 * @param  mixed $idname
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getSingleFieldValue($tablename, $fieldname, $idname, $id)
 	{
 		global $adb;
@@ -842,6 +975,11 @@ class Vtiger_Functions
 		return $fieldval;
 	}
 
+	/**
+	 * getRecurringObjValue
+	 *
+	 * @return void
+	 */
 	public static function getRecurringObjValue()
 	{
 		$recurring_data = [];
@@ -944,6 +1082,12 @@ class Vtiger_Functions
 		}
 	}
 
+	/**
+	 * getTicketComments
+	 *
+	 * @param  mixed $ticketid
+	 * @return void
+	 */
 	public static function getTicketComments($ticketid)
 	{
 		global $adb;
@@ -954,16 +1098,21 @@ class Vtiger_Functions
 		for ($i = 0; $i < $adb->num_rows($result); $i++) {
 			$comment = $adb->query_result($result, $i, 'commentcontent');
 			if ($comment != '') {
-				$commentlist .= '<br><br>'.$comment;
+				$commentlist .= '<br><br>' . $comment;
 			}
 		}
 		if ($commentlist != '') {
-			$commentlist = '<br><br>'.getTranslatedString('The comments are', $moduleName).' : '.$commentlist;
+			$commentlist = '<br><br>' . getTranslatedString('The comments are', $moduleName) . ' : ' . $commentlist;
 		}
 
 		return $commentlist;
 	}
 
+	/**
+	 * generateRandomPassword
+	 *
+	 * @return void
+	 */
 	public static function generateRandomPassword()
 	{
 		$salt = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -973,13 +1122,19 @@ class Vtiger_Functions
 		while ($i <= 7) {
 			$num = rand() % 33;
 			$tmp = substr($salt, $num, 1);
-			$pass = $pass.$tmp;
+			$pass = $pass . $tmp;
 			$i++;
 		}
 
 		return $pass;
 	}
 
+	/**
+	 * getTagCloudView
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getTagCloudView($id = '')
 	{
 		global $adb;
@@ -1000,9 +1155,17 @@ class Vtiger_Functions
 		return $tag_cloud_view;
 	}
 
+	/**
+	 * transformFieldTypeOfData
+	 *
+	 * @param  mixed $table_name
+	 * @param  mixed $column_name
+	 * @param  mixed $type_of_data
+	 * @return void
+	 */
 	public static function transformFieldTypeOfData($table_name, $column_name, $type_of_data)
 	{
-		$field = $table_name.':'.$column_name;
+		$field = $table_name . ':' . $column_name;
 		//Add the field details in this array if you want to change the advance filter field details
 
 		static $new_field_details = [
@@ -1089,6 +1252,13 @@ class Vtiger_Functions
 		return $type_of_data;
 	}
 
+	/**
+	 * getPickListValuesFromTableForRole
+	 *
+	 * @param  mixed $tablename
+	 * @param  mixed $roleid
+	 * @return void
+	 */
 	public static function getPickListValuesFromTableForRole($tablename, $roleid)
 	{
 		global $adb;
@@ -1103,6 +1273,12 @@ class Vtiger_Functions
 		return $fldVal;
 	}
 
+	/**
+	 * getActivityType
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getActivityType($id)
 	{
 		global $adb;
@@ -1113,6 +1289,12 @@ class Vtiger_Functions
 		return $activity_type;
 	}
 
+	/**
+	 * getInvoiceStatus
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public static function getInvoiceStatus($id)
 	{
 		global $adb;
@@ -1122,6 +1304,12 @@ class Vtiger_Functions
 		return $invoiceStatus;
 	}
 
+	/**
+	 * mkCountQuery
+	 *
+	 * @param  mixed $query
+	 * @return void
+	 */
 	public static function mkCountQuery($query)
 	{
 		// Remove all the \n, \r and white spaces to keep the space between the words consistent.
@@ -1130,7 +1318,7 @@ class Vtiger_Functions
 
 		//Strip of the current SELECT fields and replace them by "select count(*) as count"
 		// Space across FROM has to be retained here so that we do not have a clash with string "from" found in select clause
-		$query = 'SELECT count(*) AS count '.substr($query, stripos($query, ' FROM '), strlen($query));
+		$query = 'SELECT count(*) AS count ' . substr($query, stripos($query, ' FROM '), strlen($query));
 
 		//Strip of any "GROUP BY" clause
 		if (stripos($query, 'GROUP BY') > 0) {
@@ -1214,7 +1402,13 @@ class Vtiger_Functions
 		return true;
 	}
 
-	// Function to generate encrypted password.
+	/**
+	 * generateEncryptedPassword
+	 *
+	 * @param  mixed $password
+	 * @param  mixed $mode
+	 * @return void
+	 */
 	public static function generateEncryptedPassword($password, $mode = '')
 	{
 		if ($mode == '') {
@@ -1234,30 +1428,41 @@ class Vtiger_Functions
 			if (function_exists('password_hash')) { // php 5.5+
 				$salt = password_hash($password, PASSWORD_DEFAULT);
 			} else {
-				$salt = '$2y$11$'.str_replace('+', '.', substr(base64_encode(openssl_random_pseudo_bytes(17)), 0, 22));
+				$salt = '$2y$11$' . str_replace('+', '.', substr(base64_encode(openssl_random_pseudo_bytes(17)), 0, 22));
 			}
 
 			return crypt($password, $salt);
 		}
 
-		throw new Exception('Invalid encryption mode: '.$mode);
+		throw new Exception('Invalid encryption mode: ' . $mode);
 	}
 
-	// Function to compare encrypted password.
+	/**
+	 * compareEncryptedPassword
+	 *
+	 * @param  mixed $plainText
+	 * @param  mixed $encryptedPassword
+	 * @param  mixed $mode
+	 * @return void
+	 */
 	public static function compareEncryptedPassword($plainText, $encryptedPassword, $mode = 'CRYPT')
 	{
 		$reEncryptedPassword = null;
 		switch ($mode) {
-			case 'PHASH': return password_verify($plainText, $encryptedPassword);
-			case 'CRYPT': $reEncryptedPassword = crypt($plainText, $encryptedPassword);
+			case 'PHASH':
+				return password_verify($plainText, $encryptedPassword);
+			case 'CRYPT':
+				$reEncryptedPassword = crypt($plainText, $encryptedPassword);
 
-break;
-			case 'MD5': $reEncryptedPassword = md5($plainText);
+				break;
+			case 'MD5':
+				$reEncryptedPassword = md5($plainText);
 
-break;
-			default: $reEncryptedPassword = $plainText;
+				break;
+			default:
+				$reEncryptedPassword = $plainText;
 
-break;
+				break;
 		}
 
 		return ($reEncryptedPassword == $encryptedPassword);
@@ -1356,15 +1561,21 @@ break;
 		return $urls;
 	}
 
+	/**
+	 * redirectUrl
+	 *
+	 * @param  mixed $targetUrl
+	 * @return void
+	 */
 	public static function redirectUrl($targetUrl)
 	{
 		$regExp = '~^(?:f|ht)tps?://~i'; // This regular expression is to detect if targetUrl which was stored in database contains
 		//http:// or https:// then it will redirect as normal if not for target http:// will prepend and then redirect
 		if (! preg_match($regExp, $targetUrl)) {
-			return header('Location:http://'.$targetUrl);
+			return header('Location:http://' . $targetUrl);
 		}
 
-		return header('Location:'.$targetUrl);
+		return header('Location:' . $targetUrl);
 	}
 
 	/**
@@ -1489,6 +1700,12 @@ break;
 		return $mandatoryReferenceFields;
 	}
 
+	/**
+	 * setEventsContactIdToRequest
+	 *
+	 * @param  mixed $recordId
+	 * @return void
+	 */
 	public static function setEventsContactIdToRequest($recordId)
 	{
 		$db = PearDatabase::getInstance();
@@ -1501,6 +1718,11 @@ break;
 		$_REQUEST['contactidlist'] = implode(';', $contactIds);
 	}
 
+	/**
+	 * getNonQuickCreateSupportedModules
+	 *
+	 * @return void
+	 */
 	public static function getNonQuickCreateSupportedModules()
 	{
 		$nonQuickCreateModules = [];
@@ -1514,6 +1736,11 @@ break;
 		return $nonQuickCreateModules;
 	}
 
+	/**
+	 * getPrivateCommentModules
+	 *
+	 * @return void
+	 */
 	public static function getPrivateCommentModules()
 	{
 		return ['HelpDesk', 'Faq'];
@@ -1542,6 +1769,12 @@ break;
 		return (self::getUserSpecificTableName($moduleName) == $tableName) ? true : false;
 	}
 
+	/**
+	 * isUserExist
+	 *
+	 * @param  mixed $userId
+	 * @return void
+	 */
 	public static function isUserExist($userId)
 	{
 		$adb = PearDatabase::getInstance();
@@ -1570,14 +1803,18 @@ break;
 
 		// Next, add padding if it is needed.
 		switch (strlen($encoded_token) % 4) {
-			case 0:	break;// No pad characters needed.
-			case 2:	$encoded_token = $encoded_token.'==';
+			case 0:
+				break;// No pad characters needed.
+			case 2:
+				$encoded_token = $encoded_token . '==';
 
-break;
-			case 3:	$encoded_token = $encoded_token.'=';
+				break;
+			case 3:
+				$encoded_token = $encoded_token . '=';
 
-break;
-			default:return null;// Invalid base64 string!
+				break;
+			default:
+				return null;// Invalid base64 string!
 		}
 
 		$json_string = base64_decode($encoded_token);
@@ -1598,7 +1835,7 @@ break;
 		require_once 'include/utils/encryption.php';
 		$encryption = new Encryption();
 
-		return '$ve$'.$encryption->encrypt($text);
+		return '$ve$' . $encryption->encrypt($text);
 	}
 
 	// Function to determine if text is masked.
@@ -1630,7 +1867,7 @@ break;
 			$i++;
 		} while ($sizeInBytes > 1024);
 
-		return round($sizeInBytes, 2).$fileSizeUnits[$i];
+		return round($sizeInBytes, 2) . $fileSizeUnits[$i];
 	}
 
 	/**
@@ -1735,7 +1972,7 @@ break;
 		$fileId = $imageId;
 		$fileName = $imageName;
 		if ($fileId) {
-			$publicUrl = "public.php?fid=${fileId}&key=".md5($fileName);
+			$publicUrl = "public.php?fid=${fileId}&key=" . md5($fileName);
 		}
 
 		return $publicUrl;
@@ -1788,7 +2025,7 @@ break;
 			}
 		}
 
-		return self::$currencyInfoCache[$currencyid];
+		return isset(self::$currencyInfoCache[$currencyid]) ? self::$currencyInfoCache[$currencyid] : null;
 	}
 
 	protected static function getBasicModuleInfo($mixed)

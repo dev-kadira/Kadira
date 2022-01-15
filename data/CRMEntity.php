@@ -32,6 +32,7 @@ class CRMEntity
 {
 	public $ownedby;
 	public $recordSource = 'CRM';
+	public $mode;
 
 	/**
 	 * To keep track of action of field filtering and avoiding doing more than once.
@@ -170,7 +171,8 @@ class CRMEntity
 		$this->db->completeTransaction();
 
 		// vtlib customization: Hook provide to enable generic module relation.
-		if ($_REQUEST['createmode'] == 'link' && ! $_REQUEST['__linkcreated']) {
+		if ((isset($_REQUEST['createmode']) && $_REQUEST['createmode'] == 'link') &&
+			! isset($_REQUEST['__linkcreated'])) {
 			$_REQUEST['__linkcreated'] = true;
 			$for_module = vtlib_purify($_REQUEST['return_module']);
 			$for_crmid = vtlib_purify($_REQUEST['return_id']);
@@ -344,7 +346,7 @@ class CRMEntity
 		$this->column_fields['label'] = $label;
 
 		if ($this->mode == 'edit') {
-			$description_val = from_html($this->column_fields['description'], ($insertion_mode == 'edit') ? true : false);
+			$description_val = from_html($this->column_fields['description'], ($this->mode == 'edit') ? true : false);
 
 			$tabid = getTabid($module);
 			$modified_date_var = $adb->formatDate($date_var, true);
@@ -554,16 +556,17 @@ class CRMEntity
 			$fieldname = $this->resolve_query_result_value($result, $i, 'fieldname');
 			$columname = $this->resolve_query_result_value($result, $i, 'columnname');
 			$uitype = $this->resolve_query_result_value($result, $i, 'uitype');
-			$generatedtype = $this->resolve_query_result_value($result, $i, 'generatedtype');
 			$typeofdata = $this->resolve_query_result_value($result, $i, 'typeofdata');
 			$skipUpdateForField = false;
 			$typeofdata_array = explode('~', $typeofdata);
 			$datatype = $typeofdata_array[0];
 
 			$ajaxSave = false;
-			if (($_REQUEST['file'] == 'DetailViewAjax' && $_REQUEST['ajxaction'] == 'DETAILVIEW'
-						&& isset($_REQUEST['fldName']) && $_REQUEST['fldName'] != $fieldname)
-					|| ($_REQUEST['action'] == 'MassEditSave' && ! isset($_REQUEST[$fieldname . '_mass_edit_check']))) {
+			if ((isset($_REQUEST['file']) && $_REQUEST['file'] == 'DetailViewAjax') &&
+				(isset($_REQUEST['ajaxaction']) && $_REQUEST['ajxaction'] == 'DETAILVIEW') &&
+				(isset($_REQUEST['fldName']) && $_REQUEST['fldName'] != $fieldname) ||
+				((isset($_REQUEST['action']) && $_REQUEST['action'] == 'MassEditSave') &&
+				! isset($_REQUEST[$fieldname . '_mass_edit_check']))) {
 				$ajaxSave = true;
 			}
 
@@ -717,10 +720,11 @@ class CRMEntity
 				} elseif ($uitype == 61 && count($_FILES)) {
 					if ($module == 'ModComments') {
 						$UPLOADED_FILES = $_FILES[$fieldname];
+						$uploadedFileNames = [];
 						foreach ($UPLOADED_FILES as $fileIndex => $file) {
 							if ($file['error'] == 0 && $file['name'] != '' && $file['size'] > 0) {
-								if ($_REQUEST[$fileindex . '_hidden'] != '') {
-									$file['original_name'] = vtlib_purify($_REQUEST[$fileindex . '_hidden']);
+								if ($_REQUEST[$fileIndex . '_hidden'] != '') {
+									$file['original_name'] = vtlib_purify($_REQUEST[$fileIndex . '_hidden']);
 								} else {
 									$file['original_name'] = stripslashes($file['name']);
 								}
@@ -2198,7 +2202,7 @@ class CRMEntity
 			$sql2 = 'SELECT * FROM vtiger_field WHERE fieldid = ?';
 			$query2 = $adb->pquery($sql2, [$field]);
 			$numRows2 = $adb->num_rows($query2);
-			
+
 			for ($j = 0; $j < $numRows2; $j++) {
 				$table = $adb->query_result($query2, $j, 'tablename');
 				$column = $adb->query_result($query2, $j, 'columnname');

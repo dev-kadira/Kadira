@@ -1119,11 +1119,11 @@ class Vtiger_Field_Model extends Vtiger_Field
 	 */
 	public function getEditViewDisplayValue($value)
 	{
-		if(!isset($this->uitype_instance) || !$this->uitype_instance) {
+		if (! isset($this->uitype_instance) || ! $this->uitype_instance) {
 			$this->uitype_instance = Vtiger_Base_UIType::getInstanceFromField($this);
 		}
 		$uiTypeInstance = $this->uitype_instance;
-		
+
 		return $uiTypeInstance->getEditViewDisplayValue($value);
 	}
 
