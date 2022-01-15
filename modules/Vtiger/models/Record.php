@@ -136,7 +136,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	 */
 	public function getRawData()
 	{
-		return $this->rawData;
+		return isset($this->rawData) ? $this->rawData : null;
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&view='.$module->getDetailViewName().'&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=' . $module->getDetailViewName() . '&record=' . $this->getId();
 	}
 
 	/**
@@ -171,9 +171,9 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 		$module = $this->getModule();
 		// If we don't send tab label then it will show full detail view, but it will select summary tab
 		$moduleName = $this->getModuleName();
-		$fullDetailViewLabel = vtranslate('SINGLE_'.$moduleName, $moduleName).' '.vtranslate('LBL_DETAILS', $moduleName);
+		$fullDetailViewLabel = vtranslate('SINGLE_' . $moduleName, $moduleName) . ' ' . vtranslate('LBL_DETAILS', $moduleName);
 
-		return 'index.php?module='.$moduleName.'&view='.$module->getDetailViewName().'&record='.$this->getId().'&mode=showDetailViewByMode&requestMode=full&tab_label='.$fullDetailViewLabel;
+		return 'index.php?module=' . $moduleName . '&view=' . $module->getDetailViewName() . '&record=' . $this->getId() . '&mode=showDetailViewByMode&requestMode=full&tab_label=' . $fullDetailViewLabel;
 	}
 
 	/**
@@ -184,7 +184,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&view='.$module->getEditViewName().'&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&view=' . $module->getEditViewName() . '&record=' . $this->getId();
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	 */
 	public function getUpdatesUrl()
 	{
-		return $this->getDetailViewUrl().'&mode=showRecentActivities&page=1&tab_label=LBL_UPDATES';
+		return $this->getDetailViewUrl() . '&mode=showRecentActivities&page=1&tab_label=LBL_UPDATES';
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&action='.$module->getDeleteActionName().'&record='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&action=' . $module->getDeleteActionName() . '&record=' . $this->getId();
 	}
 
 	/**
@@ -241,13 +241,13 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 		// For showing the "Date Sent" and "Time Sent" in email related list in user time zone
 		if ($fieldName == 'time_start' && $this->getModule()->getName() == 'Emails') {
 			$date = new DateTime();
-			$dateTime = new DateTimeField($date->format('Y-m-d').' '.$this->get($fieldName));
+			$dateTime = new DateTimeField($date->format('Y-m-d') . ' ' . $this->get($fieldName));
 			$value = Vtiger_Time_UIType::getDisplayValue($dateTime->getDisplayTime());
 			$this->set($fieldName, $value);
 
 			return $value;
 		} elseif ($fieldName == 'date_start' && $this->getModule()->getName() == 'Emails') {
-			$dateTime = new DateTimeField($this->get($fieldName).' '.$this->get('time_start'));
+			$dateTime = new DateTimeField($this->get($fieldName) . ' ' . $this->get('time_start'));
 			$value = $dateTime->getDisplayDate();
 			$this->set($fieldName, $value);
 
@@ -428,7 +428,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module='.$this->getModuleName().'&view='.$module->getEditViewName().'&record='.$this->getId().'&isDuplicate=true';
+		return 'index.php?module=' . $this->getModuleName() . '&view=' . $module->getEditViewName() . '&record=' . $this->getId() . '&isDuplicate=true';
 	}
 
 	/**
@@ -461,7 +461,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 						INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_attachments.attachmentsid
 						WHERE vtiger_crmentity.setype = ? and vtiger_seattachmentsrel.crmid = ?';
 
-			$result = $db->pquery($sql, [$this->getModuleName().' Image', $recordId]);
+			$result = $db->pquery($sql, [$this->getModuleName() . ' Image', $recordId]);
 
 			$imageId = $db->query_result($result, 0, 'attachmentsid');
 			$imagePath = $db->query_result($result, 0, 'path');
@@ -470,14 +470,14 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 			//decode_html - added to handle UTF-8 characters in file names
 			$imageOriginalName = urlencode(decode_html($imageName));
 			if ($url) {
-				$url = $site_URL.'/'.$url;
+				$url = $site_URL . '/' . $url;
 			}
 
 			if (! empty($imageName)) {
 				$imageDetails[] = [
 					'id'      => $imageId,
 					'orgname' => $imageOriginalName,
-					'path'    => $imagePath.$imageId,
+					'path'    => $imagePath . $imageId,
 					'name'    => $imageName,
 					'url'     => $url
 				];
@@ -548,7 +548,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 	 */
 	public function getParentPopupContentsUrl()
 	{
-		return 'index.php?module='.$this->getModuleName().'&mode=getRelatedRecordInfo&action=RelationAjax&id='.$this->getId();
+		return 'index.php?module=' . $this->getModuleName() . '&mode=getRelatedRecordInfo&action=RelationAjax&id=' . $this->getId();
 	}
 
 	/**
@@ -595,9 +595,9 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 		$moduleTableIndexList = $meta->getEntityTableIndexList();
 		$baseTableIndex = $moduleTableIndexList[$baseTable];
 		if ($moduleName == 'Users') {
-			$query .= ' AND vtiger_users.id IN ('.generateQuestionMarks($recordIds).')';
+			$query .= ' AND vtiger_users.id IN (' . generateQuestionMarks($recordIds) . ')';
 		} else {
-			$query .= ' AND vtiger_crmentity.crmid IN ('.generateQuestionMarks($recordIds).')';
+			$query .= ' AND vtiger_crmentity.crmid IN (' . generateQuestionMarks($recordIds) . ')';
 		}
 		$result = $adb->pquery($query, [$recordIds]);
 
@@ -666,15 +666,15 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 			$fileName = html_entity_decode($fileName, ENT_QUOTES, vglobal('default_charset'));
 			if (! empty($fileName)) {
 				if (! empty($storedFileName)) {
-					$savedFile = $fileDetails['attachmentsid'].'_'.$storedFileName;
+					$savedFile = $fileDetails['attachmentsid'] . '_' . $storedFileName;
 				} elseif (is_null($storedFileName)) {
-					$savedFile = $fileDetails['attachmentsid'].'_'.$fileName;
+					$savedFile = $fileDetails['attachmentsid'] . '_' . $fileName;
 				}
-				$fileSize = filesize($filePath.$savedFile);
+				$fileSize = filesize($filePath . $savedFile);
 				$fileSize = $fileSize + ($fileSize % 1024);
-				if (fopen($filePath.$savedFile, 'r')) {
-					$fileContent = fread(fopen($filePath.$savedFile, 'r'), $fileSize);
-					header('Content-type: '.$fileDetails['type']);
+				if (fopen($filePath . $savedFile, 'r')) {
+					$fileContent = fread(fopen($filePath . $savedFile, 'r'), $fileSize);
+					header('Content-type: ' . $fileDetails['type']);
 					header('Pragma: public');
 					header('Cache-Control: private');
 					header("Content-Disposition: attachment; filename=\"${fileName}\"");
@@ -734,9 +734,9 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 
 			$query = $queryGenerator->getQuery();
 
-			$query .= ' AND vtiger_modcomments.related_to IN ('.generateQuestionMarks($relatedModuleRecordIds)
-					.') AND vtiger_modcomments.parent_comments=0 ORDER BY vtiger_crmentity.createdtime DESC LIMIT '
-					." ${startIndex},${pageLimit}";
+			$query .= ' AND vtiger_modcomments.related_to IN (' . generateQuestionMarks($relatedModuleRecordIds)
+					. ') AND vtiger_modcomments.parent_comments=0 ORDER BY vtiger_crmentity.createdtime DESC LIMIT '
+					. " ${startIndex},${pageLimit}";
 
 			$db = PearDatabase::getInstance();
 			$result = $db->pquery($query, $relatedModuleRecordIds);
@@ -822,7 +822,7 @@ class Vtiger_Record_Model extends Vtiger_Base_Model
 			$fileDetails = $fileDetails[0];
 		}
 		if (! empty($fileDetails)) {
-			return 'index.php?module='.$this->getModuleName().'&action=DownloadFile&record='.$this->getId().'&fileid='.$fileDetails['attachmentsid'].'&name='.$fileDetails['name'];
+			return 'index.php?module=' . $this->getModuleName() . '&action=DownloadFile&record=' . $this->getId() . '&fileid=' . $fileDetails['attachmentsid'] . '&name=' . $fileDetails['name'];
 		} else {
 			return $this->get('filename');
 		}

@@ -180,7 +180,8 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 	public function getViewer(Vtiger_Request $request)
 	{
 		if (! $this->viewer) {
-			global $vtiger_current_version, $vtiger_display_version, $onlyV7Instance;
+			global $vtiger_current_version, $vtiger_display_version, $onlyV7Instance, $current_user;
+
 			$viewer = new Vtiger_Viewer();
 			$viewer->assign('APPTITLE', getTranslatedString('APPTITLE'));
 			$viewer->assign('VTIGER_VERSION', $vtiger_current_version);
@@ -198,6 +199,7 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 			$viewer->assign('PARENT_MODULE', '');
 			$viewer->assign('EXTENSION_MODULE', '');
 			$viewer->assign('moduleName', '');
+			$viewer->assign('CURRENT_USER_ID', $current_user ? $current_user->id : '');
 
 			$viewer->assign('NOTIFIER_URL', '');
 			$viewer->assign('GLOBAL_SEARCH_VALUE', '');
@@ -240,6 +242,9 @@ abstract class Vtiger_View_Controller extends Vtiger_Action_Controller
 
 			// RelatedLists
 			$viewer->assign('TOTAL_ENTRIES', 0);
+
+			// Popupview
+			$viewer->assign('IS_MODULE_DISABLED', false);
 		}
 
 		return $this->viewer;

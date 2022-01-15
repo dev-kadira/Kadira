@@ -87,7 +87,7 @@ class ListViewController {
 		if(count($idList) == 0) {
 			return;
 		}
-		if($parentReferenceFieldName) {
+		if(isset($parentReferenceFieldName) && $parentReferenceFieldName) {
 			$moduleList = $referenceFieldInfoList[$field->referenceFieldName];
 		} else {
 			$moduleList = $referenceFieldInfoList[$fieldName];
