@@ -153,15 +153,10 @@
                                                 <a href='{$RELATED_RECORD->getEditViewUrl()}'><i title="{vtranslate('LBL_EDIT', $MODULE)}" class="icon-pencil alignMiddle"></i></a>
                                             {/if}
                                         {/if}
-                                        {if $IS_DELETABLE}
-                                            {if $RELATED_MODULE_NAME eq 'Calendar'}
-                                                {if isPermitted($RELATED_MODULE->get('name'), 'Delete', $RELATED_RECORD->getId()) eq 'yes'}
-                                                    <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
-                                                {/if}
-                                            {else}
-                                                <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
-                                            {/if}
+                                        {if $PARENT_RECORD->isEditable()}
+                                                <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-remove-circle alignMiddle"></i></a>
                                         {/if}
+
                                     </span>
                                 </div>
                             </td>

@@ -111,7 +111,7 @@
                                            class="editListPrice cursorPointer" data-related-recordid='{$RELATED_RECORD->getId()}' data-list-price={$LISTPRICE}>
                                             <i class="icon-pencil alignMiddle" title="{vtranslate('LBL_EDIT', $MODULE)}"></i>
                                         </a>
-                                        <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
+                                        <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-remove-circle alignMiddle"></i></a>
                                     </span>
                                 </div>
                             </td>

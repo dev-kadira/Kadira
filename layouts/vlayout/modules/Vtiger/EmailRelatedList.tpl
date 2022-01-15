@@ -139,8 +139,8 @@
                                         {if !($RELATED_RECORD->isSentMail())}
                                             <a name="emailsEditView"><i title="{vtranslate('LBL_EDIT', $MODULE)}" class="icon-pencil alignMiddle"></i></a>	
                                         {/if}
-                                        {if $IS_DELETABLE}
-                                            <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
+                                        {if $PARENT_RECORD->isEditable()}
+                                                <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-remove-circle alignMiddle"></i></a>
                                         {/if}
                                     </span>
                                 </div>
