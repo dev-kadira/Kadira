@@ -6,31 +6,26 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Reports_Folder_Action extends Vtiger_Action_Controller
-{
-	public function __construct()
-	{
+class Reports_Folder_Action extends Vtiger_Action_Controller {
+
+	function __construct() {
 		parent::__construct();
 		$this->exposeMethod('save');
 		$this->exposeMethod('delete');
 	}
 
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		return $permissions;
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$mode = $request->get('mode');
-		if (! empty($mode)) {
+		if(!empty($mode)) {
 			$this->invokeExposedMethod($mode, $request);
-
 			return;
 		}
 	}
@@ -39,17 +34,16 @@ class Reports_Folder_Action extends Vtiger_Action_Controller
 	 * Function that saves/updates the Folder
 	 * @param Vtiger_Request $request
 	 */
-	public function save(Vtiger_Request $request)
-	{
+	function save(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$folderModel = Reports_Folder_Model::getInstance();
 		$folderId = $request->get('folderid');
 
-		if (! empty($folderId)) {
+		if(!empty($folderId)) {
 			$folderModel->set('folderid', $folderId);
 		}
 
-		// we need to decode if encoded values are given(for XSS vulnerability)
+        // we need to decode if encoded values are given(for XSS vulnerability)
 		$folderModel->set('foldername', decode_html($request->get('foldername')));
 		$folderModel->set('description', decode_html($request->get('description')));
 
@@ -58,7 +52,7 @@ class Reports_Folder_Action extends Vtiger_Action_Controller
 		}
 
 		$folderModel->save();
-		$result = ['success' => true, 'message' => vtranslate('LBL_FOLDER_SAVED', $moduleName), 'info' => $folderModel->getInfoArray()];
+		$result = array('success' => true, 'message' => vtranslate('LBL_FOLDER_SAVED', $moduleName), 'info' => $folderModel->getInfoArray());
 
 		$response = new Vtiger_Response();
 		$response->setResult($result);
@@ -69,8 +63,7 @@ class Reports_Folder_Action extends Vtiger_Action_Controller
 	 * Function that deletes the Folder
 	 * @param Vtiger_Request $request
 	 */
-	public function delete(Vtiger_Request $request)
-	{
+	function delete(Vtiger_Request $request) {
 		$folderId = $request->get('folderid');
 		$moduleName = $request->getModule();
 		if ($folderId) {
@@ -87,16 +80,15 @@ class Reports_Folder_Action extends Vtiger_Action_Controller
 					$success = true;
 				}
 			}
-
-			$result = ['success' => $success, 'message' => $message];
+			
+			$result = array('success' => $success, 'message' => $message);
 			$response = new Vtiger_Response();
 			$response->setResult($result);
 			$response->emit();
 		}
 	}
-
-	public function validateRequest(Vtiger_Request $request)
-	{
-		return true;
-	}
+    
+    public function validateRequest(Vtiger_Request $request) {
+        return true;
+    }
 }

@@ -6,21 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class CustomView_EditAjax_View extends Vtiger_IndexAjax_View
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+Class CustomView_EditAjax_View extends Vtiger_IndexAjax_View {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'source_module', 'action' => 'DetailView'];
-
+		$permissions[] = array('module_parameter' => 'source_module', 'action' => 'DetailView');
 		return $permissions;
 	}
-
-	public function process(Vtiger_Request $request)
-	{
-		$viewer = $this->getViewer($request);
+	
+	public function process(Vtiger_Request $request) {
+		$viewer = $this->getViewer ($request);
 		$moduleName = $request->get('source_module');
 		$module = $request->getModule();
 		$record = $request->get('record');
@@ -29,10 +26,10 @@ class CustomView_EditAjax_View extends Vtiger_IndexAjax_View
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 		$recordStructureInstance = Vtiger_RecordStructure_Model::getInstanceForModule($moduleModel, Vtiger_RecordStructure_Model::RECORD_STRUCTURE_MODE_FILTER);
 
-		if (! empty($record)) {
+		if(!empty($record)) {
 			$customViewModel = CustomView_Record_Model::getInstanceById($record);
 			$viewer->assign('MODE', 'edit');
-		} elseif (! empty($sourceRecord)) {
+		} else if(!empty($sourceRecord)) {
 			$customViewModel = CustomView_Record_Model::getInstanceById($sourceRecord);
 			$viewer->assign('MODE', '');
 		} else {
@@ -45,31 +42,31 @@ class CustomView_EditAjax_View extends Vtiger_IndexAjax_View
 		$viewer->assign('CURRENTDATE', date('Y-n-j'));
 		$viewer->assign('DATE_FILTERS', Vtiger_Field_Model::getDateFilterTypes());
 
-		if ($moduleName == 'Calendar') {
+		if($moduleName == 'Calendar'){
 			$advanceFilterOpsByFieldType = Calendar_Field_Model::getAdvancedFilterOpsByFieldType();
-		} else {
+		} else{
 			$advanceFilterOpsByFieldType = Vtiger_Field_Model::getAdvancedFilterOpsByFieldType();
 		}
 		$viewer->assign('ADVANCED_FILTER_OPTIONS', Vtiger_Field_Model::getAdvancedFilterOptions());
 		$viewer->assign('ADVANCED_FILTER_OPTIONS_BY_TYPE', $advanceFilterOpsByFieldType);
 		$dateFilters = Vtiger_Field_Model::getDateFilterTypes();
-		foreach ($dateFilters as $comparatorKey => $comparatorInfo) {
+		foreach($dateFilters as $comparatorKey => $comparatorInfo) {
 			$comparatorInfo['startdate'] = DateTimeField::convertToUserFormat($comparatorInfo['startdate']);
 			$comparatorInfo['enddate'] = DateTimeField::convertToUserFormat($comparatorInfo['enddate']);
-			$comparatorInfo['label'] = vtranslate($comparatorInfo['label'], $module);
+			$comparatorInfo['label'] = vtranslate($comparatorInfo['label'],$module);
 			$dateFilters[$comparatorKey] = $comparatorInfo;
 		}
 		$viewer->assign('DATE_FILTERS', $dateFilters);
 		$viewer->assign('RECORD_STRUCTURE_MODEL', $recordStructureInstance);
 		$recordStructure = $recordStructureInstance->getStructure();
 		// for Inventory module we should now allow item details block
-		if (in_array($moduleName, getInventoryModules())) {
-			$itemsBlock = 'LBL_ITEM_DETAILS';
+		if(in_array($moduleName, getInventoryModules())){
+			$itemsBlock = "LBL_ITEM_DETAILS";
 			unset($recordStructure[$itemsBlock]);
 		}
 		$viewer->assign('RECORD_STRUCTURE', $recordStructure);
 		// Added to show event module custom fields
-		if ($moduleName == 'Calendar') {
+		if($moduleName == 'Calendar'){
 			$relatedModuleName = 'Events';
 			$relatedModuleModel = Vtiger_Module_Model::getInstance($relatedModuleName);
 			$relatedRecordStructureInstance = Vtiger_RecordStructure_Model::getInstanceForModule($relatedModuleModel, Vtiger_RecordStructure_Model::RECORD_STRUCTURE_MODE_FILTER);
@@ -82,15 +79,15 @@ class CustomView_EditAjax_View extends Vtiger_IndexAjax_View
 		$viewer->assign('CUSTOMVIEW_MODEL', $customViewModel);
 		$viewer->assign('RECORD_ID', $record);
 		$viewer->assign('MODULE', $module);
-		$viewer->assign('SOURCE_MODULE', $moduleName);
+		$viewer->assign('SOURCE_MODULE',$moduleName);
 		$viewer->assign('USER_MODEL', $currentUserModel);
 		$viewer->assign('CV_PRIVATE_VALUE', CustomView_Record_Model::CV_STATUS_PRIVATE);
 		$viewer->assign('CV_PENDING_VALUE', CustomView_Record_Model::CV_STATUS_PENDING);
 		$viewer->assign('CV_PUBLIC_VALUE', CustomView_Record_Model::CV_STATUS_PUBLIC);
-		$viewer->assign('MODULE_MODEL', $moduleModel);
+		$viewer->assign('MODULE_MODEL',$moduleModel);
 
 		$allCustomViews = CustomView_Record_Model::getAllByGroup($moduleName);
-		$allViewNames = [];
+		$allViewNames = array();
 		foreach ($allCustomViews as $views) {
 			foreach ($views as $view) {
 				if ($currentUserModel->getId() == $view->get('userid')) {
@@ -103,13 +100,12 @@ class CustomView_EditAjax_View extends Vtiger_IndexAjax_View
 		$customViewSharedMembers = $customViewModel->getMembers();
 		$listShared = ($customViewModel->get('status') == CustomView_Record_Model::CV_STATUS_PUBLIC) ? true : false;
 		foreach ($customViewSharedMembers as $memberGroupLabel => $membersList) {
-			if (count($membersList) > 0) {
+			if(count($membersList) > 0){
 				$listShared = true;
-
 				break;
 			}
 		}
-		$viewer->assign('LIST_SHARED', $listShared);
+		$viewer->assign('LIST_SHARED',$listShared);
 		$viewer->assign('SELECTED_MEMBERS_GROUP', $customViewSharedMembers);
 		$viewer->assign('MEMBER_GROUPS', Settings_Groups_Member_Model::getAll());
 

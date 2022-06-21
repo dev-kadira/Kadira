@@ -8,41 +8,40 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class PBXManager_OutgoingCall_Action extends Vtiger_Action_Controller
-{
-	public function checkPermission(Vtiger_Request $request)
-	{
+class PBXManager_OutgoingCall_Action extends Vtiger_Action_Controller{
+    
+    public function checkPermission(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
 
-		if (! $permission) {
+		if(!$permission) {
 			throw new AppException('LBL_PERMISSION_DENIED');
 		}
 	}
-
-	public function process(Vtiger_Request $request)
-	{
-		$serverModel = PBXManager_Server_Model::getInstance();
-		$gateway = $serverModel->get('gateway');
-		$response = new Vtiger_Response();
-		$user = Users_Record_Model::getCurrentUserModel();
-		$userNumber = $user->phone_crm_extension;
-
-		if ($gateway && $userNumber) {
-			try {
-				$number = $request->get('number');
-				$recordId = $request->get('record');
-				$connector = $serverModel->getConnector();
-				$result = $connector->call($number, $recordId);
-				$response->setResult($result);
-			} catch (Exception $e) {
-				throw new Exception($e);
-			}
-		} else {
-			$response->setResult(false);
-		}
-		$response->emit();
-	}
+    
+    public function process(Vtiger_Request $request) {
+        $serverModel = PBXManager_Server_Model::getInstance();
+        $gateway = $serverModel->get("gateway");
+        $response = new Vtiger_Response();
+        $user = Users_Record_Model::getCurrentUserModel();
+	$userNumber = $user->phone_crm_extension;
+        
+        if($gateway && $userNumber){
+            try{
+                $number = $request->get('number');
+                $recordId = $request->get('record');
+                $connector = $serverModel->getConnector();
+                $result = $connector->call($number, $recordId);
+                $response->setResult($result);
+            }catch(Exception $e){
+                throw new Exception($e);
+            }
+        }else{
+            $response->setResult(false);
+        }
+        $response->emit();
+    }
+    
 }

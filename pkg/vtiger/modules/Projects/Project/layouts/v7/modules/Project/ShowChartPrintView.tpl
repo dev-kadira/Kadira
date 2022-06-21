@@ -23,7 +23,6 @@
 			<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css" type="text/css">
 
 			<script src="libraries/jquery/jquery.min.js"></script>
-			<script src="libraries/jquery/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
 
 			<script src="libraries/jquery/gantt/libs/jquery.livequery.min.js"></script>
 			<script src="libraries/jquery/gantt/libs/jquery.timers.js"></script>

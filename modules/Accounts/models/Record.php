@@ -6,31 +6,29 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Accounts_Record_Model extends Vtiger_Record_Model
-{
+class Accounts_Record_Model extends Vtiger_Record_Model {
+
 	/**
 	 * Function returns the details of Accounts Hierarchy
 	 * @return <Array>
 	 */
-	public function getAccountHierarchy()
-	{
+	function getAccountHierarchy() {
 		$focus = CRMEntity::getInstance($this->getModuleName());
 		$hierarchy = $focus->getAccountHierarchy($this->getId());
-		$i = 0;
-		foreach ($hierarchy['entries'] as $accountId => $accountInfo) {
+		$i=0;
+		foreach($hierarchy['entries'] as $accountId => $accountInfo) {
 			preg_match('/<a href="+/', $accountInfo[0], $matches);
-			if ($matches != null) {
+			if($matches != null) {
 				preg_match('/[.\s]+/', $accountInfo[0], $dashes);
-				preg_match('/<a(.*)>(.*)<\\/a>/i', $accountInfo[0], $name);
+				preg_match("/<a(.*)>(.*)<\/a>/i",$accountInfo[0], $name);
 
 				$recordModel = Vtiger_Record_Model::getCleanInstance('Accounts');
 				$recordModel->setId($accountId);
-				$hierarchy['entries'][$accountId][0] = $dashes[0].'<a href='.$recordModel->getDetailViewUrl().'>'.$name[2].'</a>';
+				$hierarchy['entries'][$accountId][0] = $dashes[0]."<a href=".$recordModel->getDetailViewUrl().">".$name[2]."</a>";
 			}
 		}
-
 		return $hierarchy;
 	}
 
@@ -38,10 +36,8 @@ class Accounts_Record_Model extends Vtiger_Record_Model
 	 * Function returns the url for create event
 	 * @return <String>
 	 */
-	public function getCreateEventUrl()
-	{
+	function getCreateEventUrl() {
 		$calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
-
 		return $calendarModuleModel->getCreateEventRecordUrl().'&parent_id='.$this->getId();
 	}
 
@@ -49,10 +45,8 @@ class Accounts_Record_Model extends Vtiger_Record_Model
 	 * Function returns the url for create todo
 	 * @retun <String>
 	 */
-	public function getCreateTaskUrl()
-	{
+	function getCreateTaskUrl() {
 		$calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
-
 		return $calendarModuleModel->getCreateTaskRecordUrl().'&parent_id='.$this->getId();
 	}
 
@@ -60,16 +54,15 @@ class Accounts_Record_Model extends Vtiger_Record_Model
 	 * Function to check duplicate exists or not
 	 * @return <boolean>
 	 */
-	public function checkDuplicate()
-	{
+	public function checkDuplicate() {
 		$db = PearDatabase::getInstance();
 
-		$query = 'SELECT 1 FROM vtiger_crmentity WHERE setype = ? AND label = ? AND deleted = 0';
-		$params = [$this->getModule()->getName(), decode_html($this->getName())];
+		$query = "SELECT 1 FROM vtiger_crmentity WHERE setype = ? AND label = ? AND deleted = 0";
+                $params = array($this->getModule()->getName(), decode_html($this->getName())); 
 
 		$record = $this->getId();
 		if ($record) {
-			$query .= ' AND crmid != ?';
+			$query .= " AND crmid != ?";
 			array_push($params, $record);
 		}
 
@@ -77,7 +70,6 @@ class Accounts_Record_Model extends Vtiger_Record_Model
 		if ($db->num_rows($result)) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -85,24 +77,23 @@ class Accounts_Record_Model extends Vtiger_Record_Model
 	 * Function to get List of Fields which are related from Accounts to Inventory Record.
 	 * @return <array>
 	 */
-	public function getInventoryMappingFields()
-	{
-		return [
-			//Billing Address Fields
-			['parentField'=>'bill_city', 'inventoryField'=>'bill_city', 'defaultValue'=>''],
-			['parentField'=> 'bill_street', 'inventoryField'=>'bill_street', 'defaultValue'=>''],
-			['parentField'=> 'bill_state', 'inventoryField'=>'bill_state', 'defaultValue'=>''],
-			['parentField'=> 'bill_code', 'inventoryField'=>'bill_code', 'defaultValue'=>''],
-			['parentField'=> 'bill_country', 'inventoryField'=>'bill_country', 'defaultValue'=>''],
-			['parentField'=> 'bill_pobox', 'inventoryField'=>'bill_pobox', 'defaultValue'=>''],
+	public function getInventoryMappingFields() {
+		return array(
+				//Billing Address Fields
+				array('parentField'=>'bill_city', 'inventoryField'=>'bill_city', 'defaultValue'=>''),
+				array('parentField'=>'bill_street', 'inventoryField'=>'bill_street', 'defaultValue'=>''),
+				array('parentField'=>'bill_state', 'inventoryField'=>'bill_state', 'defaultValue'=>''),
+				array('parentField'=>'bill_code', 'inventoryField'=>'bill_code', 'defaultValue'=>''),
+				array('parentField'=>'bill_country', 'inventoryField'=>'bill_country', 'defaultValue'=>''),
+				array('parentField'=>'bill_pobox', 'inventoryField'=>'bill_pobox', 'defaultValue'=>''),
 
-			//Shipping Address Fields
-			['parentField'=>'ship_city', 'inventoryField'=>'ship_city', 'defaultValue'=>''],
-			['parentField'=> 'ship_street', 'inventoryField'=>'ship_street', 'defaultValue'=>''],
-			['parentField'=> 'ship_state', 'inventoryField'=>'ship_state', 'defaultValue'=>''],
-			['parentField'=> 'ship_code', 'inventoryField'=>'ship_code', 'defaultValue'=>''],
-			['parentField'=> 'ship_country', 'inventoryField'=>'ship_country', 'defaultValue'=>''],
-			['parentField'=> 'ship_pobox', 'inventoryField'=>'ship_pobox', 'defaultValue'=>'']
-		];
+				//Shipping Address Fields
+				array('parentField'=>'ship_city', 'inventoryField'=>'ship_city', 'defaultValue'=>''),
+				array('parentField'=>'ship_street', 'inventoryField'=>'ship_street', 'defaultValue'=>''),
+				array('parentField'=>'ship_state', 'inventoryField'=>'ship_state', 'defaultValue'=>''),
+				array('parentField'=>'ship_code', 'inventoryField'=>'ship_code', 'defaultValue'=>''),
+				array('parentField'=>'ship_country', 'inventoryField'=>'ship_country', 'defaultValue'=>''),
+				array('parentField'=>'ship_pobox', 'inventoryField'=>'ship_pobox', 'defaultValue'=>'')
+		);
 	}
 }

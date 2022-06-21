@@ -39,7 +39,7 @@ class Vtiger_List_View extends Vtiger_Index_View {
 		}
 
 		$viewer = $this->getViewer($request);
-		$cvId = isset($this->viewName) ? $this->viewName : 0;
+		$cvId = $this->viewName;
 
 		if(!$cvId) {
 			$customView = new CustomView();
@@ -56,7 +56,7 @@ class Vtiger_List_View extends Vtiger_Index_View {
                 $this->listViewModel = Vtiger_ListView_Model::getInstance($moduleName, $cvId, $listHeaders);
 		$orderParams = $this->listViewModel->getSortParamsSession($listViewSessionKey);
 
-		if(empty($listHeaders) && is_array($orderParams)) {
+		if(empty($listHeaders)) {
 			$listHeaders = $orderParams['list_headers'];
 		}
 
@@ -105,12 +105,6 @@ class Vtiger_List_View extends Vtiger_Index_View {
 		if(!empty($viewName)) {
 			$this->viewName = $viewName;
 		}
-		$params = $request->get('search_params');
-		$searchparams="";
-		foreach ($params[0] as $key => $val) {
-		   $searchparams .= "&" . $val[0] . "=" . ucfirst($val[2]);		   	 
-		}
-		$viewer->assign('searchparams', $searchparams);
 
 		$this->initializeListViewContents($request, $viewer);
 		$this->assignCustomViews($request,$viewer);
@@ -222,12 +216,12 @@ class Vtiger_List_View extends Vtiger_Index_View {
 			$orderBy = '';
 			$sortOrder = '';
 		}
-		if(empty($listHeaders) && is_array($orderParams)) {
+		if(empty($listHeaders)) {
 			$listHeaders = $orderParams['list_headers'];
 		}
                 
                 
-		if(!empty($tag) && empty($tagParams) && is_array($orderParams)){
+		if(!empty($tag) && empty($tagParams)){
                     $tagParams = $orderParams['tag_params'];
 		}
                 
@@ -369,15 +363,15 @@ class Vtiger_List_View extends Vtiger_Index_View {
 		}
 		$viewer->assign('PAGE_NUMBER',$pageNumber);
 
-		if(!isset($this->moduleFieldStructure) || !$this->moduleFieldStructure) {
+		if(!$this->moduleFieldStructure) {
 			$recordStructure = Vtiger_RecordStructure_Model::getInstanceForModule($listViewModel->getModule(), Vtiger_RecordStructure_Model::RECORD_STRUCTURE_MODE_FILTER);
 			$this->moduleFieldStructure = $recordStructure->getStructure();   
 		}
 
-		if(!isset($this->tags) || !$this->tags) {
+		if(!$this->tags) {
 			$this->tags = Vtiger_Tag_Model::getAllAccessible($currentUser->id, $moduleName);
 		}
-		if(!isset($this->allUserTags) || !$this->allUserTags) {
+		if(!$this->allUserTags) {
 			$this->allUserTags = Vtiger_Tag_Model::getAllUserTags($currentUser->getId());
 		}
 

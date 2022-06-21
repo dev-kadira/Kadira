@@ -6,50 +6,30 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
-{
-	/**
-	 * __construct
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
+class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller {
+
+	function __construct() {
 		$this->exposeMethod('addTab');
 		$this->exposeMethod('deleteTab');
 		$this->exposeMethod('renameTab');
 		$this->exposeMethod('updateTabSequence');
 	}
 
-	/**
-	 * requiresPermission
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function requiresPermission(Vtiger_Request $request)
-	{
+	public function requiresPermission(Vtiger_Request $request){
 		$permissions = parent::requiresPermission($request);
-		if ($request->get('module') != 'Dashboard') {
+		if($request->get('module') != 'Dashboard'){
 			$request->set('custom_module', 'Dashboard');
-			$permissions[] = ['module_parameter' => 'custom_module', 'action' => 'DetailView'];
-		} else {
-			$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
+			$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'DetailView');
+		}else{
+			$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		}
-
+		
 		return $permissions;
 	}
-
-	/**
-	 * process
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		$mode = $request->get('mode');
 		if ($mode) {
 			$this->invokeExposedMethod($mode, $request);
@@ -60,8 +40,7 @@ class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
 	 * Function to add Dashboard Tab
 	 * @param Vtiger_Request $request
 	 */
-	public function addTab(Vtiger_Request $request)
-	{
+	function addTab(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$tabName = $request->getRaw('tabName');
 
@@ -73,7 +52,7 @@ class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
 
 		if ($tabLimitExceeded) {
 			$response->setError(100, vtranslate('LBL_TABS_LIMIT_EXCEEDED', $moduleName));
-		} elseif ($tabExist) {
+		} else if ($tabExist) {
 			$response->setError(100, vtranslate('LBL_DASHBOARD_TAB_ALREADY_EXIST', $moduleName));
 		} else {
 			$tabData = $dashBoardModel->addTab($tabName);
@@ -86,8 +65,7 @@ class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
 	 * Function to delete Dashboard Tab
 	 * @param Vtiger_Request $request
 	 */
-	public function deleteTab(Vtiger_Request $request)
-	{
+	function deleteTab(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$tabId = $request->get('tabid');
 		$dashBoardModel = Vtiger_DashBoard_Model::getInstance($moduleName);
@@ -106,8 +84,7 @@ class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
 	 * Funtion to rename Dashboard Tab
 	 * @param Vtiger_Request $request
 	 */
-	public function renameTab(Vtiger_Request $request)
-	{
+	function renameTab(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$tabName = $request->get('tabname');
 		$tabId = $request->get('tabid');
@@ -123,16 +100,9 @@ class Vtiger_DashBoardTab_Action extends Vtiger_Action_Controller
 		$response->emit();
 	}
 
-	/**
-	 * updateTabSequence
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function updateTabSequence(Vtiger_Request $request)
-	{
+	function updateTabSequence(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
-		$sequence = $request->get('sequence');
+		$sequence = $request->get("sequence");
 		$dashBoardModel = Vtiger_DashBoard_Model::getInstance($moduleName);
 		$result = $dashBoardModel->updateTabSequence($sequence);
 		$response = new Vtiger_Response();

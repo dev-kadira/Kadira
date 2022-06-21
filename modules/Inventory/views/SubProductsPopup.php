@@ -6,46 +6,42 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
-{
-	public function requiresPermission(Vtiger_Request $request)
-	{
+class Inventory_SubProductsPopup_View extends Vtiger_Popup_View {
+
+	public function requiresPermission(Vtiger_Request $request){
 		$permissions = parent::requiresPermission($request);
-
-		$permissions[] = ['module_parameter' => 'custom_module', 'action' => 'DetailView'];
+		
+		$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'DetailView');
 		$request->set('custom_module', $this->getModule($request));
-
 		return $permissions;
 	}
-
+	
 	/**
 	 * Function returns module name for which Popup will be initialized
 	 * @param type $request
 	 */
-	public function getModule($request)
-	{
+	function getModule($request) {
 		return 'Products';
 	}
 
-	public function process(Vtiger_Request $request)
-	{
-		$viewer = $this->getViewer($request);
+	function process (Vtiger_Request $request) {
+		$viewer = $this->getViewer ($request);
 		$companyDetails = Vtiger_CompanyDetails_Model::getInstanceById();
 		$companyLogo = $companyDetails->getLogo();
 
 		$this->initializeListViewContents($request, $viewer);
 
 		$moduleName = 'Inventory';
-		$viewer->assign('COMPANY_LOGO', $companyLogo);
-		$viewer->assign('MODULE_NAME', $moduleName);
+		$viewer->assign('COMPANY_LOGO',$companyLogo);
+		$viewer->assign('MODULE_NAME',$moduleName);
 		$viewer->view('PopupEntries.tpl', $moduleName);
 	}
-
-	// Function to initialize the required data in smarty to display the List View Contents
-	public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer)
-	{
+	/*
+	 * Function to initialize the required data in smarty to display the List View Contents
+	 */
+	public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer) {
 		//src_module value is added to just to stop showing inactive products
 		$request->set('src_module', $request->getModule());
 
@@ -60,7 +56,7 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$searchKey = $request->get('search_key');
 		$searchValue = $request->get('search_value');
 		$currencyId = $request->get('currency_id');
-		$searchParams = $request->get('search_params');
+		$searchParams=$request->get('search_params');
 
 		//To handle special operation when selecting record from Popup
 		$getUrl = $request->get('get_url');
@@ -71,14 +67,14 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 
 		//Check whether the request is in multi select mode
 		$multiSelectMode = $request->get('multi_select');
-		if (empty($multiSelectMode)) {
+		if(empty($multiSelectMode)) {
 			$multiSelectMode = false;
 		}
 
-		if (empty($cvId)) {
+		if(empty($cvId)) {
 			$cvId = '0';
 		}
-		if (empty($pageNumber)) {
+		if(empty ($pageNumber)){
 			$pageNumber = '1';
 		}
 
@@ -89,65 +85,64 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$listViewModel = Vtiger_ListView_Model::getInstanceForPopup($moduleName);
 		$recordStructureInstance = Vtiger_RecordStructure_Model::getInstanceForModule($moduleModel);
 
-		if (! empty($orderBy)) {
+		if(!empty($orderBy)) {
 			$listViewModel->set('orderby', $orderBy);
 			$listViewModel->set('sortorder', $sortOrder);
 		}
-		if (! empty($sourceModule)) {
+		if(!empty($sourceModule)) {
 			$listViewModel->set('src_module', $sourceModule);
 			$listViewModel->set('src_field', $sourceField);
 			$listViewModel->set('src_record', $sourceRecord);
 		}
-		if ((! empty($searchKey)) && (! empty($searchValue))) {
+		if((!empty($searchKey)) && (!empty($searchValue)))  {
 			$listViewModel->set('search_key', $searchKey);
 			$listViewModel->set('search_value', $searchValue);
 		}
 
-		if ($subProductsPopup && $parentProductId) {
+		if($subProductsPopup && $parentProductId){
 			$listViewModel->set('subProductsPopup', true);
 			$listViewModel->set('productId', $parentProductId);
 			$viewer->assign('SUBPRODUCTS_POPUP', $subProductsPopup);
 			$viewer->assign('PARENT_PRODUCT_ID', $parentProductId);
 		}
 
-		if (! empty($searchParams)) {
+		if(!empty($searchParams)) { 
 			$transformedSearchParams = $this->transferListSearchParamsToFilterCondition($searchParams, $listViewModel->getModule());
-			$listViewModel->set('search_params', $transformedSearchParams);
+			$listViewModel->set('search_params',$transformedSearchParams);
 		}
 
-		if (! $this->listViewHeaders) {
+		if(!$this->listViewHeaders){
 			$this->listViewHeaders = $listViewModel->getListViewHeaders();
 		}
 
-		if (! $this->listViewEntries) {
+		if(!$this->listViewEntries){
 			$this->listViewEntries = $listViewModel->getListViewEntries($pagingModel);
 		}
 
 		$noOfEntries = count($this->listViewEntries);
 
-		if (empty($sortOrder)) {
-			$sortOrder = 'ASC';
+		if(empty($sortOrder)){
+			$sortOrder = "ASC";
 		}
-		if ($sortOrder == 'ASC') {
-			$nextSortOrder = 'DESC';
-			$sortImage = 'downArrowSmall.png';
-		} else {
-			$nextSortOrder = 'ASC';
-			$sortImage = 'upArrowSmall.png';
+		if($sortOrder == "ASC"){
+			$nextSortOrder = "DESC";
+			$sortImage = "downArrowSmall.png";
+		}else{
+			$nextSortOrder = "ASC";
+			$sortImage = "upArrowSmall.png";
 		}
-		if (empty($searchParams)) {
-			$searchParams = [];
+		if(empty($searchParams)) {
+			$searchParams = array();
 		}
-
-		//To make smarty to get the details easily accesible
-		foreach ($searchParams as $fieldListGroup) {
-			foreach ($fieldListGroup as $fieldSearchInfo) {
+				//To make smarty to get the details easily accesible
+		foreach($searchParams as $fieldListGroup){
+			foreach($fieldListGroup as $fieldSearchInfo){
 				$fieldSearchInfo['searchValue'] = $fieldSearchInfo[2];
 				$fieldSearchInfo['fieldName'] = $fieldName = $fieldSearchInfo[0];
 				$fieldSearchInfo['comparator'] = $fieldSearchInfo[1];
 				$searchParams[$fieldName] = $fieldSearchInfo;
 			}
-		}
+	   }
 		$viewer->assign('MODULE', $moduleName);
 
 		$viewer->assign('SOURCE_MODULE', $sourceModule);
@@ -157,10 +152,10 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$viewer->assign('SEARCH_KEY', $searchKey);
 		$viewer->assign('SEARCH_VALUE', $searchValue);
 
-		$viewer->assign('ORDER_BY', $orderBy);
-		$viewer->assign('SORT_ORDER', $sortOrder);
-		$viewer->assign('NEXT_SORT_ORDER', $nextSortOrder);
-		$viewer->assign('SORT_IMAGE', $sortImage);
+		$viewer->assign('ORDER_BY',$orderBy);
+		$viewer->assign('SORT_ORDER',$sortOrder);
+		$viewer->assign('NEXT_SORT_ORDER',$nextSortOrder);
+		$viewer->assign('SORT_IMAGE',$sortImage);
 		$viewer->assign('GETURL', $getUrl);
 		$viewer->assign('CURRENCY_ID', $currencyId);
 
@@ -168,22 +163,22 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$viewer->assign('RECORD_STRUCTURE', $recordStructureInstance->getStructure());
 
 		$viewer->assign('PAGING_MODEL', $pagingModel);
-		$viewer->assign('PAGE_NUMBER', $pageNumber);
+		$viewer->assign('PAGE_NUMBER',$pageNumber);
 
-		$viewer->assign('LISTVIEW_ENTRIES_COUNT', $noOfEntries);
+		$viewer->assign('LISTVIEW_ENTRIES_COUNT',$noOfEntries);
 		$viewer->assign('LISTVIEW_HEADERS', $this->listViewHeaders);
 		$viewer->assign('LISTVIEW_ENTRIES', $this->listViewEntries);
 		$viewer->assign('SEARCH_DETAILS', $searchParams);
 
 		if (PerformancePrefs::getBoolean('LISTVIEW_COMPUTE_PAGE_COUNT', false)) {
-			if (! $this->listViewCount) {
+			if(!$this->listViewCount){
 				$this->listViewCount = $listViewModel->getListViewCount();
 			}
 			$totalCount = $this->listViewCount;
 			$pageLimit = $pagingModel->getPageLimit();
 			$pageCount = ceil((int) $totalCount / (int) $pageLimit);
 
-			if ($pageCount == 0) {
+			if($pageCount == 0){
 				$pageCount = 1;
 			}
 			$viewer->assign('PAGE_COUNT', $pageCount);
@@ -198,13 +193,11 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$viewer->assign('VIEW', 'SubProductsPopup');
 		$viewer->assign('MAIN_PRODUCT_POPUP', true);
 	}
-
 	/**
 	 * Function to get listView count
 	 * @param Vtiger_Request $request
 	 */
-	public function getListViewCount(Vtiger_Request $request)
-	{
+	function getListViewCount(Vtiger_Request $request){
 		$moduleName = $this->getModule($request);
 		$sourceModule = $request->get('src_module');
 		$sourceField = $request->get('src_field');
@@ -216,60 +209,56 @@ class Inventory_SubProductsPopup_View extends Vtiger_Popup_View
 		$searchValue = $request->get('search_value');
 		$subProductsPopup = $request->get('subProductsPopup');
 		$parentProductId = $request->get('productid');
-		$searchParams = $request->get('search_params');
+		$searchParams=$request->get('search_params');
 		$listViewModel = Vtiger_ListView_Model::getInstanceForPopup($moduleName);
-
-		if (! empty($sourceModule)) {
+		if(!empty($sourceModule)) {
 			$listViewModel->set('src_module', $sourceModule);
 			$listViewModel->set('src_field', $sourceField);
 			$listViewModel->set('src_record', $sourceRecord);
 		}
 
-		if (! empty($orderBy)) {
+		if(!empty($orderBy)) {
 			$listViewModel->set('orderby', $orderBy);
 			$listViewModel->set('sortorder', $sortOrder);
 		}
-		if ((! empty($searchKey)) && (! empty($searchValue))) {
+		if((!empty($searchKey)) && (!empty($searchValue)))  {
 			$listViewModel->set('search_key', $searchKey);
 			$listViewModel->set('search_value', $searchValue);
 		}
-		if ($subProductsPopup && $parentProductId) {
+		if($subProductsPopup && $parentProductId){
 			$listViewModel->set('subProductsPopup', true);
 			$listViewModel->set('productId', $parentProductId);
 		}
-		if (! empty($searchParams)) {
+		if(!empty($searchParams)) { 
 			$transformedSearchParams = $this->transferListSearchParamsToFilterCondition($searchParams, $listViewModel->getModule());
-			$listViewModel->set('search_params', $transformedSearchParams);
+			$listViewModel->set('search_params',$transformedSearchParams);
 		}
+		$count = $listViewModel->getListViewCount();
 
-		return $listViewModel->getListViewCount();
+		return $count;
 	}
 
 	/**
 	 * Function to get the page count for list
 	 * @return total number of pages
 	 */
-	public function getPageCount(Vtiger_Request $request)
-	{
+	function getPageCount(Vtiger_Request $request){
 		$listViewCount = $this->getListViewCount($request);
 		$pagingModel = new Vtiger_Paging_Model();
 		$pageLimit = $pagingModel->getPageLimit();
 		$pageCount = ceil((int) $listViewCount / (int) $pageLimit);
 
-		if ($pageCount == 0) {
+		if($pageCount == 0){
 			$pageCount = 1;
 		}
-
-		$result = [];
+		$result = array();
 		$result['page'] = $pageCount;
 		$result['numberOfRecords'] = $listViewCount;
 		$response = new Vtiger_Response();
 		$response->setResult($result);
 		$response->emit();
 	}
-
-	public function transferListSearchParamsToFilterCondition($listSearchParams, $moduleModel)
-	{
+	public function transferListSearchParamsToFilterCondition($listSearchParams, $moduleModel) {
 		return Vtiger_Util_Helper::transferListSearchParamsToFilterCondition($listSearchParams, $moduleModel);
 	}
 }

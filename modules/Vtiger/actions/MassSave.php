@@ -6,53 +6,35 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Vtiger_MassSave_Action extends Vtiger_Mass_Action
-{
-	/**
-	 * requiresPermission
-	 *
-	 * @param  mixed $request
-	 * @return Array
-	 */
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Vtiger_MassSave_Action extends Vtiger_Mass_Action {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'EditView'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'EditView');
 		return $permissions;
 	}
-
-	/**
-	 * process
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		$response = new Vtiger_Response();
-
 		try {
-			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', $request->get('_timeStampNoChangeMode', false));
-
+			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', $request->get('_timeStampNoChangeMode',false));
 			$moduleName = $request->getModule();
 			$recordModels = $this->getRecordModelsFromRequest($request);
 			$allRecordSave= true;
-
-			foreach ($recordModels as $recordId => $recordModel) {
-				if (Users_Privileges_Model::isPermitted($moduleName, 'Save', $recordId)) {
+			foreach($recordModels as $recordId => $recordModel) {
+				if(Users_Privileges_Model::isPermitted($moduleName, 'Save', $recordId)) {
 					$recordModel->save();
 				} else {
 					$allRecordSave= false;
 				}
 			}
 			vglobal('VTIGER_TIMESTAMP_NO_CHANGE_MODE', false);
-			if ($allRecordSave) {
+			if($allRecordSave) {
 				$response->setResult(true);
 			} else {
-				$response->setResult(false);
+			   $response->setResult(false);
 			}
 		} catch (DuplicateException $e) {
 			$response->setError($e->getMessage(), $e->getDuplicationMessage(), $e->getMessage());
@@ -67,46 +49,36 @@ class Vtiger_MassSave_Action extends Vtiger_Mass_Action
 	 * @param Vtiger_Request $request
 	 * @return array of Vtiger_Record_Model
 	 */
-	protected function getRecordModelsFromRequest(Vtiger_Request $request)
-	{
+	protected function getRecordModelsFromRequest(Vtiger_Request $request) {
 		$recordIds = $this->getRecordsListFromRequest($request);
-		$recordModels = [];
+		$recordModels = array();
 
-		foreach ($recordIds as $recordId) {
+		foreach($recordIds as $recordId) {
 			$recordModels[$recordId] = $this->getUpdatedRecord($request, $recordId);
 		}
-
+		
 		return $recordModels;
 	}
-
-	/**
-	 * getUpdatedRecord
-	 *
-	 * @param  mixed $request
-	 * @param  mixed $recordId
-	 * @return void
-	 */
-	private function getUpdatedRecord(Vtiger_Request $request, $recordId)
-	{
+	
+	private function getUpdatedRecord(Vtiger_Request $request, $recordId) {
 		$recordModel = Vtiger_Record_Model::getInstanceById($recordId);
 		$recordModel->set('mode', 'edit');
 		$fieldModelList = $recordModel->getModule()->getFields();
-
+		
 		foreach ($fieldModelList as $fieldName => $fieldModel) {
 			if ($request->has($fieldName)) {
 				$fieldValue = $request->get($fieldName, null);
 				$fieldDataType = $fieldModel->getFieldDataType();
-				if ($fieldDataType == 'time') {
+				if($fieldDataType == 'time'){
 					$fieldValue = Vtiger_Time_UIType::getTimeValueWithSeconds($fieldValue);
 				}
-
-				if (! is_array($fieldValue)) {
+				
+				if (!is_array($fieldValue)) {
 					$fieldValue = trim($fieldValue);
 				}
 				$recordModel->set($fieldName, $fieldValue);
 			}
 		}
-
 		return $recordModel;
 	}
 }

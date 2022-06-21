@@ -28,19 +28,19 @@
             <div class=" col-md-3">
             <div class="btn-group listViewActionsContainer" role="group" aria-label="...">
                 {if $editAction}
-                    <button type="button" class="btn btn-outline-primary" id={$MODULE}_listView_massAction_{$editAction->getLabel()} 
+                    <button type="button" class="btn btn-default" id={$MODULE}_listView_massAction_{$editAction->getLabel()} 
                             {if stripos($editAction->getUrl(), 'javascript:')===0} href="javascript:void(0);" onclick='{$editAction->getUrl()|substr:strlen("javascript:")}'{else} href='{$editAction->getUrl()}' {/if} title="{vtranslate('LBL_EDIT', $MODULE)}" disabled="disabled">
                         <i class="fa fa-pencil"></i>
                     </button>
                 {/if}
                 {if $deleteAction}
-                    <button type="button" class="btn btn-outline-primary" id={$MODULE}_listView_massAction_{$deleteAction->getLabel()} 
+                    <button type="button" class="btn btn-default" id={$MODULE}_listView_massAction_{$deleteAction->getLabel()} 
                             {if stripos($deleteAction->getUrl(), 'javascript:')===0} href="javascript:void(0);" onclick='{$deleteAction->getUrl()|substr:strlen("javascript:")}'{else} href='{$deleteAction->getUrl()}' {/if} title="{vtranslate('LBL_DELETE', $MODULE)}" disabled="disabled">
                         <i class="fa fa-trash"></i>
                     </button>
                 {/if}
                 {if $commentAction}
-                    <button type="button" class="btn btn-outline-primary" id="{$MODULE}_listView_massAction_{$commentAction->getLabel()}" 
+                    <button type="button" class="btn btn-default" id="{$MODULE}_listView_massAction_{$commentAction->getLabel()}" 
                             onclick="Vtiger_List_Js.triggerMassAction('{$commentAction->getUrl()}')" title="{vtranslate('LBL_COMMENT', $MODULE)}" disabled="disabled">
                         <i class="fa fa-comment"></i>
                     </button>
@@ -48,7 +48,7 @@
 
                 {if count($LISTVIEW_MASSACTIONS_1) gt 0 or $LISTVIEW_LINKS['LISTVIEW']|@count gt 0}
                     <div class="btn-group listViewMassActions" role="group">
-                        <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                             {vtranslate('LBL_MORE','Vtiger')}&nbsp;
                             <span class="caret"></span>
                         </button>

@@ -215,6 +215,7 @@ $languageStrings = array(
     'Default Activity Type' => 'Tipo de actividad por defecto',
     'Default Record View' => 'Vista de registro por defecto',
     'Left Panel Hide' => 'Ocultar panel izquierdo',
+    'Default Landing Page' => 'Página de acceso por defecto',
     'Row Height' => 'Alto de fila',
 	'LBL_RESTORE_USER_FAILED' => 'Error al restaurar el usuario. Ya existe un usuario del CRM con este nombre de usuario.',
     
@@ -249,6 +250,29 @@ $languageStrings = array(
   'LBL_USER_TO_BE_DELETED' => 'Usuario eliminado',
   'LBL_USERS_SETTINGS' => 'CONFIGURACIÓN DE USUARIOS',
   'LBL_TEMPLATES' => 'Plantillas',
+    
+    //Calendar Settings
+    'Sunday' => 'Domingo',
+    'Monday' => 'Lunes',
+    'Tuesday' => 'Martes',
+    'Wednesday' => 'Miércoles',
+    'Thursday' => 'Jueves',
+    'Friday' => 'Viernes',
+    'Saturday' => 'Sábado',
+    
+    '1 Minute' => '1 minuto',
+    '5 Minutes' => '5 minutos',
+    '15 Minutes' => '15 minutos',
+    '30 Minutes' => '30 minutos',
+    '45 Minutes' => '45 minutos',
+    '1 Hour' => '1 hora',
+    '1 Day' => '1 día',
+    
+    'Today' => 'Hoy',
+    'This Week' => 'Esta semana',
+    'This Month' => 'Este mes',
+    'This Year' => 'Este año',
+    'Agenda' => 'Agenda',
 
 );
 $jsLanguageStrings = array(

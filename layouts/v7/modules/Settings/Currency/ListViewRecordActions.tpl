@@ -25,7 +25,7 @@
                     <i class="fa fa-trash" ></i>
                     </a>
                 {/if}
-                {if is_numeric($RECORD_LINK) && !$RECORD_LINK@lastui-sortable}
+                {if !$RECORD_LINK@lastui-sortable}
                     &nbsp;&nbsp;
                 {/if}
                 </span>

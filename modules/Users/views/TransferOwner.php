@@ -6,42 +6,39 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Users_TransferOwner_View extends Vtiger_Index_View
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
-		return [];
+class Users_TransferOwner_View extends Vtiger_Index_View {
+    
+    public function requiresPermission(\Vtiger_Request $request) {
+		return array();
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+    
+	public function checkPermission(Vtiger_Request $request){
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		if (! $currentUserModel->isAdminUser()) {
+		if(!$currentUserModel->isAdminUser()) {
 			throw new AppException(vtranslate('LBL_PERMISSION_DENIED', 'Vtiger'));
 		}
 	}
-
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$userid = $request->get('record');
-
+		
 		$userRecordModel = Users_Record_Model::getCurrentUserModel();
 		$viewer = $this->getViewer($request);
 		$usersList = $userRecordModel->getActiveAdminUsers(true);
-
-		if (array_key_exists($userid, $usersList)) {
+		
+		if(array_key_exists($userid, $usersList)){
 			unset($usersList[$userid]);
 		}
-
+		
 		$viewer->assign('MODULE', $moduleName);
 		$viewer->assign('USERID', $userid);
 		$viewer->assign('TRANSFER_USER_NAME', $userRecordModel->getName());
 		$viewer->assign('USER_LIST', $usersList);
 		$viewer->assign('CURRENT_USER_MODEL', $userRecordModel);
-
+		
 		$viewer->view('TransferOwner.tpl', $moduleName);
 	}
 }

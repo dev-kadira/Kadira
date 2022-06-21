@@ -10,76 +10,62 @@
 
 /**
  * Function to get the field information from module name and field label
- * @param mixed $module
- * @param mixed $label
- * @param mixed $mode
  */
-function getFieldByReportLabel($module, $label, $mode = 'label')
-{
+function getFieldByReportLabel($module, $label, $mode = 'label') {
 	$cacheLabel = VTCacheUtils::getReportFieldByLabel($module, $label);
-	if ($cacheLabel) {
-		return $cacheLabel;
-	}
+	if($cacheLabel) return $cacheLabel;
 
 	// this is required so the internal cache is populated or reused.
 	getColumnFields($module);
 	//lookup all the accessible fields
 	$cachedModuleFields = VTCacheUtils::lookupFieldInfo_Module($module);
 	$label = decode_html($label);
-
-	if ($module == 'Calendar') {
+	
+	if($module == 'Calendar') {
 		$cachedEventsFields = VTCacheUtils::lookupFieldInfo_Module('Events');
 		if ($cachedEventsFields) {
-			if (empty($cachedModuleFields)) {
-				$cachedModuleFields = $cachedEventsFields;
-			} else {
-				$cachedModuleFields = array_merge($cachedModuleFields, $cachedEventsFields);
-			}
+			if(empty($cachedModuleFields)) $cachedModuleFields = $cachedEventsFields;
+			else $cachedModuleFields = array_merge($cachedModuleFields, $cachedEventsFields);
 		}
-		if ($label == 'Start_Date_and_Time') {
+		if($label == 'Start_Date_and_Time') {
 			$label = 'Start_Date_&_Time';
 		}
 	}
-
-	if (empty($cachedModuleFields)) {
+	
+	if(empty($cachedModuleFields)) {
 		return null;
 	}
-
+    
 	foreach ($cachedModuleFields as $fieldInfo) {
-		if ($mode == 'name') {
-			$fieldLabel = $fieldInfo['fieldname'];
-		} else {
-			$fieldLabel = str_replace(' ', '_', $fieldInfo['fieldlabel']);
-		}
-		$fieldLabel = decode_html($fieldLabel);
-		if ($label == $fieldLabel) {
+        if($mode == 'name') {
+            $fieldLabel = $fieldInfo['fieldname'];
+        } else {
+            $fieldLabel = str_replace(' ', '_', $fieldInfo['fieldlabel']);
+        }
+        $fieldLabel = decode_html($fieldLabel);
+		if($label == $fieldLabel) {
 			VTCacheUtils::setReportFieldByLabel($module, $label, $fieldInfo);
-
 			return $fieldInfo;
 		}
 	}
-
 	return null;
 }
 
-function isReferenceUIType($uitype)
-{
-	static $options = ['101', '116', '117', '26', '357',
+function isReferenceUIType($uitype) {
+	static $options = array('101', '116', '117', '26', '357',
 		'50', '51', '52', '53', '57', '58', '59', '66', '68',
 		'73', '75', '76', '77', '78', '80', '81'
-	];
+	);
 
-	if (in_array($uitype, $options)) {
+	if(in_array($uitype, $options)) {
 		return true;
 	}
-
 	return false;
 }
 
-function IsDateField($reportColDetails)
-{
-	list($tablename, $colname, $module_field, $fieldname, $typeOfData) = split(':', $reportColDetails);
-	if ($typeOfData == 'D') {
+function IsDateField($reportColDetails) {
+	list($tablename, $colname, $module_field, $fieldname, $typeOfData) = split(":", $reportColDetails);
+	if ($typeOfData == "D") {
 		return true;
 	} else {
 		return false;
@@ -94,11 +80,9 @@ function IsDateField($reportColDetails)
  * @param ADOFieldObject $dbField
  * @param Array $valueArray
  * @param String $fieldName
- * @param mixed $operation
  * @return String
  */
-function getReportFieldValue($report, $picklistArray, $dbField, $valueArray, $fieldName, $operation = false)
-{
+function getReportFieldValue ($report, $picklistArray, $dbField, $valueArray, $fieldName, $operation = false) {
 	global $current_user, $default_charset;
 
 	$db = PearDatabase::getInstance();
@@ -108,46 +92,46 @@ function getReportFieldValue($report, $picklistArray, $dbField, $valueArray, $fi
 	$fieldInfo = getFieldByReportLabel($module, $fieldLabel);
 	$fieldType = null;
 	$fieldvalue = $value;
-	if (! empty($fieldInfo)) {
+	if(!empty($fieldInfo)) {
 		$field = WebserviceField::fromArray($db, $fieldInfo);
 		$fieldType = $field->getFieldDataType();
 	}
 
 	// Added to support pricebook List Price in reports
 	if ($report->primarymodule == 'PriceBooks' && $fieldLabel == 'List_Price') {
-		$fieldInfo = [
-			'tabid'		   => getTabid($module),
-			'fieldid'	  => '',
+		$fieldInfo = array(
+			'tabid'		=> getTabid($module),
+			'fieldid'	=> '',
 			'fieldname' => 'listprice',
 			'fieldlabel'=> 'List Price',
 			'columnname'=> 'listprice',
 			'tablename'	=> 'vtiger_pricebookproductrel',
-			'uitype'	   => 72,
+			'uitype'	=> 72,
 			'typeofdata'=> 'Currency',
-			'presence'	 => 0,
-		];
+			'presence'	=> 0,
+		);
 		$field = WebserviceField::fromArray($db, $fieldInfo);
 		$fieldType = $field->getFieldDataType();
 	}
-	if (is_object($field) && $field->getUIType() == 401) {
+	if(is_object($field) &&	$field->getUIType() == 401){
 		if ($value) {
 			$value = explode('_', $value);
 			$module = 'RecurringInvoice';
 			$frequency = ucfirst($value[0]);
-			if ($frequency == 'Monthly') {
-				$fieldvalue = vtranslate('LBL_MONTHLY', $module, $value[1], vtranslate($value[2], $module));
-			} elseif ($frequency == 'Yearly') {
+			if($frequency == 'Monthly'){
+				$fieldvalue = vtranslate('LBL_MONTHLY', $module, $value[1], vtranslate($value[2], $module)); 
+			}elseif($frequency == 'Yearly'){
 				$fieldvalue = vtranslate('LBL_YEARLY', $module, vtranslate(ucfirst($value[1]), $module), vtranslate($value[2], $module));
-			} elseif ($frequency == 'Weekly') {
+			}elseif($frequency == 'Weekly'){
 				$fieldvalue = vtranslate('LBL_WEEKLY', $module, vtranslate(ucfirst($value[1])));
-			} elseif ($frequency == 'Daily') {
+			}elseif($frequency == 'Daily'){
 				$fieldvalue = vtranslate($frequency, $module);
 			}
 		}
-	} elseif ($fieldType == 'currency' && $value != '') {
+	}else if ($fieldType == 'currency' && $value != '') {
 		// Some of the currency fields like Unit Price, Total, Sub-total etc of Inventory modules, do not need currency conversion
 		if ($field->getUIType() == '72') {
-			$curid_value = explode('::', $value);
+			$curid_value = explode("::", $value);
 			$currency_id = $curid_value[0];
 			$currency_value = $curid_value[1];
 			$cur_sym_rate = getCurrencySymbolandCRate($currency_id);
@@ -175,180 +159,174 @@ function getReportFieldValue($report, $picklistArray, $dbField, $valueArray, $fi
 				$fieldvalue = CurrencyField::appendCurrencySymbol($currencyField->getDisplayValue(), $userCurrencyInfo['symbol']);
 			}
 		}
-	} elseif ($dbField->name == 'PurchaseOrder_Currency' || $dbField->name == 'SalesOrder_Currency'
-				|| $dbField->name == 'Invoice_Currency' || $dbField->name == 'Quotes_Currency' || $dbField->name == 'PriceBooks_Currency') {
-		if ($value != '') {
+	} elseif ($dbField->name == "PurchaseOrder_Currency" || $dbField->name == "SalesOrder_Currency"
+				|| $dbField->name == "Invoice_Currency" || $dbField->name == "Quotes_Currency" || $dbField->name == "PriceBooks_Currency") {
+		if($value!='') {
 			$fieldvalue = getTranslatedCurrencyString($value);
 		}
-	} elseif (in_array($dbField->name, $report->ui101_fields) && ! empty($value)) {
+	} elseif (in_array($dbField->name,$report->ui101_fields) && !empty($value)) {
 		$entityNames = getEntityName('Users', $value);
 		$fieldvalue = $entityNames[$value];
-	} elseif ($fieldType == 'date' && ! empty($value)) {
-		if ($module == 'Calendar' && ($field->getFieldName() == 'due_date' || $field->getFieldName() == 'date_start')) {
-			if ($field->getFieldName() == 'due_date') {
-				$endTime = $valueArray['calendar_end_time'];
-				if (empty($endTime)) {
-					$recordId = $valueArray['calendar_id'];
-					$endTime = getSingleFieldValue('vtiger_activity', 'time_end', 'activityid', $recordId);
-				}
-				$date = new DateTimeField($value.' '.$endTime);
-				$fieldvalue = $date->getDisplayDate();
-			} else {
-				$date = new DateTimeField($fieldvalue);
-				$fieldvalue = $date->getDisplayDateTimeValue();
-			}
+	} elseif( $fieldType == 'date' && !empty($value)) {
+		if($module == 'Calendar' && ($field->getFieldName() == 'due_date' || $field->getFieldName() == 'date_start')) {
+            if($field->getFieldName() == 'due_date'){
+                $endTime = $valueArray['calendar_end_time'];
+                if(empty($endTime)) {
+                    $recordId = $valueArray['calendar_id'];
+                    $endTime = getSingleFieldValue('vtiger_activity', 'time_end', 'activityid', $recordId);
+                }
+                $date = new DateTimeField($value.' '.$endTime);
+                $fieldvalue = $date->getDisplayDate();
+            }
+            else{
+                $date = new DateTimeField($fieldvalue);
+                $fieldvalue = $date->getDisplayDateTimeValue();
+            }
 		} else {
-			$date = new DateTimeField($fieldvalue);
-			$fieldvalue = $date->getDisplayDate();
+            $date = new DateTimeField($fieldvalue);
+            $fieldvalue = $date->getDisplayDate();
 		}
-	} elseif ($fieldType == 'datetime' && ! empty($value)) {
+	} elseif( $fieldType == "datetime" && !empty($value)) {
 		$date = new DateTimeField($value);
 		$fieldvalue = $date->getDisplayDateTimeValue();
-	} elseif ($fieldType == 'time' && ! empty($value) && $field->getFieldName()
+	} elseif( $fieldType == 'time' && !empty($value) && $field->getFieldName()
 			!= 'duration_hours') {
-		if ($field->getFieldName() == 'time_start' || $field->getFieldName() == 'time_end') {
+		if($field->getFieldName() == "time_start" || $field->getFieldName() == "time_end") {
 			$date = new DateTimeField($value);
 			$fieldvalue = $date->getDisplayTime();
 		} else {
 			$userModel = Users_Privileges_Model::getCurrentUserModel();
-			if ($userModel->get('hour_format') == '12') {
+			if($userModel->get('hour_format') == '12'){
 				$value = Vtiger_Time_UIType::getTimeValueInAMorPM($value);
 			}
 			$fieldvalue = $value;
 		}
-	} elseif ($fieldType == 'picklist' && ! empty($value)) {
-		$fieldvalue = getTranslatedString($value, $module);
-	} elseif ($fieldType == 'multipicklist' && ! empty($value)) {
-		if (is_array($picklistArray[1])) {
+	} elseif( $fieldType == "picklist" && !empty($value) ) {
+			$fieldvalue = getTranslatedString($value, $module);
+	} elseif( $fieldType == "multipicklist" && !empty($value) ) {
+		if(is_array($picklistArray[1])) {
 			$valueList = explode(' |##| ', $value);
-			$translatedValueList = [];
-			foreach ($valueList as $value) {
+			$translatedValueList = array();
+			foreach ( $valueList as $value) {
 				$translatedValueList[] = getTranslatedString($value, $module);
 			}
 		}
-		if (! is_array($picklistArray[1]) || ! is_array($picklistArray[1][$dbField->name])) {
+		if (!is_array($picklistArray[1]) || !is_array($picklistArray[1][$dbField->name])) {
 			$fieldvalue = str_replace(' |##| ', ', ', $value);
 		} else {
 			implode(', ', $translatedValueList);
 		}
 	} elseif ($fieldType == 'double' && $operation != 'ExcelExport') {
-		if ($current_user->truncate_trailing_zeros == true) {
-			$fieldvalue = decimalFormat($fieldvalue);
-		}
-	}
-	if ($fieldType == 'currency' && $value == '' && $operation != 'ExcelExport') {
-		$currencyField = new CurrencyField($value);
-		$fieldvalue = $currencyField->getDisplayValue();
-
-		return $fieldvalue;
-	} elseif ($fieldvalue == '' && $operation != 'ExcelExport') {
-		return '';
-	}
-	$fieldvalue = str_replace('<', '&lt;', $fieldvalue);
-	$fieldvalue = str_replace('>', '&gt;', $fieldvalue);
+        if($current_user->truncate_trailing_zeros == true)
+            $fieldvalue = decimalFormat($fieldvalue);
+    }
+    if($fieldType == 'currency' && $value == "" && $operation != 'ExcelExport'){
+        $currencyField = new CurrencyField($value);
+        $fieldvalue = $currencyField->getDisplayValue();
+        return $fieldvalue;
+    } else if($fieldvalue == "" && $operation != 'ExcelExport') {
+        return "";
+    }
+	$fieldvalue = str_replace("<", "&lt;", $fieldvalue);
+	$fieldvalue = str_replace(">", "&gt;", $fieldvalue);
 	$fieldvalue = decode_html($fieldvalue);
 
-	if (stristr($fieldvalue, '|##|') && empty($fieldType)) {
+	if (stristr($fieldvalue, "|##|") && empty($fieldType)) {
 		$fieldvalue = str_ireplace(' |##| ', ', ', $fieldvalue);
-	} elseif ($fld_type == 'date' && empty($fieldType)) {
+	} elseif ($fld_type == "date" && empty($fieldType)) {
 		$fieldvalue = DateTimeField::convertToUserFormat($fieldvalue);
-	} elseif ($fld_type == 'datetime' && empty($fieldType)) {
+	} elseif ($fld_type == "datetime" && empty($fieldType)) {
 		$date = new DateTimeField($fieldvalue);
 		$fieldvalue = $date->getDisplayDateTimeValue();
 	}
 
 	// Added to render html tag for description fields
-	if ($fieldInfo['uitype'] == '19' && ($module == 'Documents' || $module == 'Emails')) {
+	if($fieldInfo['uitype'] == '19' && ($module == 'Documents' || $module == 'Emails')) {
 		return $fieldvalue;
 	}
-	if ($operation == 'ExcelExport') {
-		return ['value' => htmlentities($fieldvalue, ENT_QUOTES, $default_charset), 'type' => $fieldType];
-	}
-
+        if($operation == 'ExcelExport') {
+            return array('value' => htmlentities($fieldvalue, ENT_QUOTES, $default_charset), 'type' => $fieldType);
+        }
 	return htmlentities($fieldvalue, ENT_QUOTES, $default_charset);
 }
 
-function transformAdvFilterListToDBFormat($advFilterList)
-{
-	$db = PearDatabase::getInstance();
-	foreach ($advFilterList as $k => $columnConditions) {
-		foreach ($columnConditions['columns'] as $j => $columnCondition) {
-			if (empty($columnCondition)) {
-				continue;
-			}
+function transformAdvFilterListToDBFormat($advFilterList) {
+    $db = PearDatabase::getInstance();
+    foreach($advFilterList as $k => $columnConditions) {
+        foreach($columnConditions['columns'] as $j => $columnCondition) {
+            if(empty($columnCondition)) continue;
 
-			$advFilterColumn = $columnCondition['columnname'];
-			$advFilterComparator = $columnCondition['comparator'];
-			$advFilterValue = $columnCondition['value'];
+            $advFilterColumn = $columnCondition["columnname"];
+            $advFilterComparator = $columnCondition["comparator"];
+            $advFilterValue = $columnCondition["value"];
 
-			$columnInfo = explode(':', $advFilterColumn);
-			$moduleFieldLabel = $columnInfo[2];
+            $columnInfo = explode(":",$advFilterColumn);
+            $moduleFieldLabel = $columnInfo[2];
 
-			list($module, $fieldLabel) = explode('_', $moduleFieldLabel, 2);
-			$fieldInfo = getFieldByReportLabel($module, $fieldLabel);
-			$fieldType = null;
-			if (! empty($fieldInfo)) {
-				$field = WebserviceField::fromArray($db, $fieldInfo);
-				$fieldType = $field->getFieldDataType();
-			}
+            list($module, $fieldLabel) = explode('_', $moduleFieldLabel, 2);
+            $fieldInfo = getFieldByReportLabel($module, $fieldLabel);
+            $fieldType = null;
+            if(!empty($fieldInfo)) {
+                $field = WebserviceField::fromArray($db, $fieldInfo);
+                $fieldType = $field->getFieldDataType();
+            }
 
-			if ($fieldType == 'currency') {
-				if ($field->getUIType() == '72') {
-					$advFilterValue = Vtiger_Currency_UIType::convertToDBFormat($advFilterValue, null, true);
-				} else {
-					$advFilterValue = Vtiger_Currency_UIType::convertToDBFormat($advFilterValue);
-				}
-			}
+            if($fieldType == 'currency') {
+                if($field->getUIType() == '72') {
+                    $advFilterValue = Vtiger_Currency_UIType::convertToDBFormat($advFilterValue, null, true);
+                } else {
+                    $advFilterValue = Vtiger_Currency_UIType::convertToDBFormat($advFilterValue);
+                }
+            }
 
-			$specialDateConditions = Vtiger_Functions::getSpecialDateTimeCondtions();
-			$tempVal = explode(',', $advFilterValue);
-			if (($columnInfo[4] == 'D' || ($columnInfo[4] == 'T' && $columnInfo[1] != 'time_start' && $columnInfo[1] != 'time_end') ||
-							($columnInfo[4] == 'DT')) && ($columnInfo[4] != '' && $advFilterValue != '') && ! in_array($advFilterComparator, $specialDateConditions)) {
-				$val = [];
-				for ($i = 0; $i < count($tempVal); $i++) {
-					if (trim($tempVal[$i]) != '') {
-						$date = new DateTimeField(trim($tempVal[$i]));
-						if ($columnInfo[4] == 'D') {
-							$val[$i] = DateTimeField::convertToDBFormat(trim($tempVal[$i]));
-						} elseif ($columnInfo[4] == 'DT') {
-							$values = explode(' ', $tempVal[$i]);
-							$date = new DateTimeField($values[0]);
-							$val[$i] = $date->getDBInsertDateValue();
-						} elseif ($fieldType == 'time') {
-							$val[$i] = Vtiger_Time_UIType::getTimeValueWithSeconds($tempVal[$i]);
-						} else {
-							$val[$i] = $date->getDBInsertTimeValue();
-						}
-					}
-				}
-				$advFilterValue = implode(',', $val);
-			}
-			$advFilterList[$k]['columns'][$j]['value'] = $advFilterValue;
-		}
-	}
-
-	return $advFilterList;
+            $specialDateConditions = Vtiger_Functions::getSpecialDateTimeCondtions();
+            $tempVal = explode(",",$advFilterValue);
+            if(($columnInfo[4] == 'D' || ($columnInfo[4] == 'T' && $columnInfo[1] != 'time_start' && $columnInfo[1] != 'time_end') ||
+                            ($columnInfo[4] == 'DT')) && ($columnInfo[4] != '' && $advFilterValue != '' ) && !in_array($advFilterComparator, $specialDateConditions)) {
+                $val = Array();
+                for($i=0; $i<count($tempVal); $i++) {
+                    if(trim($tempVal[$i]) != '') {
+                        $date = new DateTimeField(trim($tempVal[$i]));
+                        if($columnInfo[4] == 'D') {
+                            $val[$i] = DateTimeField::convertToDBFormat(trim($tempVal[$i]));
+                        } elseif($columnInfo[4] == 'DT') {
+                            $values = explode(' ', $tempVal[$i]);
+                            $date = new DateTimeField($values[0]);
+                            $val[$i] = $date->getDBInsertDateValue();
+                        } elseif($fieldType == 'time') {
+                            $val[$i] = Vtiger_Time_UIType::getTimeValueWithSeconds($tempVal[$i]);
+                        } else {
+                            $val[$i] = $date->getDBInsertTimeValue();
+                        }
+                    }
+                }
+                $advFilterValue = implode(",", $val);
+            }
+            $advFilterList[$k]['columns'][$j]['value'] = $advFilterValue;
+        }
+    }
+    
+    return $advFilterList;
 }
 
-function getReportSearchCondition($searchParams, $filterId)
-{
-	if (! empty($searchParams)) {
+function getReportSearchCondition($searchParams, $filterId) {
+	if (!empty($searchParams)) {
 		$db = PearDatabase::getInstance();
-		$params = [];
+		$params = array();
 		$conditionQuery = '';
 		if ($filterId === 'All') {
 			$conditionQuery .= ' WHERE ';
 		} else {
-			$conditionQuery .= ' AND ';
+			$conditionQuery .= " AND ";
 		}
-		$conditionQuery .= ' (( ';
+		$conditionQuery .= " (( ";
 		foreach ($searchParams as $i => $condition) {
 			$fieldName = $condition[0];
 			$searchValue = $condition[2];
 			if ($fieldName == 'reportname' || $fieldName == 'description') {
-				$conditionQuery .= " vtiger_report.${fieldName} LIKE ? ";
-				array_push($params, "%${searchValue}%");
-			} elseif ($fieldName == 'reporttype' || $fieldName == 'foldername' || $fieldName == 'owner') {
+				$conditionQuery .= " vtiger_report.$fieldName LIKE ? ";
+				array_push($params, "%$searchValue%");
+			} else if ($fieldName == 'reporttype' || $fieldName == 'foldername' || $fieldName == 'owner') {
 				$searchValue = explode(',', $searchValue);
 				if ($fieldName == 'foldername') {
 					$fieldName = 'folderid';
@@ -356,13 +334,13 @@ function getReportSearchCondition($searchParams, $filterId)
 				if ($fieldName == 'reporttype' && in_array('tabular', $searchValue)) {
 					array_push($searchValue, 'summary');
 				}
-				$conditionQuery .= " vtiger_report.${fieldName} IN (".generateQuestionMarks($searchValue).') ';
+				$conditionQuery .= " vtiger_report.$fieldName IN (".generateQuestionMarks($searchValue).") ";
 				foreach ($searchValue as $value) {
 					array_push($params, $value);
 				}
-			} elseif ($fieldName == 'primarymodule') {
+			} else if ($fieldName == 'primarymodule') {
 				$searchValue = explode(',', $searchValue);
-				$conditionQuery .= " vtiger_reportmodules.${fieldName} IN (".generateQuestionMarks($searchValue).') ';
+				$conditionQuery .= " vtiger_reportmodules.$fieldName IN (".generateQuestionMarks($searchValue).") ";
 				foreach ($searchValue as $value) {
 					array_push($params, $value);
 				}
@@ -371,11 +349,11 @@ function getReportSearchCondition($searchParams, $filterId)
 				$conditionQuery .= ' AND ';
 			}
 		}
-		$conditionQuery .= ' ) ';
-		$conditionQuery .= ') ';
-
+		$conditionQuery .= " ) ";
+		$conditionQuery .= ") ";
 		return $db->convert2Sql($conditionQuery, $params);
 	}
-
 	return false;
 }
+
+?>

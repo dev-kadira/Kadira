@@ -6,12 +6,11 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Documents_InRelation_View extends Vtiger_RelatedList_View
-{
-	public function process(Vtiger_Request $request)
-	{
+class Documents_InRelation_View extends Vtiger_RelatedList_View {
+
+	function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$relatedModuleName = $request->get('relatedModule');
 		$parentId = $request->get('record');
@@ -23,19 +22,19 @@ class Documents_InRelation_View extends Vtiger_RelatedList_View
 		$searchParams = $request->get('search_params');
 
 		if (empty($searchParams)) {
-			$searchParams = [];
+			$searchParams = array();
 		}
 
-		$whereCondition = [];
+		$whereCondition = array();
 
 		foreach ($searchParams as $fieldListGroup) {
 			foreach ($fieldListGroup as $fieldSearchInfo) {
 				$fieldModel = $moduleFields[$fieldSearchInfo[0]];
 				$tableName = $fieldModel->get('table');
 				$column = $fieldModel->get('column');
-				$whereCondition[$fieldSearchInfo[0]] = [$tableName.'.'.$column, $fieldSearchInfo[1], $fieldSearchInfo[2]];
+				$whereCondition[$fieldSearchInfo[0]] = array($tableName.'.'.$column, $fieldSearchInfo[1], $fieldSearchInfo[2]);
 
-				$fieldSearchInfoTemp = [];
+				$fieldSearchInfoTemp = array();
 				$fieldSearchInfoTemp['searchValue'] = $fieldSearchInfo[2];
 				$fieldSearchInfoTemp['fieldName'] = $fieldName = $fieldSearchInfo[0];
 				$fieldSearchInfoTemp['comparator'] = $fieldSearchInfo[1];
@@ -54,21 +53,20 @@ class Documents_InRelation_View extends Vtiger_RelatedList_View
 		$parentRecordModel = Vtiger_Record_Model::getInstanceById($parentId, $moduleName);
 		$relationListView = Vtiger_RelationListView_Model::getInstance($parentRecordModel, $relatedModuleName, $label);
 
-		if (! empty($whereCondition)) {
+		if (!empty($whereCondition))
 			$relationListView->set('whereCondition', $whereCondition);
-		}
 		$orderBy = $request->get('orderby');
 		$sortOrder = $request->get('sortorder');
 		if ($sortOrder == 'ASC') {
 			$nextSortOrder = 'DESC';
 			$sortImage = 'icon-chevron-down';
-			$faSortImage = 'fa-sort-desc';
+			$faSortImage = "fa-sort-desc";
 		} else {
 			$nextSortOrder = 'ASC';
 			$sortImage = 'icon-chevron-up';
-			$faSortImage = 'fa-sort-asc';
+			$faSortImage = "fa-sort-asc";
 		}
-		if (! empty($orderBy)) {
+		if (!empty($orderBy)) {
 			$relationListView->set('orderby', $orderBy);
 			$relationListView->set('sortorder', $sortOrder);
 		}
@@ -77,15 +75,16 @@ class Documents_InRelation_View extends Vtiger_RelatedList_View
 		$links = $relationListView->getLinks();
 		$header = $relationListView->getHeaders();
 		$noOfEntries = $pagingModel->get('_relatedlistcount');
-		if (! $noOfEntries) {
+		if (!$noOfEntries) {
 			$noOfEntries = count($models);
 		}
 		$relationModel = $relationListView->getRelationModel();
 		$relatedModuleModel = $relationModel->getRelationModuleModel();
 		$relationField = $relationModel->getRelationField();
 
+
 		$moduleFields = $relatedModuleModel->getFields();
-		$fieldsInfo = [];
+		$fieldsInfo = array();
 		foreach ($moduleFields as $fieldName => $fieldModel) {
 			$fieldsInfo[$fieldName] = $fieldModel->getFieldInfo();
 		}
@@ -126,7 +125,7 @@ class Documents_InRelation_View extends Vtiger_RelatedList_View
 		$viewer->assign('IS_EDITABLE', $relationModel->isEditable());
 		$viewer->assign('IS_DELETABLE', $relationModel->isDeletable());
 		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
-		$viewer->assign('IS_CREATE_PERMITTED', $relatedModuleModel->isPermitted('CreateView'));
+		$viewer->assign('IS_CREATE_PERMITTED', $relatedModuleModel->isPermitted('CreateView')); 
 		$viewer->assign('VIEW', $request->get('view'));
 		$viewer->assign('PARENT_ID', $parentId);
 		$viewer->assign('SEARCH_DETAILS', $searchParams);
@@ -134,4 +133,5 @@ class Documents_InRelation_View extends Vtiger_RelatedList_View
 
 		return $viewer->view('DocumentsRelatedList.tpl', 'Documents', 'true');
 	}
+
 }

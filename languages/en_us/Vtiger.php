@@ -1937,9 +1937,6 @@ $jsLanguageStrings = array(
 	'JS_SHARED_WITH'=>'Shared with',
 	'JS_DEFAULT_DASHBOARD_TOOLTIP' => 'Make this dashboard as default by reordering it as the first tab!',
 	'JS_SET_DEFAULT_TAB' => 'is set as your default dashboard',
-    //SalesPlatform.ru begin 
-    'JS_LBL_ASSIGNED_TO' => 'Assigned To', 
-    //SalesPlatform.ru end
 	'JS_PASSWORD_MISMATCH_ERROR' => 'Please re-enter passwords. The "new password" and "confirm password" values do not match.',
 	'LBL_LIST_DELETE_CONFIRMATION' => 'Are you sure you want to delete?',
 	'JS_WIDGET_RESIZING_WAIT_MSG' => 'Widget contents will load after resizing.',

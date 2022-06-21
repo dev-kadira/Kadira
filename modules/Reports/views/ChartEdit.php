@@ -1,46 +1,39 @@
 <?php
-/*
+/*************************************************************************************
  * The contents of this file are subject to the vtiger CRM Public License Version 1.1
  * ("License"); You may not use this file except in compliance with the License
  * The Original Code is:  vtiger CRM Open Source
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Reports_ChartEdit_View extends Vtiger_Edit_View
-{
-	public function __construct()
-	{
+Class Reports_ChartEdit_View extends Vtiger_Edit_View {
+	function __construct() {
 		parent::__construct();
 		$this->exposeMethod('step1');
 		$this->exposeMethod('step2');
 		$this->exposeMethod('step3');
 	}
 
-	public function requiresPermission(\Vtiger_Request $request)
-	{
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record'];
-
+	public function requiresPermission(\Vtiger_Request $request) {
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 		return $permissions;
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+	
+	public function checkPermission(Vtiger_Request $request) {
 		parent::checkPermission($request);
 		$record = $request->get('record');
 		if ($record) {
 			$reportModel = Reports_Record_Model::getCleanInstance($record);
-			if (! $reportModel->isEditable()) {
+			if (!$reportModel->isEditable()) {
 				throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
 			}
 		}
-
 		return true;
 	}
 
-	public function preProcess(Vtiger_Request $request)
-	{
+	public function preProcess(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$record = $request->get('record');
 		$moduleName = $request->getModule();
@@ -53,7 +46,7 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 			$userPrivilegesModel = Users_Privileges_Model::getInstanceById($currentUser->getId());
 			$permission = $userPrivilegesModel->hasModulePermission($primaryModuleModel->getId());
 
-			if (! $permission) {
+			if (!$permission) {
 				$viewer->assign('MODULE', $primaryModule);
 				$viewer->assign('MESSAGE', vtranslate('LBL_PERMISSION_DENIED'));
 				$viewer->view('OperationNotPermitted.tpl', $primaryModule);
@@ -70,25 +63,23 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		parent::preProcess($request);
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$mode = $request->getMode();
-		if (! empty($mode)) {
+		if (!empty($mode)) {
 			echo $this->invokeExposedMethod($mode, $request);
 			exit;
 		}
 		$this->step1($request);
 	}
 
-	public function step1(Vtiger_Request $request)
-	{
+	function step1(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 		$record = $request->get('record');
 
 		$reportModel = Reports_Record_Model::getCleanInstance($record);
-		if (! $reportModel->has('folderid')) {
-			$reportModel->set('folderid', $request->get('folder'));
+		if(!$reportModel->has('folderid')){
+			$reportModel->set('folderid',$request->get('folder'));
 		}
 		$data = $request->getAll();
 		foreach ($data as $name => $value) {
@@ -97,13 +88,12 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 
 		$modulesList = $reportModel->getModulesList();
 
-		if (! empty($record)) {
+		if (!empty($record)) {
 			$viewer->assign('MODE', 'edit');
 		} else {
 			$firstModuleName = reset($modulesList);
-			if ($firstModuleName) {
+			if($firstModuleName)
 				$reportModel->setPrimaryModule($firstModuleName);
-			}
 			$viewer->assign('MODE', '');
 		}
 
@@ -113,9 +103,9 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$relatedModules = $reportModel->getReportRelatedModules();
 
 		foreach ($relatedModules as $primaryModule => $relatedModuleList) {
-			$translatedRelatedModules = [];
+			$translatedRelatedModules = array();
 
-			foreach ($relatedModuleList as $relatedModuleName) {
+			foreach($relatedModuleList as $relatedModuleName) {
 				$translatedRelatedModules[$relatedModuleName] = vtranslate($relatedModuleName, $relatedModuleName);
 			}
 			$relatedModules[$primaryModule] = $translatedRelatedModules;
@@ -133,12 +123,12 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$admin = Users::getActiveAdminUser();
 		$viewer->assign('ACTIVE_ADMIN', $admin);
 		$viewer->assign('TYPE', 'Chart');
-		$viewer->assign('REPORT_TYPE', $request->get('view'));
+		$viewer->assign('REPORT_TYPE',$request->get('view'));
 
 		//Sharing access to users and groups
 		$sharedMembers = $reportModel->getMembers();
 		$viewer->assign('SELECTED_MEMBERS_GROUP', $sharedMembers);
-		$viewer->assign('MEMBER_GROUPS', Settings_Groups_Member_Model::getAll());
+		$viewer->assign('MEMBER_GROUPS',  Settings_Groups_Member_Model::getAll());
 
 		if ($request->get('isDuplicate')) {
 			$viewer->assign('IS_DUPLICATE', true);
@@ -147,22 +137,21 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$viewer->view('ChartEditStep1.tpl', $moduleName);
 	}
 
-	public function step2(Vtiger_Request $request)
-	{
+	function step2(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 		$record = $request->get('record');
 
 		$reportModel = Reports_Record_Model::getCleanInstance($record);
-		if (! empty($record)) {
+		if (!empty($record)) {
 			$viewer->assign('SELECTED_STANDARD_FILTER_FIELDS', $reportModel->getSelectedStandardFilter());
 			$viewer->assign('SELECTED_ADVANCED_FILTER_FIELDS', $reportModel->transformToNewAdvancedFilter());
 		}
 		$data = $request->getAll();
 		foreach ($data as $name => $value) {
-			if ($name == 'schdayoftheweek' || $name == 'schdayofthemonth' || $name == 'schannualdates' || $name == 'recipients') {
-				if (is_string($value)) {
-					$value = [$value];
+			if($name == 'schdayoftheweek' || $name == 'schdayofthemonth' || $name == 'schannualdates' || $name == 'recipients') {
+				if(is_string($value)) {
+					$value = array($value);
 				}
 			}
 			$reportModel->set($name, $value);
@@ -170,40 +159,40 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$primaryModule = $request->get('primary_module');
 		$secondaryModules = $request->get('secondary_modules');
 		$reportModel->setPrimaryModule($primaryModule);
-		if (! empty($secondaryModules)) {
+		if(!empty($secondaryModules)){
 			$secondaryModules = implode(':', $secondaryModules);
 			$reportModel->setSecondaryModule($secondaryModules);
 
-			$secondaryModules = explode(':', $secondaryModules);
-		} else {
-			$secondaryModules = [];
+			$secondaryModules = explode(':',$secondaryModules);
+		}else{
+			$secondaryModules = array();
 		}
 
 		$viewer->assign('RECORD_ID', $record);
 		$viewer->assign('REPORT_MODEL', $reportModel);
-		$viewer->assign('PRIMARY_MODULE', $primaryModule);
+		$viewer->assign('PRIMARY_MODULE',$primaryModule);
 
 		$recordStructureInstance = Vtiger_RecordStructure_Model::getInstanceFromRecordModel($reportModel);
 		$primaryModuleRecordStructure = $recordStructureInstance->getPrimaryModuleRecordStructure();
-		if ($secondaryModules) {
-			$secondaryModuleRecordStructures = $recordStructureInstance->getSecondaryModuleRecordStructure();
-		}
+				if($secondaryModules) {
+					$secondaryModuleRecordStructures = $recordStructureInstance->getSecondaryModuleRecordStructure();
+				}
 
-		$viewer->assign('SECONDARY_MODULES', $secondaryModules);
+		$viewer->assign('SECONDARY_MODULES',$secondaryModules);
 		$viewer->assign('PRIMARY_MODULE_RECORD_STRUCTURE', $primaryModuleRecordStructure);
 		$viewer->assign('SECONDARY_MODULE_RECORD_STRUCTURES', $secondaryModuleRecordStructures);
 		$dateFilters = Vtiger_Field_Model::getDateFilterTypes();
-		foreach ($dateFilters as $comparatorKey => $comparatorInfo) {
+		foreach($dateFilters as $comparatorKey => $comparatorInfo) {
 			$comparatorInfo['startdate'] = DateTimeField::convertToUserFormat($comparatorInfo['startdate']);
 			$comparatorInfo['enddate'] = DateTimeField::convertToUserFormat($comparatorInfo['enddate']);
-			$comparatorInfo['label'] = vtranslate($comparatorInfo['label'], $moduleName);
+			$comparatorInfo['label'] = vtranslate($comparatorInfo['label'],$moduleName);
 			$dateFilters[$comparatorKey] = $comparatorInfo;
 		}
 		$viewer->assign('DATE_FILTERS', $dateFilters);
 
-		if (($primaryModule == 'Calendar') || (in_array('Calendar', $secondaryModules))) {
+		if(($primaryModule == 'Calendar') || (in_array('Calendar', $secondaryModules))){
 			$advanceFilterOpsByFieldType = Calendar_Field_Model::getAdvancedFilterOpsByFieldType();
-		} else {
+		} else{
 			$advanceFilterOpsByFieldType = Vtiger_Field_Model::getAdvancedFilterOpsByFieldType();
 		}
 		$viewer->assign('ADVANCED_FILTER_OPTIONS', Vtiger_Field_Model::getAdvancedFilterOptions());
@@ -211,7 +200,7 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$viewer->assign('MODULE', $moduleName);
 
 		$calculationFields = $reportModel->get('calculation_fields');
-		if ($calculationFields) {
+		if($calculationFields) {
 			$calculationFields = Zend_Json::decode($calculationFields);
 			$viewer->assign('LINEITEM_FIELD_IN_CALCULATION', $reportModel->showLineItemFieldsInFilter($calculationFields));
 		}
@@ -221,23 +210,22 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$viewer->view('ChartEditStep2.tpl', $moduleName);
 	}
 
-	public function step3(Vtiger_request $request)
-	{
+	function step3(Vtiger_request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 		$record = $request->get('record');
 
 		$reportModel = Reports_Record_Model::getCleanInstance($record);
-		if (! empty($record)) {
+		if (!empty($record)) {
 			$viewer->assign('SELECTED_STANDARD_FILTER_FIELDS', $reportModel->getSelectedStandardFilter());
 			$viewer->assign('SELECTED_ADVANCED_FILTER_FIELDS', $reportModel->transformToNewAdvancedFilter());
 		}
 		$data = $request->getAll();
 		foreach ($data as $name => $value) {
-			if ($name == 'schdayoftheweek' || $name == 'schdayofthemonth' || $name == 'schannualdates' || $name == 'recipients' || $name == 'members') {
+			if($name == 'schdayoftheweek' || $name == 'schdayofthemonth' || $name == 'schannualdates' || $name == 'recipients' || $name == 'members') {
 				$value = Zend_Json::decode($value);
-				if (! is_array($value)) {
-					$value = [$value];
+				if(!is_array($value)) {
+					$value = array($value);
 				}
 			}
 			$reportModel->set($name, $value);
@@ -245,12 +233,12 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 		$primaryModule = $request->get('primary_module');
 		$secondaryModules = $request->get('secondary_modules');
 		$reportModel->setPrimaryModule($primaryModule);
-		if (! empty($secondaryModules)) {
+		if(!empty($secondaryModules)) {
 			$secondaryModules = implode(':', $secondaryModules);
 			$reportModel->setSecondaryModule($secondaryModules);
-			$secondaryModules = explode(':', $secondaryModules);
+			$secondaryModules = explode(':',$secondaryModules);
 		} else {
-			$secondaryModules = [];
+			$secondaryModules = array();
 			$reportModel->setSecondaryModule('');
 		}
 
@@ -268,49 +256,49 @@ class Reports_ChartEdit_View extends Vtiger_Edit_View
 
 		$viewer->assign('RECORD_ID', $record);
 		$viewer->assign('REPORT_MODEL', $reportModel);
-		$viewer->assign('PRIMARY_MODULE', $primaryModule);
-		$viewer->assign('SECONDARY_MODULES', $secondaryModules);
+		$viewer->assign('PRIMARY_MODULE',$primaryModule);
+		$viewer->assign('SECONDARY_MODULES',$secondaryModules);
 		$viewer->assign('MODULE', $moduleName);
 
 		$viewer->view('ChartEditStep3.tpl', $moduleName);
 	}
+
+
 
 	/**
 	 * Function to get the list of Script models to be included
 	 * @param Vtiger_Request $request
 	 * @return <Array> - List of Vtiger_JsScript_Model instances
 	 */
-	public function getHeaderScripts(Vtiger_Request $request)
-	{
+	function getHeaderScripts(Vtiger_Request $request) {
 		$headerScriptInstances = parent::getHeaderScripts($request);
 		$moduleName = $request->getModule();
 
-		$jsFileNames = [
+		$jsFileNames = array(
 			'~libraries/jquery/jquery.datepick.package-4.1.0/jquery.datepick.js',
-			'modules.Reports.resources.Edit',
-			'modules.Reports.resources.Edit1',
-			'modules.Reports.resources.Edit2',
-			'modules.Reports.resources.Edit3',
-			"modules.${moduleName}.resources.ChartEdit",
-			"modules.${moduleName}.resources.ChartEdit1",
-			"modules.${moduleName}.resources.ChartEdit2",
-			"modules.${moduleName}.resources.ChartEdit3"
-		];
+			"modules.Reports.resources.Edit",
+			"modules.Reports.resources.Edit1",
+			"modules.Reports.resources.Edit2",
+			"modules.Reports.resources.Edit3",
+			"modules.$moduleName.resources.ChartEdit",
+			"modules.$moduleName.resources.ChartEdit1",
+			"modules.$moduleName.resources.ChartEdit2",
+			"modules.$moduleName.resources.ChartEdit3"
+		);
 
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-
-		return array_merge($headerScriptInstances, $jsScriptInstances);
+		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+		return $headerScriptInstances;
 	}
 
-	public function getHeaderCss(Vtiger_Request $request)
-	{
+	function getHeaderCss(Vtiger_Request $request) {
 		$headerCssInstances = parent::getHeaderCss($request);
 		$moduleName = $request->getModule();
-		$cssFileNames = [
+		$cssFileNames = array(
 			'~libraries/jquery/jquery.datepick.package-4.1.0/jquery.datepick.css',
-		];
+		);
 		$cssInstances = $this->checkAndConvertCssStyles($cssFileNames);
-
-		return array_merge($cssInstances, $headerCssInstances);
+		$headerCssInstances = array_merge($cssInstances, $headerCssInstances);
+		return $headerCssInstances;
 	}
 }

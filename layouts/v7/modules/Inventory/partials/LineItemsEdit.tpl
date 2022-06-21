@@ -11,49 +11,46 @@
 
 {strip}
 	{assign var=LINEITEM_FIELDS value=$RECORD_STRUCTURE['LBL_ITEM_DETAILS']}
-	{assign var=COL_SPAN1 value=1}
-	{assign var=COL_SPAN2 value=2}
-	{assign var=COL_SPAN3 value=3}
-	{if isset($LINEITEM_FIELDS['image'])}
+	{if $LINEITEM_FIELDS['image']}
 		{assign var=IMAGE_EDITABLE value=$LINEITEM_FIELDS['image']->isEditable()}
 	{if $IMAGE_EDITABLE}{assign var=COL_SPAN1 value=($COL_SPAN1)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['productid'])}
+{if $LINEITEM_FIELDS['productid']}
 	{assign var=PRODUCT_EDITABLE value=$LINEITEM_FIELDS['productid']->isEditable()}
 {if $PRODUCT_EDITABLE}{assign var=COL_SPAN1 value=($COL_SPAN1)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['quantity'])}
+{if $LINEITEM_FIELDS['quantity']}
 	{assign var=QUANTITY_EDITABLE value=$LINEITEM_FIELDS['quantity']->isEditable()}
 {if $QUANTITY_EDITABLE}{assign var=COL_SPAN1 value=($COL_SPAN1)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['purchase_cost'])}
+{if $LINEITEM_FIELDS['purchase_cost']}
 	{assign var=PURCHASE_COST_EDITABLE value=$LINEITEM_FIELDS['purchase_cost']->isEditable()}
 {if $PURCHASE_COST_EDITABLE}{assign var=COL_SPAN2 value=($COL_SPAN2)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['listprice'])}
+{if $LINEITEM_FIELDS['listprice']}
 	{assign var=LIST_PRICE_EDITABLE value=$LINEITEM_FIELDS['listprice']->isEditable()}
 {if $LIST_PRICE_EDITABLE}{assign var=COL_SPAN2 value=($COL_SPAN2)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['margin'])}
+{if $LINEITEM_FIELDS['margin']}
 	{assign var=MARGIN_EDITABLE value=$LINEITEM_FIELDS['margin']->isEditable()}
 {if $MARGIN_EDITABLE}{assign var=COL_SPAN3 value=($COL_SPAN3)+1}{/if}
 {/if}
-{if isset($LINEITEM_FIELDS['comment'])}
+{if $LINEITEM_FIELDS['comment']}
 	{assign var=COMMENT_EDITABLE value=$LINEITEM_FIELDS['comment']->isEditable()}
 {/if}
-{if isset($LINEITEM_FIELDS['discount_amount'])}
+{if $LINEITEM_FIELDS['discount_amount']}
 	{assign var=ITEM_DISCOUNT_AMOUNT_EDITABLE value=$LINEITEM_FIELDS['discount_amount']->isEditable()}
 {/if}
-{if isset($LINEITEM_FIELDS['discount_percent'])}
+{if $LINEITEM_FIELDS['discount_percent']}
 	{assign var=ITEM_DISCOUNT_PERCENT_EDITABLE value=$LINEITEM_FIELDS['discount_percent']->isEditable()}
 {/if}
-{if isset($LINEITEM_FIELDS['hdnS_H_Percent'])}
+{if $LINEITEM_FIELDS['hdnS_H_Percent']}
 	{assign var=SH_PERCENT_EDITABLE value=$LINEITEM_FIELDS['hdnS_H_Percent']->isEditable()}
 {/if}
-{if isset($LINEITEM_FIELDS['hdnDiscountAmount'])}
+{if $LINEITEM_FIELDS['hdnDiscountAmount']}
 	{assign var=DISCOUNT_AMOUNT_EDITABLE value=$LINEITEM_FIELDS['hdnDiscountAmount']->isEditable()}
 {/if}
-{if isset($LINEITEM_FIELDS['hdnDiscountPercent'])}
+{if $LINEITEM_FIELDS['hdnDiscountPercent']}
 	{assign var=DISCOUNT_PERCENT_EDITABLE value=$LINEITEM_FIELDS['hdnDiscountPercent']->isEditable()}
 {/if}
 
@@ -150,12 +147,12 @@
 				<table class="table table-bordered" id="lineItemTab">
 					<tr>
 						<td><strong>{vtranslate('LBL_TOOLS',$MODULE)}</strong></td>
-						{if isset($IMAGE_EDITABLE)}
+						{if $IMAGE_EDITABLE}
 							<td>
 								<strong>{vtranslate({$LINEITEM_FIELDS['image']->get('label')},$MODULE)}</strong>
 							</td>
 						{/if}
-						{if isset($PRODUCT_EDITABLE)}
+						{if $PRODUCT_EDITABLE}
 							<td>
 								<span class="redColor">*</span><strong>{vtranslate({$LINEITEM_FIELDS['productid']->get('label')},$MODULE)}</strong>
 							</td>
@@ -163,18 +160,18 @@
 						<td>
 							<strong>{vtranslate('LBL_QTY',$MODULE)}</strong>
 						</td>
-						{if isset($PURCHASE_COST_EDITABLE)}
+						{if $PURCHASE_COST_EDITABLE}
 							<td>
 								<strong class="pull-right">{vtranslate({$LINEITEM_FIELDS['purchase_cost']->get('label')},$MODULE)}</strong>
 							</td>
 						{/if}
-						{if isset($LIST_PRICE_EDITABLE)}
+						{if $LIST_PRICE_EDITABLE}
 							<td>
 								<strong>{vtranslate({$LINEITEM_FIELDS['listprice']->get('label')},$MODULE)}</strong>
 							</td>
 						{/if}
 						<td><strong class="pull-right">{vtranslate('LBL_TOTAL',$MODULE)}</strong></td>
-							{if isset($MARGIN_EDITABLE) && isset($PURCHASE_COST_EDITABLE)}
+							{if $MARGIN_EDITABLE && $PURCHASE_COST_EDITABLE}
 							<td>
 								<strong class="pull-right">{vtranslate({$LINEITEM_FIELDS['margin']->get('label')},$MODULE)}</strong>
 							</td>
@@ -189,7 +186,7 @@
 							{include file="partials/LineItemsContent.tpl"|@vtemplate_path:'Inventory' row_no=$row_no data=$data}
 						</tr>
 					{/foreach}
-					{if $RELATED_PRODUCTS && count($RELATED_PRODUCTS) eq 0 and ($PRODUCT_ACTIVE eq 'true' || $SERVICE_ACTIVE eq 'true')}
+					{if count($RELATED_PRODUCTS) eq 0 and ($PRODUCT_ACTIVE eq 'true' || $SERVICE_ACTIVE eq 'true')}
 						<tr id="row1" class="lineItemRow" data-row-num="1">
 							{include file="partials/LineItemsContent.tpl"|@vtemplate_path:'Inventory' row_no=1 data=[] IGNORE_UI_REGISTRATION=false}
 						</tr>

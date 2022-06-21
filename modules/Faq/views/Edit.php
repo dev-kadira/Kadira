@@ -6,20 +6,19 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Faq_Edit_View extends Vtiger_Edit_View
-{
-	public function process(Vtiger_Request $request)
-	{
-		$viewer = $this->getViewer($request);
+class Faq_Edit_View extends Vtiger_Edit_View {
+
+	public function process(Vtiger_Request $request) {
+		$viewer = $this->getViewer ($request);
 		$moduleName = $request->getModule();
 		$record = $request->get('record');
 
-		if (! empty($record) && $request->get('isDuplicate') == true) {
+		if(!empty($record) && $request->get('isDuplicate') == true) {
 			$recordModel = Vtiger_Record_Model::getInstanceById($record, $moduleName);
 			$viewer->assign('MODE', '');
-		} elseif (! empty($record)) {
+		} else if(!empty($record)) {
 			$recordModel = Vtiger_Record_Model::getInstanceById($record, $moduleName);
 			$viewer->assign('RECORD_ID', $record);
 			$viewer->assign('MODE', 'edit');
@@ -39,19 +38,19 @@ class Faq_Edit_View extends Vtiger_Edit_View
 		$fieldList = $moduleModel->getFields();
 		$requestFieldList = array_intersect_key($request->getAllPurified(), $fieldList);
 
-		foreach ($requestFieldList as $fieldName=> $fieldValue) {
+		foreach($requestFieldList as $fieldName=>$fieldValue) {
 			$fieldModel = $fieldList[$fieldName];
-			if ($fieldModel->isEditable()) {
+			if($fieldModel->isEditable()) {
 				$recordModel->set($fieldName, $fieldModel->getDBInsertValue($fieldValue));
 			}
 		}
 		$recordStructureInstance = Vtiger_RecordStructure_Model::getInstanceFromRecordModel($recordModel, Vtiger_RecordStructure_Model::RECORD_STRUCTURE_MODE_EDIT);
 
 		$viewMode = $request->get('view_mode');
-		if (! empty($viewMode)) {
+		if(!empty($viewMode)) {
 			$viewer->assign('VIEW_MODE', $viewMode);
 		}
-
+		
 		$picklistDependencyDatasource = Vtiger_DependencyPicklist::getPicklistDependencyDatasource($moduleName);
 
 		$viewer->assign('PICKIST_DEPENDENCY_DATASOURCE', Vtiger_Functions::jsonEncode($picklistDependencyDatasource));
@@ -65,13 +64,13 @@ class Faq_Edit_View extends Vtiger_Edit_View
 
 		//if it is relation edit
 		$viewer->assign('IS_RELATION_OPERATION', $isRelationOperation);
-		if ($isRelationOperation) {
+		if($isRelationOperation) {
 			$viewer->assign('SOURCE_MODULE', $request->get('sourceModule'));
 			$viewer->assign('SOURCE_RECORD', $request->get('sourceRecord'));
 		}
 
 		// added to set the return values
-		if ($request->get('returnview')) {
+		if($request->get('returnview')) {
 			$request->setViewerReturnValues($viewer);
 		}
 		$viewer->assign('MAX_UPLOAD_LIMIT_MB', Vtiger_Util_Helper::getMaxUploadSize());

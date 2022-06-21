@@ -6,25 +6,23 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class CustomView_Deny_Action extends Vtiger_Action_Controller
-{
-	public function process(Vtiger_Request $request)
-	{
+class CustomView_Deny_Action extends Vtiger_Action_Controller {
+
+	public function process(Vtiger_Request $request) {
 		$currentUser = Users_Record_Model::getCurrentUserModel();
 		$customViewModel = CustomView_Record_Model::getInstanceById($request->get('record'));
 		$moduleModel = $customViewModel->getModule();
-		if ($currentUser->isAdminUser()) {
+		if($currentUser->isAdminUser()) {
 			$customViewModel->deny();
 		}
 
 		$listViewUrl = $moduleModel->getListViewUrl();
-		header("Location: ${listViewUrl}");
+		header("Location: $listViewUrl");
 	}
 
-	public function validateRequest(Vtiger_Request $request)
-	{
+	public function validateRequest(Vtiger_Request $request) {
 		$request->validateWriteAccess();
 	}
 }

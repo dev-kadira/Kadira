@@ -6,38 +6,35 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Campaigns_Relation_Model extends Vtiger_Relation_Model
-{
+class Campaigns_Relation_Model extends Vtiger_Relation_Model {
+
 	/**
 	 * Function to get Email enabled modules list for detail view of record
 	 * @return <array> List of modules
 	 */
-	public function getEmailEnabledModulesInfoForDetailView()
-	{
-		return [
-			'Leads'    => ['fieldName' => 'leadid', 'tableName' => 'vtiger_campaignleadrel'],
-			'Accounts' => ['fieldName' => 'accountid', 'tableName' => 'vtiger_campaignaccountrel'],
-			'Contacts' => ['fieldName' => 'contactid', 'tableName' => 'vtiger_campaigncontrel']
-		];
+	public function getEmailEnabledModulesInfoForDetailView() {
+		return array(
+				'Leads' => array('fieldName' => 'leadid', 'tableName' => 'vtiger_campaignleadrel'),
+				'Accounts' => array('fieldName' => 'accountid', 'tableName' => 'vtiger_campaignaccountrel'),
+				'Contacts' => array('fieldName' => 'contactid', 'tableName' => 'vtiger_campaigncontrel')
+		);
 	}
 
 	/**
 	 * Function to get Campaigns Relation status values
 	 * @return <array> List of status values
 	 */
-	public function getCampaignRelationStatusValues()
-	{
-		$statusValues = [];
+	public function getCampaignRelationStatusValues() {
+		$statusValues = array();
 		$db = PearDatabase::getInstance();
-		$result = $db->pquery('SELECT campaignrelstatusid, campaignrelstatus FROM vtiger_campaignrelstatus', []);
+		$result = $db->pquery("SELECT campaignrelstatusid, campaignrelstatus FROM vtiger_campaignrelstatus", array());
 		$numOfRows = $db->num_rows($result);
 
-		for ($i = 0; $i < $numOfRows; $i++) {
+		for ($i=0; $i<$numOfRows; $i++) {
 			$statusValues[$db->query_result($result, $i, 'campaignrelstatusid')] = $db->query_result($result, $i, 'campaignrelstatus');
 		}
-
 		return $statusValues;
 	}
 
@@ -45,10 +42,8 @@ class Campaigns_Relation_Model extends Vtiger_Relation_Model
 	 * Function to update the status of relation
 	 * @param <Number> Campaign record id
 	 * @param <array> $statusDetails
-	 * @param mixed $sourceRecordId
 	 */
-	public function updateStatus($sourceRecordId, $statusDetails = [])
-	{
+	public function updateStatus($sourceRecordId, $statusDetails = array()) {
 		if ($sourceRecordId && $statusDetails) {
 			$relatedModuleName = $this->getRelationModuleModel()->getName();
 			$emailEnabledModulesInfo = $this->getEmailEnabledModulesInfoForDetailView();
@@ -58,14 +53,14 @@ class Campaigns_Relation_Model extends Vtiger_Relation_Model
 				$tableName = $emailEnabledModulesInfo[$relatedModuleName]['tableName'];
 				$db = PearDatabase::getInstance();
 
-				$paramArray = [];
-				$updateQuery = "UPDATE ${tableName} SET campaignrelstatusid = CASE ${fieldName} ";
+				$paramArray = array();
+				$updateQuery = "UPDATE $tableName SET campaignrelstatusid = CASE $fieldName ";
 				foreach ($statusDetails as $relatedRecordId => $status) {
-					$updateQuery .= ' WHEN ? THEN ? ';
+					$updateQuery .= " WHEN ? THEN ? ";
 					array_push($paramArray, $relatedRecordId);
 					array_push($paramArray, $status);
 				}
-				$updateQuery .= 'ELSE campaignrelstatusid END WHERE campaignid = ?';
+				$updateQuery .= "ELSE campaignrelstatusid END WHERE campaignid = ?";
 				array_push($paramArray, $sourceRecordId);
 				$db->pquery($updateQuery, $paramArray);
 			}

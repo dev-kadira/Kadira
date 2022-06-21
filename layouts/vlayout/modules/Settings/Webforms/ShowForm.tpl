@@ -25,6 +25,7 @@
   method="post" accept-charset="utf-8" enctype="multipart/form-data">
 	<input type="hidden" name="publicid" value="{$RECORD_MODEL->get('publicid')}" />
 	<input type="hidden" name="name" value="{$RECORD_MODEL->getName()}" />
+        <input type="hidden" name="VTIGER_RECAPTCHA_PUBLIC_KEY" value="{$VTIGER_RECAPTCHA_PUBLIC_KEY}" />
     {assign var=IS_CAPTCHA_ENABLED value=$RECORD_MODEL->isCaptchaEnabled()}
 	<table>
                             {foreach item=FIELD_MODEL key=FIELD_NAME from=$SELECTED_FIELD_MODELS_LIST}

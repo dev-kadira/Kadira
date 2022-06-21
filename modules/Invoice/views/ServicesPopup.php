@@ -6,8 +6,8 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Invoice_ServicesPopup_View extends Inventory_ServicesPopup_View
-{
+class Invoice_ServicesPopup_View extends Inventory_ServicesPopup_View {
+
 }

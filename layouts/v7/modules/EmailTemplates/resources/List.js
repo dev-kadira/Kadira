@@ -38,8 +38,11 @@ Vtiger_List_Js("EmailTemplates_List_Js", {
                         deleteURL += "&search_params=" + JSON.stringify(listViewInstance.getListSearchParams());
                         app.helper.showProgress();
                         app.request.post({url: deleteURL}).then(
-                                function () {
+                                function (error, data) {
                                     app.helper.hideProgress();
+                                    if(error) {
+                                        app.helper.showErrorNotification({message: error});
+                                    }
                                     listInstance.clearList();
                                     listInstance.loadListViewRecords();
                                 }

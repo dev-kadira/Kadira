@@ -19,7 +19,7 @@
 					</div>
 					<div class="col-sm-2">
 						<div class="btn-group pull-right">
-							<button class="btn btn-outline-primary " type="button" onclick='window.location.href = "{$RECORD_MODEL->getEditViewUrl()}"'>{vtranslate('LBL_EDIT',$QUALIFIED_MODULE)}</button>
+							<button class="btn btn-default  " type="button" onclick='window.location.href = "{$RECORD_MODEL->getEditViewUrl()}"'>{vtranslate('LBL_EDIT',$QUALIFIED_MODULE)}</button>
 						</div>
 					</div>
 				</div>

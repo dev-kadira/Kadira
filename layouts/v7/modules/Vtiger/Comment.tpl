@@ -87,12 +87,6 @@
 													</a>
 												{/if}
 											{/if}
-											{if $COMMENTS_MODULE_MODEL->isPermitted('Delete')}
-												{if $IS_CREATABLE}&nbsp;&nbsp;&nbsp;{/if}
-												<a href="javascript:void(0);" class="cursorPointer deleteComment feedback" style="color: blue;">
-													{vtranslate('LBL_DELETE',$MODULE_NAME)}
-												</a>
-											{/if}
 
 											{assign var=CHILD_COMMENTS_COUNT value=$COMMENT->getChildCommentsCount()}
 											{if $CHILD_COMMENTS_MODEL neq null and ($CHILDS_ROOT_PARENT_ID neq $PARENT_COMMENT_ID)}

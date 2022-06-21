@@ -49,9 +49,7 @@ class PBXManagerHandler extends VTEventHandler {
                 $fieldName = $fieldName->get('name');      
                 $values[$fieldName] = $data[$fieldName];
                 
-                //SalesPlatform.ru begin
-                //if($values[$fieldName])
-                //SalesPlatform.ru end
+                if($values[$fieldName])
                     $recordModel->receivePhoneLookUpRecord($fieldName, $values, true);
         }
     }

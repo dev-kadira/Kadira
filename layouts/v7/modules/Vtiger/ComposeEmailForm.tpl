@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-lg-6">
                                 {if !empty($TO)}
-                                    {assign var=TO_EMAILS value=","|implode:$TO}
+                                    {assign var=TO_EMAILS value=","|implode:$TO|htmlentities}
                                 {/if}
                                 <input id="emailField" style="width:100%" name="toEmail" type="text" class="autoComplete sourceField select2" data-rule-required="true" data-rule-multiEmails="true" value="{$TO_EMAILS}" placeholder="{vtranslate('LBL_TYPE_AND_SEARCH',$MODULE)}">
                             </div>

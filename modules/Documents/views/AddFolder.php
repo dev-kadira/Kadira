@@ -6,26 +6,23 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Documents_AddFolder_View extends Vtiger_IndexAjax_View
-{
-	public function requiresPermission(Vtiger_Request $request)
-	{
+class Documents_AddFolder_View extends Vtiger_IndexAjax_View {
+
+	public function requiresPermission(Vtiger_Request $request){
 		$permissions = parent::requiresPermission($request);
-
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
-
+		
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		return $permissions;
 	}
 
-	public function checkPermission(Vtiger_Request $request)
-	{
+
+	public function checkPermission(Vtiger_Request $request) {
 		return parent::checkPermission($request);
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process (Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 
@@ -38,7 +35,7 @@ class Documents_AddFolder_View extends Vtiger_IndexAjax_View
 			$viewer->assign('FOLDER_NAME', $folderModel->getName());
 			$viewer->assign('FOLDER_DESC', $folderModel->getDescription());
 		}
-		$viewer->assign('MODULE', $moduleName);
+		$viewer->assign('MODULE',$moduleName);
 		$viewer->view('AddFolder.tpl', $moduleName);
 	}
 }

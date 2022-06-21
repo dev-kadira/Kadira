@@ -39,7 +39,7 @@
 					</td>
 					<td>
 						<input type="hidden" name="row_counter" value="{$_COUNTER}" />
-						<select name="mapped_fields" class="select2" id ="mappedFieldsSelect" style="width:100%" onchange="Vtiger_Import_Js.loadDefaultValueWidget('fieldIdentifier{$_COUNTER}')">
+						<select name="mapped_fields" class="select2 mappedFieldsSelect" style="width:100%" onchange="Vtiger_Import_Js.loadDefaultValueWidget('fieldIdentifier{$_COUNTER}')">
 							<option value="">{'LBL_SELECT_OPTION'|@vtranslate:$FOR_MODULE}</option>
 							{foreach key=_FIELD_NAME item=_FIELD_INFO from=$AVAILABLE_FIELDS}
 								{assign var="_TRANSLATED_FIELD_LABEL" value=$_FIELD_INFO->getFieldLabelKey()|@vtranslate:$FOR_MODULE}

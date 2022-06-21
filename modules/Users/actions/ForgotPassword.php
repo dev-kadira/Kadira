@@ -6,23 +6,23 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
-chdir(dirname(__FILE__).'/../../../');
+ *************************************************************************************/
+chdir(dirname(__FILE__)."/../../../");
 
-include_once 'include/utils/VtlibUtils.php';
-include_once 'include/utils/CommonUtils.php';
-include_once 'includes/Loader.php';
+include_once "include/utils/VtlibUtils.php";
+include_once "include/utils/CommonUtils.php";
+include_once "includes/Loader.php";
 include_once 'includes/runtime/BaseModel.php';
 include_once 'includes/runtime/Viewer.php';
-include_once 'includes/http/Request.php';
-include_once 'include/Webservices/Custom/ChangePassword.php';
-include_once 'include/Webservices/Utils.php';
-include_once 'includes/runtime/EntryPoint.php';
+include_once "includes/http/Request.php";
+include_once "include/Webservices/Custom/ChangePassword.php";
+include_once "include/Webservices/Utils.php";
+include_once "includes/runtime/EntryPoint.php";
 
-class Users_ForgotPassword_Action
-{
-	public function changePassword($request)
-	{
+class Users_ForgotPassword_Action {
+
+	public function changePassword($request){
+
 		$request = new Vtiger_Request($request);
 		$viewer = Vtiger_Viewer::getInstance();
 		$userName = $request->get('username');
@@ -33,36 +33,33 @@ class Users_ForgotPassword_Action
 		$shortURLModel = Vtiger_ShortURL_Helper::getInstance($shortURLID);
 		$secretToken = $shortURLModel->handler_data['secret_token'];
 
-		$validateData = [
-			'username'     => $userName,
-			'secret_token' => $secretToken,
-			'secret_hash'  => $secretHash
-		];
+		$validateData = array('username'  => $userName,
+							'secret_token'=> $secretToken,
+							'secret_hash' => $secretHash
+						);
 
 		$valid = $shortURLModel->compareEquals($validateData);
-		if ($valid) {
+		if($valid) {
 			$userId = getUserId_Ol($userName);
 			$user = Users::getActiveAdminUser();
 			$wsUserId = vtws_getWebserviceEntityId('Users', $userId);
-
-			try {
-				vtws_changePassword($wsUserId, '', $newPassword, $confirmPassword, $user);
-			} catch (Exception $e) {
-				$viewer->assign('ERROR', true);
-				$viewer->assign('MESSAGE', html_entity_decode($e->getMessage()));
-			}
+                        try{
+                            vtws_changePassword($wsUserId, '', $newPassword, $confirmPassword, $user);
+                        } catch (Exception $e){
+                            $viewer->assign('ERROR', true);
+                            $viewer->assign('MESSAGE', html_entity_decode($e->getMessage()));
+                        }
 		} else {
 			$viewer->assign('ERROR', true);
-			$viewer->assign('MESSAGE', 'Error, please retry setting the password!!');
+                        $viewer->assign('MESSAGE', 'Error, please retry setting the password!!');
 		}
-		$shortURLModel->delete();
-		$viewer->assign('USERNAME', $userName);
-		$viewer->assign('PASSWORD', $newPassword);
+                    $shortURLModel->delete();
+                    $viewer->assign('USERNAME', $userName);
+                    $viewer->assign('PASSWORD', $newPassword);
 		$viewer->view('FPLogin.tpl', 'Users');
 	}
 
-	public static function run($request)
-	{
+	public static function run($request){
 		$instance = new self();
 		$instance->changePassword($request);
 	}

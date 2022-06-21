@@ -50,7 +50,6 @@ class Calendar_ActivityReminder_Action extends Vtiger_Action_Controller{
 
 	function getReminders(Vtiger_Request $request) {
 		$recordModels = Calendar_Module_Model::getCalendarReminder();
-		$records = array();
 		foreach($recordModels as $record) {
 			$records[] = $record->getDisplayableValues();
 			$record->updateReminderStatus();

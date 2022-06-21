@@ -22,7 +22,7 @@
                      <h4>{vtranslate($BLOCK_LABEL, $MODULE)}</h4>
                  </div>
                  <hr >
-                 <table class="table no-border">
+                 <table class="table table-borderless">
                      <tr>
                      {assign var=COUNTER value=0}
                      {foreach key=FIELD_NAME item=FIELD_MODEL from=$BLOCK_FIELDS name=blockfields}
@@ -63,7 +63,7 @@
                              {/if}
                              &nbsp; {if $FIELD_MODEL->isMandatory() eq true} <span class="redColor">*</span> {/if}
                          </td>
-                         <td class="fieldValue" {if $FIELD_MODEL->getFieldDataType() eq 'boolean'} style="width:25%" {/if} {if $FIELD_MODEL->get('uitype') eq '19'} colspan="3" {assign var=COUNTER value=$COUNTER+1} {/if}>
+                         <td  {if in_array($FIELD_MODEL->get('uitype'),array('19')) || $FIELD_MODEL->get('label') eq 'Signature'} class="fieldValue fieldValueWidth80" colspan="3" {assign var=COUNTER value=$COUNTER+1} {else} class="fieldValue" {/if}>
                              {include file=vtemplate_path($FIELD_MODEL->getUITypeModel()->getTemplateName(),$MODULE)}
                          </td>
                      {/if}

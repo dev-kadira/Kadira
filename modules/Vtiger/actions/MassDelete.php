@@ -6,72 +6,43 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Vtiger_MassDelete_Action extends Vtiger_Mass_Action
-{
-	/**
-	 * requiresPermission
-	 *
-	 * @param  mixed $request
-	 * @return Array
-	 */
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Vtiger_MassDelete_Action extends Vtiger_Mass_Action {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'Delete'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'Delete');
 		return $permissions;
 	}
-
-	/**
-	 * preProcess
-	 *
-	 * @param  mixed $request
-	 * @return Boolean
-	 */
-	public function preProcess(Vtiger_Request $request)
-	{
+	
+	function preProcess(Vtiger_Request $request) {
 		return true;
 	}
 
-	/**
-	 * postProcess
-	 *
-	 * @param  mixed $request
-	 * @return Boolean
-	 */
-	public function postProcess(Vtiger_Request $request)
-	{
+	function postProcess(Vtiger_Request $request) {
 		return true;
 	}
 
-	/**
-	 * process
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 
-		if ($request->get('selected_ids') == 'all' && $request->get('mode') == 'FindDuplicates') {
+		if($request->get('selected_ids') == 'all' && $request->get('mode') == 'FindDuplicates') {
 			$recordIds = Vtiger_FindDuplicate_Model::getMassDeleteRecords($request);
 		} else {
 			$recordIds = $this->getRecordsListFromRequest($request);
 		}
 		$cvId = $request->get('viewname');
-		foreach ($recordIds as $recordId) {
-			if (Users_Privileges_Model::isPermitted($moduleName, 'Delete', $recordId)) {
+		foreach($recordIds as $recordId) {
+			if(Users_Privileges_Model::isPermitted($moduleName, 'Delete', $recordId)) {
 				$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleModel);
 				$recordModel->delete();
 				deleteRecordFromDetailViewNavigationRecords($recordId, $cvId, $moduleName);
 			}
 		}
 		$response = new Vtiger_Response();
-		$response->setResult(['viewname'=>$cvId, 'module'=>$moduleName]);
+		$response->setResult(array('viewname'=>$cvId, 'module'=>$moduleName));
 		$response->emit();
 	}
 }

@@ -6,47 +6,41 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Reports_Save_Action extends Vtiger_Save_Action
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Reports_Save_Action extends Vtiger_Save_Action {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 		return $permissions;
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+	
+	public function checkPermission(Vtiger_Request $request) {
 		parent::checkPermission($request);
 
 		$record = $request->get('record');
 		if ($record) {
 			$reportModel = Reports_Record_Model::getCleanInstance($record);
-			if (! $reportModel->isEditable()) {
+			if (!$reportModel->isEditable()) {
 				throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
 			}
 		}
-
 		return true;
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
+		$moduleName = $request->getModule();
+
 		$record = $request->get('record');
 		$reportModel = new Reports_Record_Model();
 		$reportModel->setModule('Reports');
-
-		if (! empty($record) && ! $request->get('isDuplicate')) {
+		if(!empty($record) && !$request->get('isDuplicate')) {
 			$reportModel->setId($record);
 		}
 
 		$reporttype = $request->get('reporttype');
-		if (empty($reporttype)) {
-			$reporttype = 'tabular';
-		}
+		if(empty($reporttype)) $reporttype='tabular';
 		$reportModel->set('reportname', $request->get('reportname'));
 		$reportModel->set('folderid', $request->get('reportfolderid'));
 		$reportModel->set('description', $request->get('reports_description'));
@@ -86,6 +80,6 @@ class Reports_Save_Action extends Vtiger_Save_Action
 		//END
 
 		$loadUrl = $reportModel->getDetailViewUrl();
-		header("Location: ${loadUrl}");
+		header("Location: $loadUrl");
 	}
 }

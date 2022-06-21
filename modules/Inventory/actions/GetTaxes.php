@@ -6,36 +6,33 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Inventory_GetTaxes_Action extends Vtiger_Action_Controller
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Inventory_GetTaxes_Action extends Vtiger_Action_Controller {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'sourceModule', 'action' => 'DetailView'];
-
+		$permissions[] = array('module_parameter' => 'sourceModule', 'action' => 'DetailView');
 		return $permissions;
 	}
-
-	public function process(Vtiger_Request $request)
-	{
+	
+	function process(Vtiger_Request $request) {
 		$decimalPlace = getCurrencyDecimalPlaces();
 		$currencyId = $request->get('currency_id');
 		$currencies = Inventory_Module_Model::getAllCurrencies();
 		$conversionRate = $conversionRateForPurchaseCost = 1;
 
 		$idList = $request->get('idlist');
-		if (! $idList) {
+		if (!$idList) {
 			$recordId = $request->get('record');
-			$idList = [$recordId];
+			$idList = array($recordId);
 		}
 
 		$response = new Vtiger_Response();
-		$namesList = $purchaseCostsList = $taxesList = $listPricesList = $listPriceValuesList = [];
-		$descriptionsList = $quantitiesList = $imageSourcesList = $productIdsList = $baseCurrencyIdsList = [];
+		$namesList = $purchaseCostsList = $taxesList = $listPricesList = $listPriceValuesList = array();
+		$descriptionsList = $quantitiesList = $imageSourcesList = $productIdsList = $baseCurrencyIdsList = array();
 
-		foreach ($idList as $id) {
+		foreach($idList as $id) {
 			$recordModel = Vtiger_Record_Model::getInstanceById($id);
 			$taxes = $recordModel->getTaxes();
 			foreach ($taxes as $key => $taxInfo) {
@@ -43,11 +40,11 @@ class Inventory_GetTaxes_Action extends Vtiger_Action_Controller
 				$taxes[$key] = $taxInfo;
 			}
 
-			$taxesList[$id] = $taxes;
-			$namesList[$id] = decode_html($recordModel->getName());
-			$quantitiesList[$id] = $recordModel->get('qtyinstock');
-			$descriptionsList[$id] = decode_html($recordModel->get('description'));
-			$listPriceValuesList[$id] = $recordModel->getListPriceValues($recordModel->getId());
+			$taxesList[$id]				= $taxes;
+			$namesList[$id]				= decode_html($recordModel->getName());
+			$quantitiesList[$id]		= $recordModel->get('qtyinstock');
+			$descriptionsList[$id]		= decode_html($recordModel->get('description'));
+			$listPriceValuesList[$id]	= $recordModel->getListPriceValues($recordModel->getId());
 
 			$priceDetails = $recordModel->getPriceDetails();
 			foreach ($priceDetails as $currencyDetails) {
@@ -60,7 +57,6 @@ class Inventory_GetTaxes_Action extends Vtiger_Action_Controller
 			foreach ($currencies as $currencyInfo) {
 				if ($currencyId == $currencyInfo['curid']) {
 					$conversionRateForPurchaseCost = $currencyInfo['conversionrate'];
-
 					break;
 				}
 			}
@@ -79,21 +75,21 @@ class Inventory_GetTaxes_Action extends Vtiger_Action_Controller
 			}
 		}
 
-		foreach ($idList as $id) {
-			$resultData = [
-				'id'              => $id,
-				'name'            => $namesList[$id],
-				'taxes'           => $taxesList[$id],
-				'listprice'       => $listPricesList[$id],
-				'listpricevalues' => $listPriceValuesList[$id],
-				'purchaseCost'    => $purchaseCostsList[$id],
-				'description'     => $descriptionsList[$id],
-				'baseCurrencyId'  => $baseCurrencyIdsList[$id],
-				'quantityInStock' => $quantitiesList[$id],
-				'imageSource'     => $imageSourcesList[$id]
-			];
+		foreach($idList as $id) {
+			$resultData = array(
+								'id'					=> $id,
+								'name'					=> $namesList[$id],
+								'taxes'					=> $taxesList[$id],
+								'listprice'				=> $listPricesList[$id],
+								'listpricevalues'		=> $listPriceValuesList[$id],
+								'purchaseCost'			=> $purchaseCostsList[$id],
+								'description'			=> $descriptionsList[$id],
+								'baseCurrencyId'		=> $baseCurrencyIdsList[$id],
+								'quantityInStock'		=> $quantitiesList[$id],
+								'imageSource'			=> $imageSourcesList[$id]
+					);
 
-			$info[] = [$id => $resultData];
+			$info[] = array($id => $resultData);
 		}
 		$response->setResult($info);
 		$response->emit();

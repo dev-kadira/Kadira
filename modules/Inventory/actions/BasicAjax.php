@@ -6,12 +6,11 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Inventory_BasicAjax_Action extends Vtiger_BasicAjax_Action
-{
-	public function process(Vtiger_Request $request)
-	{
+class Inventory_BasicAjax_Action extends Vtiger_BasicAjax_Action {
+
+	public function process(Vtiger_Request $request) {
 		$searchValue = $request->get('search_value');
 		$searchModule = $request->get('search_module');
 
@@ -24,8 +23,8 @@ class Inventory_BasicAjax_Action extends Vtiger_BasicAjax_Action
 
 		//Supporting sequence based search in updation of Inventory record
 		$isLineItem = false;
-		$sequenceBasedRecords = [];
-		if (in_array($searchModule, ['Products', 'Services'])) {
+		$sequenceBasedRecords = array();
+		if (in_array($searchModule, array('Products', 'Services'))) {
 			$isLineItem = true;
 			foreach ($records as $moduleName => $recordModels) {
 				foreach ($recordModels as $recordId => $recordModel) {
@@ -47,15 +46,15 @@ class Inventory_BasicAjax_Action extends Vtiger_BasicAjax_Action
 		}
 
 		$baseRecordId = $request->get('base_record');
-		$result = [];
-		foreach ($records as $moduleName => $recordModels) {
-			foreach ($recordModels as $recordModel) {
-				if ($recordModel->getId() != $baseRecordId) {
+		$result = array();
+		foreach($records as $moduleName => $recordModels) {
+			foreach($recordModels as $recordModel) {
+				if($recordModel->getId() != $baseRecordId) {
 					$recordLabel = decode_html($recordModel->getName());
 					if ($isLineItem) {
-						$recordLabel = $recordModel->get($fieldName)." - ${recordLabel}";
+						$recordLabel = $recordModel->get($fieldName)." - $recordLabel";
 					}
-					$result[] = ['label' => $recordLabel, 'value' => $recordLabel, 'id' => $recordModel->getId()];
+					$result[] = array('label' => $recordLabel, 'value' => $recordLabel, 'id' => $recordModel->getId());
 				}
 			}
 		}

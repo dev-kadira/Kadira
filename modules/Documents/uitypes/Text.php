@@ -6,19 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Documents_Text_UIType extends Vtiger_Text_UIType
-{
+class Documents_Text_UIType extends Vtiger_Text_UIType {
+
 	/**
 	 * Function to get the Display Value, for the current field type with given DB Insert Value
 	 * @param <Object> $value
-	 * @param mixed $record
-	 * @param mixed $recordInstance
 	 * @return <Object>
 	 */
-	public function getDisplayValue($value, $record = false, $recordInstance = false)
-	{
+	public function getDisplayValue($value, $record=false, $recordInstance=false,$removeTags = false) {
 		return $value;
 	}
+    
 }

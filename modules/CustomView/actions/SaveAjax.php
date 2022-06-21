@@ -6,48 +6,43 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class CustomView_SaveAjax_Action extends CustomView_Save_Action
-{
-	public function __construct()
-	{
+class CustomView_SaveAjax_Action extends CustomView_Save_Action {
+
+	function __construct() {
 		parent::__construct();
 		$this->exposeMethod('updateColumns');
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$response = new Vtiger_Response();
 		$cvId = $request->get('record');
-		if (! $cvId) {
+		if (!$cvId) {
 			$response->setError('Filter Not specified');
 			$response->emit();
-
 			return;
 		}
 
 		$mode = $request->get('mode');
-		if (! empty($mode)) {
+		if(!empty($mode)) {
 			$this->invokeExposedMethod($mode, $request);
-
 			return;
 		}
 
 		$customViewModel = CustomView_Record_Model::getInstanceById($cvId);
-		$customViewModel->set('setdefault', $request->get('setdefault'));
+		$customViewModel->set('setdefault',$request->get('setdefault'));
 		$customViewModel->save(true);
-
-		$response->setResult(['id'=>$cvId, 'isdefault'=>$customViewModel->get('setdefault')]);
+		$response->setResult(array('id'=>$cvId,'isdefault'=>$customViewModel->get('setdefault')));
 		$response->emit();
 	}
+
 
 	/**
 	 * Function to updated selected Custom view columns
 	 * @param Vtiger_Request $request
 	 */
-	public function updateColumns(Vtiger_Request $request)
-	{
+	 public function updateColumns(Vtiger_Request $request) {
 		$cvid = $request->get('record');
 		$customViewModel = CustomView_Record_Model::getInstanceById($cvid);
 		$response = new Vtiger_Response();
@@ -60,10 +55,10 @@ class CustomView_SaveAjax_Action extends CustomView_Save_Action
 			 * we should clear this from session in order to apply view
 			 */
 			$listViewSessionKey = $customViewModel->getModule()->getName().'_'.$cvid;
-			Vtiger_ListView_Model::deleteParamsSession($listViewSessionKey, 'list_headers');
-			$response->setResult(['message'=>vtranslate('List columns saved successfully', $request->getModule()), 'listviewurl'=>$customViewModel->getModule()->getListViewUrl().'&viewname='.$cvid]);
+			Vtiger_ListView_Model::deleteParamsSession($listViewSessionKey,'list_headers');
+			$response->setResult(array('message'=>vtranslate('List columns saved successfully',$request->getModule()), 'listviewurl'=>$customViewModel->getModule()->getListViewUrl().'&viewname='.$cvid));
 		} else {
-			$response->setError(vtranslate('Filter does not exist', $request->getModule()));
+			$response->setError(vtranslate('Filter does not exist',$request->getModule()));
 		}
 		$response->emit();
 	}

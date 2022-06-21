@@ -126,7 +126,7 @@
                                             <a name="emailsEditView"><i title="{vtranslate('LBL_EDIT', $MODULE)}" class="fa fa-pencil"></i></a>	&nbsp;&nbsp;
                                             {/if}
                                             {if $IS_DELETABLE}
-                                            <a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="fa fa-chain-broken"></i></a>
+                                            <a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="vicon-linkopen"></i></a>
                                             {/if}
                                     </span>
                                 </div>

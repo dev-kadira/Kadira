@@ -6,8 +6,11 @@
 * Portions created by vtiger are Copyright (C) vtiger.
 * All Rights Reserved.
 ************************************************************************************}
-
+</div>
 <footer class="app-footer">
+	<p>
+		Powered by Cadira - {$VTIGER_VERSION}	
+	</p>
 </footer>
 <div id='overlayPage'>
 	<!-- arrow is added to point arrow to the clicked element (Ex:- TaskManagement), 
@@ -18,7 +21,6 @@
 </div>
 <div id='helpPageOverlay'></div>
 <div id="js_strings" class="hide noprint">{Zend_Json::encode($LANGUAGE_STRINGS)}</div>
-<div id="maxListFieldsSelectionSize" class="hide noprint">{$MAX_LISTFIELDS_SELECTION_SIZE}</div>
 <div class="modal myModal fade"></div>
 {include file='JSResources.tpl'|@vtemplate_path}
 </body>

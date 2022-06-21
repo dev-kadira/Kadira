@@ -643,13 +643,6 @@ Class Google_Contacts_Connector extends WSAPP_TargetConnector {
 
 		$payLoad = html_entity_decode($atom->asXML(), ENT_QUOTES, $default_charset);
 		$response = $this->sendBatchRequest($payLoad);
-
-
-        $main1 = new SimpleXMLElement($payLoad);
-        $main1->entry->addAttribute('gd:etag', '*');
-        $payLoad = $main1->asXML();
-
-
 		if($response) {
 			$responseXml = simplexml_load_string($response);
 			$responseXml->registerXPathNamespace('gd', $this->NS['gd']);
@@ -718,12 +711,6 @@ Class Google_Contacts_Connector extends WSAPP_TargetConnector {
 			}
 		}
 		$payLoad = html_entity_decode($atom->asXML(), ENT_QUOTES, $default_charset);
-
-       $main1 = new SimpleXMLElement($payLoad);
-       $main1->entry->addAttribute('gd:etag', '*');
-       $payLoad = $main1->asXML();
-
-
 		$response = $this->sendBatchRequest($payLoad);
 		$responseXml = simplexml_load_string($response);
 		if($responseXml) {

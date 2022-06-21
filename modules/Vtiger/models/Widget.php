@@ -6,92 +6,76 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 /**
  * Vtiger Widget Model Class
  */
-class Vtiger_Widget_Model extends Vtiger_Base_Model
-{
-	public function getWidth()
-	{
-		$largerSizedWidgets = ['GroupedBySalesPerson', 'PipelinedAmountPerSalesPerson', 'GroupedBySalesStage', 'Funnel Amount'];
+class Vtiger_Widget_Model extends Vtiger_Base_Model {
+
+	public function getWidth() {
+		$largerSizedWidgets = array('GroupedBySalesPerson', 'PipelinedAmountPerSalesPerson', 'GroupedBySalesStage', 'Funnel Amount');
 		$title = $this->getName();
-		if (in_array($title, $largerSizedWidgets)) {
+		if(in_array($title, $largerSizedWidgets)) {
 			$this->set('width', '2');
 		}
 
 		$width = $this->get('width');
-		if (empty($width)) {
+		if(empty($width)) {
 			$this->set('width', '1');
 		}
-
 		return $this->get('width');
 	}
 
-	public function getHeight()
-	{
+	public function getHeight() {
 		//Special case for History widget
 		$title = $this->getTitle();
-		if ($title == 'History') {
+		if($title == 'History') {
 			$this->set('height', '2');
 		}
 		$height = $this->get('height');
-		if (empty($height)) {
+		if(empty($height)) {
 			$this->set('height', '1');
 		}
-
 		return $this->get('height');
 	}
 
-	public function getSizeX()
-	{
-		$size = $this->get('size');
+    public function getSizeX() {
+        $size = $this->get('size');
 		if ($size) {
 			$size = Zend_Json::decode(decode_html($size));
-			$width = intval($size['sizex']);
-			$this->set('width', $width);
-
+            $width = intval($size['sizex']);
+            $this->set('width', $width);
 			return $width;
 		}
-
-		return $this->getWidth();
-	}
-
-	public function getSizeY()
-	{
-		$size = $this->get('size');
+        return $this->getWidth();
+    }
+    
+    public function getSizeY() {
+        $size = $this->get('size');
 		if ($size) {
 			$size = Zend_Json::decode(decode_html($size));
 			$height = intval($size['sizey']);
-			$this->set('height', $height);
-
+            $this->set('height', $height);
 			return $height;
 		}
+        return $this->getHeight();
+    }
 
-		return $this->getHeight();
-	}
-
-	public function getPositionCol($default = 0)
-	{
+	public function getPositionCol($default=0) {
 		$position = $this->get('position');
 		if ($position) {
 			$position = Zend_Json::decode(decode_html($position));
-
 			return intval($position['col']);
 		}
-
 		return $default;
 	}
 
-	public function getPositionRow($default = 0)
-	{
+	public function getPositionRow($default=0) {
 		$position = $this->get('position');
 		if ($position) {
 			$position = Zend_Json::decode(decode_html($position));
-
 			return intval($position['row']);
 		}
-
 		return $default;
 	}
 
@@ -99,38 +83,31 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 	 * Function to get the url of the widget
 	 * @return <String>
 	 */
-	public function getUrl()
-	{
+	public function getUrl() {
 		$url = decode_html($this->get('linkurl')).'&linkid='.$this->get('linkid');
-		if ($this->get('reportid')) {
-			$chartReportLinkUrl = 'index.php?module=Reports&view=ShowWidget&name=ChartReportWidget&reportid='.$this->get('reportid');
+		if($this->get('reportid')){
+			$chartReportLinkUrl = "index.php?module=Reports&view=ShowWidget&name=ChartReportWidget&reportid=".$this->get('reportid');
 			$url = decode_html($chartReportLinkUrl);
-		}
-		$widgetid = $this->has('widgetid') ? $this->get('widgetid') : $this->get('id');
-		if ($widgetid) {
-			$url .= '&widgetid='.$widgetid;
-		}
-
+		}	
+		$widgetid = $this->has('widgetid')? $this->get('widgetid') : $this->get('id');
+		if ($widgetid) $url .= '&widgetid=' . $widgetid;
 		return $url;
 	}
 
 	/**
 	 *  Function to get the Title of the widget
 	 */
-	public function getTitle()
-	{
+	public function getTitle() {
 		$title = $this->get('title');
-		if (! $title) {
+		if(!$title) {
 			$title = $this->get('linklabel');
 		}
-
 		return $title;
 	}
 
-	public function getName()
-	{
+	public function getName() {
 		$widgetName = $this->get('name');
-		if (empty($widgetName)) {
+		if(empty($widgetName)){
 			//since the html entitites will be encoded
 			//TODO : See if you need to push decode_html to base model
 			$linkUrl = decode_html($this->getUrl());
@@ -139,68 +116,58 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 			$widgetName = $matches[1];
 			$this->set('name', $widgetName);
 		}
-
 		return $widgetName;
 	}
-
 	/**
 	 * Function to get the instance of Vtiger Widget Model from the given array of key-value mapping
 	 * @param <Array> $valueMap
 	 * @return Vtiger_Widget_Model instance
 	 */
-	public static function getInstanceFromValues($valueMap)
-	{
+	public static function getInstanceFromValues($valueMap) {
 		$self = new self();
 		$self->setData($valueMap);
-
 		return $self;
 	}
 
-	public static function getInstance($linkId, $userId)
-	{
+	public static function getInstance($linkId, $userId) {
 		$db = PearDatabase::getInstance();
 		$result = $db->pquery('SELECT * FROM vtiger_module_dashboard_widgets
 			INNER JOIN vtiger_links ON vtiger_links.linkid = vtiger_module_dashboard_widgets.linkid
-			WHERE linktype = ? AND vtiger_links.linkid = ? AND userid = ?', ['DASHBOARDWIDGET', $linkId, $userId]);
+			WHERE linktype = ? AND vtiger_links.linkid = ? AND userid = ?', array('DASHBOARDWIDGET', $linkId, $userId));
 
 		$self = new self();
-		if ($db->num_rows($result)) {
+		if($db->num_rows($result)) {
 			$row = $db->query_result_rowdata($result, 0);
 			$self->setData($row);
 		}
-
 		return $self;
 	}
 
-	public static function updateWidgetPosition($position, $linkId, $widgetId, $userId)
-	{
-		if (! $linkId && ! $widgetId) {
-			return;
-		}
+	public static function updateWidgetPosition($position, $linkId, $widgetId, $userId) {
+		if (!$linkId && !$widgetId) return;
 
 		$db = PearDatabase::getInstance();
 		$sql = 'UPDATE vtiger_module_dashboard_widgets SET position=? WHERE userid=?';
-		$params = [$position, $userId];
+		$params = array($position, $userId);
 		if ($linkId) {
 			$sql .= ' AND linkid = ?';
 			$params[] = $linkId;
-		} elseif ($widgetId) {
+		} else if ($widgetId) {
 			$sql .= ' AND id = ?';
 			$params[] = $widgetId;
 		}
 		$db->pquery($sql, $params);
 	}
 
-	public static function updateWidgetSize($size, $linkId, $widgetId, $userId, $tabId)
-	{
+	public static function updateWidgetSize($size, $linkId, $widgetId, $userId, $tabId) {
 		if ($linkId || $widgetId) {
 			$db = PearDatabase::getInstance();
 			$sql = 'UPDATE vtiger_module_dashboard_widgets SET size=? WHERE userid=?';
-			$params = [$size, $userId];
+			$params = array($size, $userId);
 			if ($linkId) {
 				$sql .= ' AND linkid=?';
 				$params[] = $linkId;
-			} elseif ($widgetId) {
+			} else if ($widgetId) {
 				$sql .= ' AND id=?';
 				$params[] = $widgetId;
 			}
@@ -210,73 +177,65 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 		}
 	}
 
-	public static function getInstanceWithWidgetId($widgetId, $userId)
-	{
+	public static function getInstanceWithWidgetId($widgetId, $userId) {
 		$db = PearDatabase::getInstance();
 		$result = $db->pquery('SELECT * FROM vtiger_module_dashboard_widgets
 			INNER JOIN vtiger_links ON vtiger_links.linkid = vtiger_module_dashboard_widgets.linkid
-			WHERE linktype = ? AND vtiger_module_dashboard_widgets.id = ? AND userid = ?', ['DASHBOARDWIDGET', $widgetId, $userId]);
+			WHERE linktype = ? AND vtiger_module_dashboard_widgets.id = ? AND userid = ?', array('DASHBOARDWIDGET', $widgetId, $userId));
 
 		$self = new self();
-		if ($db->num_rows($result)) {
+		if($db->num_rows($result)) {
 			$row = $db->query_result_rowdata($result, 0);
 			$self->setData($row);
 		}
-
 		return $self;
 	}
 
-	public static function getInstanceWithReportId($reportId, $userId)
-	{
+	public static function getInstanceWithReportId($reportId, $userId) {
 		$db = PearDatabase::getInstance();
 		$result = $db->pquery('SELECT * FROM vtiger_module_dashboard_widgets
-			WHERE reportid = ? AND userid = ?', [$reportId, $userId]);
+			WHERE reportid = ? AND userid = ?', array($reportId, $userId));
 
 		$self = new self();
-		if ($db->num_rows($result)) {
+		if($db->num_rows($result)) {
 			$row = $db->query_result_rowdata($result, 0);
 			$self->setData($row);
 		}
-
 		return $self;
 	}
 
 	/**
 	 * Function to add a widget from the Users Dashboard
 	 */
-	public function add()
-	{
+	public function add() {
 		$db = PearDatabase::getInstance();
 
 		$tabid = 1;
-		if ($this->get('tabid')) {
-			$tabid = $this->get('tabid');
+		if ($this->get("tabid")) {
+			$tabid = $this->get("tabid");
 		}
 
 		$sql = 'SELECT id FROM vtiger_module_dashboard_widgets WHERE linkid = ? AND userid = ? AND dashboardtabid=?';
-		$params = [$this->get('linkid'), $this->get('userid'), $tabid];
+		$params = array($this->get('linkid'), $this->get('userid'), $tabid);
 
 		$filterid = $this->get('filterid');
-		if (! empty($filterid)) {
+		if (!empty($filterid)) {
 			$sql .= ' AND filterid = ?';
 			$params[] = $this->get('filterid');
 		}
 
 		$result = $db->pquery($sql, $params);
 
-		if (! $db->num_rows($result)) {
-			$db->pquery(
-				'INSERT INTO vtiger_module_dashboard_widgets(linkid, userid, filterid, title, data,dashboardtabid) VALUES(?,?,?,?,?,?)',
-				[$this->get('linkid'), $this->get('userid'), $this->get('filterid'), $this->get('title'), Zend_Json::encode($this->get('data')), $tabid]
-			);
+		if(!$db->num_rows($result)) {
+			$db->pquery('INSERT INTO vtiger_module_dashboard_widgets(linkid, userid, filterid, title, data,dashboardtabid) VALUES(?,?,?,?,?,?)',
+					array($this->get('linkid'), $this->get('userid'), $this->get('filterid'), $this->get('title'), Zend_Json::encode($this->get('data')),$tabid));
 			$this->set('id', $db->getLastInsertID());
-		} elseif ($this->has('data')) {
-			$db->pquery(
-				'INSERT INTO vtiger_module_dashboard_widgets(linkid, userid, filterid, title, data,dashboardtabid) VALUES(?,?,?,?,?,?)',
-				[$this->get('linkid'), $this->get('userid'), $this->get('filterid'), $this->get('title'), Zend_Json::encode($this->get('data')), $tabid]
-			);
+		} else if($this->has('data')){
+			$db->pquery('INSERT INTO vtiger_module_dashboard_widgets(linkid, userid, filterid, title, data,dashboardtabid) VALUES(?,?,?,?,?,?)',
+					array($this->get('linkid'), $this->get('userid'), $this->get('filterid'), $this->get('title'), Zend_Json::encode($this->get('data')),$tabid));
 			$this->set('id', $db->getLastInsertID());
-		} else {
+			}
+		else {
 			$this->set('id', $db->query_result($result, 0, 'id'));
 		}
 	}
@@ -284,43 +243,31 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 	/**
 	 * Function to remove the widget from the Users Dashboard
 	 */
-	public function remove()
-	{
+	public function remove() {
 		$db = PearDatabase::getInstance();
-		$db->pquery(
-			'DELETE FROM vtiger_module_dashboard_widgets WHERE id = ? AND userid = ?',
-			[$this->get('id'), $this->get('userid')]
-		);
+		$db->pquery('DELETE FROM vtiger_module_dashboard_widgets WHERE id = ? AND userid = ?',
+				array($this->get('id'), $this->get('userid')));
 	}
 
 	/**
 	 * Function deletes all dashboard widgets with the reportId
 	 * @param type $reportId
 	 */
-	public static function deleteChartReportWidgets($reportId)
-	{
+	public static function deleteChartReportWidgets($reportId) {
 		$db = PearDatabase::getInstance();
-		$db->pquery(
-			'DELETE FROM vtiger_module_dashboard_widgets WHERE reportid = ?',
-			[$reportId]
-		);
+		$db->pquery('DELETE FROM vtiger_module_dashboard_widgets WHERE reportid = ?',
+				array($reportId));
 	}
 
 	/**
 	 * Function returns URL that will remove a widget for a User
 	 * @return <String>
 	 */
-	public function getDeleteUrl()
-	{
-		$url = 'index.php?module=Vtiger&action=RemoveWidget&linkid='.$this->get('linkid');
-		$widgetid = $this->has('widgetid') ? $this->get('widgetid') : $this->get('id');
-		if ($widgetid) {
-			$url .= '&widgetid='.$widgetid;
-		}
-		if ($this->get('reportid')) {
-			$url .= '&reportid='.$this->get('reportid');
-		}
-
+	public function getDeleteUrl() {
+		$url = 'index.php?module=Vtiger&action=RemoveWidget&linkid='. $this->get('linkid');
+		$widgetid = $this->has('widgetid')? $this->get('widgetid') : $this->get('id');
+		if ($widgetid) $url .= '&widgetid=' . $widgetid;
+		if ($this->get('reportid')) $url .= '&reportid=' .$this->get('reportid');
 		return $url;
 	}
 
@@ -328,15 +275,13 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 	 * Function to check the Widget is Default widget or not
 	 * @return <boolean> true/false
 	 */
-	public function isDefault()
-	{
+	public function isDefault() {
 		$defaultWidgets = $this->getDefaultWidgets();
 		$widgetName = $this->getName();
 
 		if (in_array($widgetName, $defaultWidgets)) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -344,8 +289,7 @@ class Vtiger_Widget_Model extends Vtiger_Base_Model
 	 * Function to get Default widget Names
 	 * @return <type>
 	 */
-	public function getDefaultWidgets()
-	{
-		return [];
+	public function getDefaultWidgets() {
+		return array();
 	}
 }

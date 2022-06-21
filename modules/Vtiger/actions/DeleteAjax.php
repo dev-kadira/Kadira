@@ -6,18 +6,11 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Vtiger_DeleteAjax_Action extends Vtiger_Delete_Action
-{
-	/**
-	 * process
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function process(Vtiger_Request $request)
-	{
+class Vtiger_DeleteAjax_Action extends Vtiger_Delete_Action {
+
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$recordId = $request->get('record');
 
@@ -27,7 +20,7 @@ class Vtiger_DeleteAjax_Action extends Vtiger_Delete_Action
 		$cvId = $request->get('viewname');
 		deleteRecordFromDetailViewNavigationRecords($recordId, $cvId, $moduleName);
 		$response = new Vtiger_Response();
-		$response->setResult(['viewname'=>$cvId, 'module'=>$moduleName]);
+		$response->setResult(array('viewname'=>$cvId, 'module'=>$moduleName));
 		$response->emit();
 	}
 }

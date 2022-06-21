@@ -47,7 +47,7 @@
           <tr style='height:50px'>
             <th class="gdfColHeader" style="width:35px;"></th>
             <th class="gdfColHeader" style="width:50px;" >{vtranslate('LBL_STATUS', $MODULE)}</th>
-            <th class="gdfColHeader cursorPointer" style="width:300px;" data-name="name" data-text="{vtranslate('LBL_TASK_NAME', $MODULE)}">{vtranslate('LBL_TASK_NAME', $MODULE)}</th>
+            <th class="gdfColHeader cursorPointer" style="width:80px;" data-name="name" data-text="{vtranslate('LBL_TASK_NAME', $MODULE)}">{vtranslate('LBL_TASK_NAME', $MODULE)}</th>
             <th class="gdfColHeader cursorPointer" style="width:80px;" data-name="startdate" data-text="{vtranslate('LBL_START_DATE', $MODULE)}" >{vtranslate('LBL_START_DATE', $MODULE)}</th>
             <th class="gdfColHeader cursorPointer" style="width:80px;" data-name="enddate" data-text="{vtranslate('LBL_END_DATE', $MODULE)}" >{vtranslate('LBL_END_DATE', $MODULE)}</th>
             <th class="gdfColHeader cursorPointer" style="width:80px;" data-name="duration" data-text="{vtranslate('LBL_DURATION', $MODULE)}">{vtranslate('LBL_DURATION', $MODULE)}</th>

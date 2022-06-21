@@ -207,14 +207,14 @@ Vtiger_Detail_Js("Project_Detail_Js",{
         //load templates
         jQuery("#ganttemplates").loadTemplates();
 
-        var ret;
-		ret = JSON.parse($("#projecttasks").val());
-
         // here starts gantt initialization
         gantt = new GanttMaster();
         var workSpace = $("#workSpace");
-        workSpace.css({height:Object.keys(ret.tasks).length*40});
+        workSpace.css({height:$("#workSpace").parent().height() - 20});
         gantt.init(workSpace);
+
+        var ret;
+        ret = JSON.parse($("#projecttasks").val());
 
         gantt.loadProject(ret);
         gantt.checkpoint(); //empty the undo stack

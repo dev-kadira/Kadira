@@ -67,7 +67,7 @@ class ListViewController {
 		$rowCount = $this->db->num_rows($result);
 
 		$columnName = $field->getColumnName();
-		if(isset($field->referenceFieldName) && $field->referenceFieldName) {
+		if($field->referenceFieldName) {
 			preg_match('/(\w+) ; \((\w+)\) (\w+)/', $field->referenceFieldName, $matches);
 			if (count($matches) != 0) {
 				list($full, $parentReferenceFieldName, $referenceModule, $referenceFieldName) = $matches;
@@ -87,7 +87,7 @@ class ListViewController {
 		if(count($idList) == 0) {
 			return;
 		}
-		if(isset($parentReferenceFieldName) && $parentReferenceFieldName) {
+		if($parentReferenceFieldName) {
 			$moduleList = $referenceFieldInfoList[$field->referenceFieldName];
 		} else {
 			$moduleList = $referenceFieldInfoList[$fieldName];
@@ -127,7 +127,7 @@ class ListViewController {
 		$fields = $this->queryGenerator->getFields(); 
 		$headerFields = array();
 		foreach($fields as $fieldName) {
-			if(is_array($moduleFields) && array_key_exists($fieldName, $moduleFields)) {
+			if(array_key_exists($fieldName, $moduleFields)) {
 				$headerFields[$fieldName] = $moduleFields[$fieldName];
 			}
 		}
@@ -142,7 +142,7 @@ class ListViewController {
 		$meta = $this->queryGenerator->getMeta($this->queryGenerator->getModule());
 		$baseModule = $module;
 		$moduleFields = $this->queryGenerator->getModuleFields();
-		$accessibleFieldList = is_array($moduleFields) ? array_keys($moduleFields) : array();
+		$accessibleFieldList = array_keys($moduleFields);
 		$listViewFields = array_intersect($fields, $accessibleFieldList);
 
 		$referenceFieldList = $this->queryGenerator->getReferenceFieldList();
@@ -180,7 +180,7 @@ class ListViewController {
 					}
 				}
 				if(count($idList) > 0) {
-					if(isset($this->onwerNameList[$fieldName]) && !is_array($this->ownerNameList[$fieldName])) {
+					if(!is_array($this->ownerNameList[$fieldName])) {
 						$this->ownerNameList[$fieldName] = getOwnerNameList($idList);
 					} else {
 						//array_merge API loses key information so need to merge the arrays
@@ -491,7 +491,7 @@ class ListViewController {
 					}
 				} elseif ( in_array($uitype,array(7,9,90)) ) {
 					$value = "<span align='right'>".textlength_check($value)."</span>";
-				} elseif($field && isset($field->isNameField) && $field->isNameField) {
+				} elseif($field && $field->isNameField) {
 					$value = "<a href='?module=$field->moduleName&view=Detail&".
 								"record=$recordId' title='".vtranslate($field->moduleName, $field->moduleName)."'>$value</a>";
 				} elseif($field->getUIType() == 61) {

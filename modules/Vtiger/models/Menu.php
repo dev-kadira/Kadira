@@ -6,45 +6,43 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 /**
  * Vtiger Menu Model Class
  */
-class Vtiger_Menu_Model extends Vtiger_Module_Model
-{
+class Vtiger_Menu_Model extends Vtiger_Module_Model {
+
 	/**
 	 * Static Function to get all the accessible menu models with/without ordering them by sequence
 	 * @param <Boolean> $sequenced - true/false
-	 * @param mixed $presence
-	 * @param mixed $restrictedModulesList
 	 * @return <Array> - List of Vtiger_Menu_Model instances
 	 */
-	public static function getAll($presence = [], $restrictedModulesList = [], $sequenced = false)
-	{
+	public static function getAll($presence = array(), $restrictedModulesList = array(),$sequenced = false) {
+		$currentUser = Users_Record_Model::getCurrentUserModel();
 		$userPrivModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
-		$restrictedModulesList = ['Emails', 'ProjectMilestone', 'ProjectTask', 'ModComments', 'Integration', 'PBXManager', 'Dashboard', 'Home'];
+		$restrictedModulesList = array('Emails', 'ProjectMilestone', 'ProjectTask', 'ModComments', 'Integration', 'PBXManager', 'Dashboard', 'Home');
 
-		$allModules = parent::getAll(['0', '2']);
-		$menuModels = [];
-		$moduleSeqs = [];
-		$moduleNonSeqs = [];
-
-		foreach ($allModules as $module) {
-			if ($module->get('tabsequence') != -1) {
+		$allModules = parent::getAll(array('0','2'));
+		$menuModels = array();
+		$moduleSeqs = Array();
+		$moduleNonSeqs = Array();
+		foreach($allModules as $module){
+			if($module->get('tabsequence') != -1){
 				$moduleSeqs[$module->get('tabsequence')] = $module;
-			} else {
+			}else {
 				$moduleNonSeqs[] = $module;
 			}
 		}
 		ksort($moduleSeqs);
 		$modules = array_merge($moduleSeqs, $moduleNonSeqs);
 
-		foreach ($modules as $module) {
+		foreach($modules as $module) {
 			if (($userPrivModel->isAdminUser() ||
 					$userPrivModel->hasGlobalReadPermission() ||
-					$userPrivModel->hasModulePermission($module->getId())) & ! in_array($module->getName(), $restrictedModulesList) && $module->get('parent') != '') {
-				$menuModels[$module->getName()] = $module;
+					$userPrivModel->hasModulePermission($module->getId()))& !in_array($module->getName(), $restrictedModulesList) && $module->get('parent') != '') {
+					$menuModels[$module->getName()] = $module;
+
 			}
 		}
 
@@ -55,21 +53,20 @@ class Vtiger_Menu_Model extends Vtiger_Module_Model
 	 * Static Function to get all the accessible module model for Quick Create
 	 * @return <Array> - List of Vtiger_Menu_Model instances
 	 */
-	public static function getAllForQuickCreate()
-	{
+	public static function getAllForQuickCreate() {
 		$userPrivModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
-		$restrictedModulesList = ['Emails', 'ModComments', 'Integration', 'PBXManager', 'Dashboard', 'Home'];
-		$allModules = parent::getAll(['0', '2']);
-		$menuModels = [];
+		$restrictedModulesList = array('Emails', 'ModComments', 'Integration', 'PBXManager', 'Dashboard', 'Home');
+		$allModules = parent::getAll(array('0', '2'));
+		$menuModels = array();
 
 		foreach ($allModules as $module) {
-			if (($userPrivModel->isAdminUser() || $userPrivModel->hasGlobalReadPermission() || $userPrivModel->hasModulePermission($module->getId())) && ! in_array($module->getName(), $restrictedModulesList) && $module->get('parent') != '') {
+			if (($userPrivModel->isAdminUser() || $userPrivModel->hasGlobalReadPermission() || $userPrivModel->hasModulePermission($module->getId())) && !in_array($module->getName(), $restrictedModulesList) && $module->get('parent') != '') {
 				$menuModels[$module->getName()] = $module;
 			}
 		}
 
-		uksort($menuModels, ['Vtiger_MenuStructure_Model', 'sortMenuItemsByProcess']);
-
+		uksort($menuModels, array('Vtiger_MenuStructure_Model', 'sortMenuItemsByProcess'));
 		return $menuModels;
 	}
+
 }

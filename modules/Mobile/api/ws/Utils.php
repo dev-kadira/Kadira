@@ -8,7 +8,23 @@
  * All Rights Reserved.
  ************************************************************************************/
 class Mobile_WS_Utils {
-
+	/*
+	static function initAppGlobals() {
+		global $current_language, $app_strings, $app_list_strings, $app_currency_strings;
+		$current_language = 'en_us';
+		
+		$app_currency_strings = return_app_currency_strings_language($current_language);
+		$app_strings = return_application_language($current_language);
+		$app_list_strings = return_app_list_strings_language($current_language);
+	}
+	
+	static function initModuleGlobals($module) {
+		global $mod_strings, $current_language;
+		if(isset($current_language)) {
+			$mod_strings = return_module_language($current_language, $module);
+		}
+	}*/
+	
 	static function getVtigerVersion() {
 		global $vtiger_current_version;
 		return $vtiger_current_version;

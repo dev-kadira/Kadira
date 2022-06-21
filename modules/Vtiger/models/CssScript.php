@@ -6,13 +6,13 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 /**
  * CSS Script Model Class
  */
-class Vtiger_CssScript_Model extends Vtiger_Base_Model
-{
+class Vtiger_CssScript_Model extends Vtiger_Base_Model {
+
 	const DEFAULT_REL = 'stylesheet';
 	const DEFAULT_MEDIA = 'screen';
 	const DEFAULT_TYPE = 'text/css';
@@ -23,13 +23,11 @@ class Vtiger_CssScript_Model extends Vtiger_Base_Model
 	 * Function to get the rel attribute value
 	 * @return <String>
 	 */
-	public function getRel()
-	{
+	public function getRel(){
 		$rel = $this->get('rel');
-		if (empty($rel)) {
+		if(empty($rel)){
 			$rel = self::DEFAULT_REL;
 		}
-
 		return $rel;
 	}
 
@@ -37,13 +35,11 @@ class Vtiger_CssScript_Model extends Vtiger_Base_Model
 	 * Function to get the media attribute value
 	 * @return <String>
 	 */
-	public function getMedia()
-	{
+	public function getMedia(){
 		$media = $this->get('media');
-		if (empty($media)) {
+		if(empty($media)){
 			$media = self::DEFAULT_MEDIA;
 		}
-
 		return $media;
 	}
 
@@ -51,13 +47,11 @@ class Vtiger_CssScript_Model extends Vtiger_Base_Model
 	 * Function to get the type attribute value
 	 * @return <String>
 	 */
-	public function getType()
-	{
+	public function getType(){
 		$type = $this->get('type');
-		if (empty($type)) {
+		if(empty($type)){
 			$type = self::DEFAULT_TYPE;
 		}
-
 		return $type;
 	}
 
@@ -65,13 +59,11 @@ class Vtiger_CssScript_Model extends Vtiger_Base_Model
 	 * Function to get the href attribute value
 	 * @return <String>
 	 */
-	public function getHref()
-	{
+	public function getHref() {
 		$href = $this->get('href');
-		if (empty($href)) {
+		if(empty($href)) {
 			$href = $this->get('linkurl');
 		}
-
 		return $href;
 	}
 
@@ -80,14 +72,13 @@ class Vtiger_CssScript_Model extends Vtiger_Base_Model
 	 * @param Vtiger_Link $linkObj
 	 * @return Vtiger_CssScript_Model instance
 	 */
-	public static function getInstanceFromLinkObject(Vtiger_Link $linkObj)
-	{
+	public static function getInstanceFromLinkObject (Vtiger_Link $linkObj){
 		$objectProperties = get_object_vars($linkObj);
 		$linkModel = new self();
-		foreach ($objectProperties as $properName=>$propertyValue) {
-			$linkModel->{$properName} = $propertyValue;
+		foreach($objectProperties as $properName=>$propertyValue){
+			$linkModel->$properName = $propertyValue;
 		}
-
 		return $linkModel->setData($objectProperties);
 	}
+
 }

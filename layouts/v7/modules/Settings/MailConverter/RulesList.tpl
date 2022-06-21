@@ -45,7 +45,7 @@
 				</div>
 				<div class="col-lg-4" style="padding-right: 0px;">
 					<div class="btn-group pull-right">
-						<button class="btn btn-outline-primary addButton" id="addRuleButton" title="{vtranslate('LBL_DRAG_AND_DROP_BLOCK_TO_PRIORITISE_THE_RULE', $QUALIFIED_MODULE)}"
+						<button class="btn btn-default addButton" id="addRuleButton" title="{vtranslate('LBL_DRAG_AND_DROP_BLOCK_TO_PRIORITISE_THE_RULE', $QUALIFIED_MODULE)}"
 							{if stripos($SCANNER_MODEL->getCreateRuleRecordUrl(), 'javascript:')===0}
 								onclick='{$SCANNER_MODEL->getCreateRuleRecordUrl()|substr:strlen("javascript:")}' 
 							{else}
@@ -53,7 +53,7 @@
 							{/if}>
 							<i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_RULE', $QUALIFIED_MODULE)}
 						</button>
-						<button href="javascript:void(0);" data-toggle="dropdown" class="btn btn-outline-primary" style="margin-left: 4px;">
+						<button href="javascript:void(0);" data-toggle="dropdown" class="btn btn-default" style="margin-left: 4px;">
 							{vtranslate('LBL_ACTIONS', $QUALIFIED_MODULE_NAME)}&nbsp;<i class="caret"></i>
 						</button>
 						<ul class="dropdown-menu pull-right">

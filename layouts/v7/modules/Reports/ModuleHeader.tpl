@@ -59,7 +59,7 @@
 						{assign var="childLinks" value=$LISTVIEW_BASICACTION->getChildLinks()}
 						{if $childLinks && $LISTVIEW_BASICACTION->get('linklabel') == 'LBL_ADD_RECORD'}
 							<span class="btn-group">
-								<button class="btn btn-lg btn-primary dropdown-toggle module-buttons" data-toggle="dropdown" id="{$MODULE}_listView_basicAction_Add">
+								<button class="btn btn-default dropdown-toggle module-buttons" data-toggle="dropdown" id="{$MODULE}_listView_basicAction_Add">
 									<i class="fa fa-plus"></i>&nbsp;&nbsp;
 									{vtranslate($LISTVIEW_BASICACTION->getLabel(), $MODULE)}&nbsp;
 									<i class="caret icon-white"></i>

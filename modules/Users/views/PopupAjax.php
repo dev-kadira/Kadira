@@ -6,24 +6,22 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Users_PopupAjax_View extends Vtiger_PopupAjax_View
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
-		return [];
+class Users_PopupAjax_View extends Vtiger_PopupAjax_View {
+    
+    public function requiresPermission(\Vtiger_Request $request) {
+		return array();
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
-		$moduleName = $request->getModule();
-		$sourceModuleName = $request->get('src_module');
-		$sourceFieldName = $request->get('src_field');
-		if ($moduleName == 'Users' && $sourceModuleName == 'Quotes' && $sourceFieldName == 'assigned_user_id1') {
-			return true;
-		}
-
-		return parent::checkPermission($request);
-	}
+    
+    function checkPermission(Vtiger_Request $request) {
+        $moduleName = $request->getModule();
+        $sourceModuleName = $request->get('src_module');
+        $sourceFieldName = $request->get('src_field');
+        if( $moduleName == 'Users' && $sourceModuleName == 'Quotes' && $sourceFieldName == 'assigned_user_id1' ) {
+            return true;
+        }
+        return parent::checkPermission($request);
+    }
+    
 }

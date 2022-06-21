@@ -15,7 +15,6 @@
 			background-position: center;
 			background-size: cover;
 			width: 100%;
-			height: 96%;
 			background-repeat: no-repeat;
 		}
 		hr {
@@ -64,14 +63,14 @@
 			width: 50%;
 		}
 		#page {
-			padding-top: 6%;
+			padding-top: 86px;
 		}
 		.widgetHeight {
 			height: 410px;
 			margin-top: 20px !important;
 		}
 		.loginDiv {
-			width: 380px;
+			max-width: 380px;
 			margin: 0 auto;
 			border-radius: 4px;
 			box-shadow: 0 0 10px gray;
@@ -79,6 +78,7 @@
 		}
 		.marketingDiv {
 			color: #303030;
+                        height: 510px !important;
 		}
 		.separatorDiv {
 			background-color: #7C7C7C;
@@ -166,7 +166,7 @@
 			outline: 0;
 		}
 		.buttonBlue {
-			background: #292961;
+			background-image: linear-gradient(to bottom, #35aa47 0px, #35aa47 100%)
 		}
 		.ripples {
 			position: absolute;
@@ -177,6 +177,9 @@
 			overflow: hidden;
 			background: transparent;
 		}
+                .mCSB_container{
+                    height: inherit;
+                }
 
 		//Animations
 		@keyframes inputHighlighter {
@@ -204,7 +207,7 @@
 	</style>
 
 	<span class="app-nav"></span>
-	<div class="col-lg-12">
+	<div class="container-fluid loginPageContainer">
 		<div class="col-lg-4 col-lg-offset-4">
 			<div class="loginDiv widgetHeight">
 				<img class="img-responsive user-logo" src="layouts/v7/resources/Images/vtiger.png">
@@ -257,7 +260,7 @@
 
 		<div class="col-lg-1">
 		</div>
-
+		
 		<script>
 			jQuery(document).ready(function () {
 				var validationMessage = jQuery('#validationMessage');
@@ -350,7 +353,7 @@
 				jQuery('.bx-prev, .bx-next, .bx-pager-item').live('click',function(){ slider.startAuto(); });
 				jQuery('.bx-wrapper .bx-viewport').css('background-color', 'transparent');
 				jQuery('.bx-wrapper .bxslider li').css('text-align', 'left');
-				jQuery('.bx-wrapper .bx-pager').css('bottom', '-15px');
+				jQuery('.bx-wrapper .bx-pager').css('bottom', '-40px');
 
 				var params = {
 					theme		: 'dark-thick',

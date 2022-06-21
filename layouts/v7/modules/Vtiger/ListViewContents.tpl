@@ -117,7 +117,7 @@
                                     <tr class="searchRow listViewSearchContainer">
                                         <th class="inline-search-btn">
                                             <div class="table-actions">
-                                                <button class="btn btn-success btn-lg {if count($SEARCH_DETAILS) gt 0}hide{/if}" data-trigger="listSearch">
+                                                <button class="btn btn-success btn-sm {if count($SEARCH_DETAILS) gt 0}hide{/if}" data-trigger="listSearch">
                                                     <i class="fa fa-search"></i> &nbsp;
                                                     <span class="s2-btn-text">{vtranslate("LBL_SEARCH",$MODULE)}</span>
                                                 </button>
@@ -127,12 +127,8 @@
                                     {foreach item=LISTVIEW_HEADER from=$LISTVIEW_HEADERS}
 						<th>
 							{assign var=FIELD_UI_TYPE_MODEL value=$LISTVIEW_HEADER->getUITypeModel()}
-							{assign var=SEARCH_INFO_DETAILS_FOR_FIELD value=array( 'searchValue' => '', 'comparator' => '' )}
-							{if isset($SEARCH_DETAILS[$LISTVIEW_HEADER->getName()])}
-								{assign var=SEARCH_INFO_DETAILS_FOR_FIELD value=$SEARCH_DETAILS[$LISTVIEW_HEADER->getName()]}
-							{/if}
-							{include file=vtemplate_path($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(),$MODULE) FIELD_MODEL= $LISTVIEW_HEADER SEARCH_INFO=$SEARCH_INFO_DETAILS_FOR_FIELD USER_MODEL=$CURRENT_USER_MODEL}
-							<input type="hidden" class="operatorValue" value="{$SEARCH_INFO_DETAILS_FOR_FIELD['comparator']}">
+							{include file=vtemplate_path($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(),$MODULE) FIELD_MODEL= $LISTVIEW_HEADER SEARCH_INFO=$SEARCH_DETAILS[$LISTVIEW_HEADER->getName()] USER_MODEL=$CURRENT_USER_MODEL}
+							<input type="hidden" class="operatorValue" value="{$SEARCH_DETAILS[$LISTVIEW_HEADER->getName()]['comparator']}">
 						</th>
 					{/foreach}
 					</tr>
@@ -238,7 +234,7 @@
 								{assign var=SINGLE_MODULE value="SINGLE_$MODULE"}
 								{vtranslate('LBL_NO')} {vtranslate($MODULE, $MODULE)} {vtranslate('LBL_FOUND')}.
 								{if $IS_CREATE_PERMITTED}
-									<a style="color:blue" href="{$MODULE_MODEL->getCreateRecordUrl()}{$searchparams}"> {vtranslate('LBL_CREATE')}</a>
+									<a style="color:blue" href="{$MODULE_MODEL->getCreateRecordUrl()}"> {vtranslate('LBL_CREATE')}</a>
 									{if Users_Privileges_Model::isPermitted($MODULE, 'Import') && $LIST_VIEW_MODEL->isImportEnabled()}
 										{vtranslate('LBL_OR', $MODULE)}
 										<a style="color:blue" href="#" onclick="return Vtiger_Import_Js.triggerImportAction()">{vtranslate('LBL_IMPORT', $MODULE)}</a>

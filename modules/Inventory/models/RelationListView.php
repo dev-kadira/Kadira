@@ -6,19 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Inventory_RelationListView_Model extends Vtiger_RelationListView_Model
-{
-	public function getCreateViewUrl()
-	{
+class Inventory_RelationListView_Model extends Vtiger_RelationListView_Model {
+
+	public function getCreateViewUrl(){
 		$createViewUrl = parent::getCreateViewUrl();
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		$parentRecordModel = $this->getParentRecordModel();
-		$currencyValue = $parentRecordModel->get('hdnGrandTotal');
-		$parentRecordModelCurrencyId = $parentRecordModel->get('currency_id');
+		$currentUserModel				= Users_Record_Model::getCurrentUserModel();
+		$parentRecordModel				= $this->getParentRecordModel();
+		$currencyValue					= $parentRecordModel->get('hdnGrandTotal');
+		$parentRecordModelCurrencyId	= $parentRecordModel->get('currency_id');
 
-		if ($parentRecordModelCurrencyId == $currentUserModel->get('currency_id')) {
+		if($parentRecordModelCurrencyId == $currentUserModel->get('currency_id')) {
 			$amount = CurrencyField::convertToUserFormat($currencyValue, null, true);
 		} else {
 			$baseCurrencyId = CurrencyField::getDBCurrencyId();
@@ -40,6 +39,8 @@ class Inventory_RelationListView_Model extends Vtiger_RelationListView_Model
 		}
 		$accountId = ($parentRecordModel->getModuleName() == 'PurchaseOrder') ? $parentRecordModel->get('accountid') : $parentRecordModel->get('account_id');
 
-		return $createViewUrl.'&relatedcontact='.$parentRecordModel->get('contact_id').'&relatedorganization='.$accountId.'&amount='.$amount;
+		return $createViewUrl.'&relatedcontact='.$parentRecordModel->get('contact_id').'&relatedorganization='. $accountId.'&amount='.$amount;
 	}
+
 }
+?>

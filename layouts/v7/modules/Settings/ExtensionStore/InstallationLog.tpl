@@ -10,7 +10,7 @@
 {strip}
 	<div class="modal-dialog modal-lg installationLog">
 		<div class='modal-content'>
-			<div class="modal-header" style="background: #2478bb;color:white;">
+			<div class="modal-header" style="background: #596875;color:white;">
 				<div class="row">
 					<div class="col-lg-11 col-md-11">
 						{if $ERROR}

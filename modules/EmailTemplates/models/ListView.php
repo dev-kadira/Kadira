@@ -53,13 +53,14 @@ class EmailTemplates_ListView_Model extends Vtiger_ListView_Model {
 	 * @param <Number> $viewId - Custom View Id
 	 * @return Vtiger_ListView_Model instance
 	 */
-	public static function getInstance($moduleName, $viewId = 0) {
-		$db = PearDatabase::getInstance();
-		$modelClassName = Vtiger_Loader::getComponentClassName('Model', 'ListView', $moduleName);
-		$instance = new $modelClassName();
+	public static function getInstance($moduleName, $viewId='0', $listHeaders = array()) {
+            list($moduleName) = func_get_args();
+            $db = PearDatabase::getInstance();
+            $modelClassName = Vtiger_Loader::getComponentClassName('Model', 'ListView', $moduleName);
+            $instance = new $modelClassName();
 
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		return $instance->set('module', $moduleModel);
+            $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+            return $instance->set('module', $moduleModel);
 	}
 
 	/**

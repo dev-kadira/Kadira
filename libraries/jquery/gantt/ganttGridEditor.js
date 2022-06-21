@@ -23,8 +23,7 @@
 function GridEditor(master) {
   this.master = master; // is the a GantEditor instance
   this.gridified = $.gridify($.JST.createFromTemplate({}, "TASKSEDITHEAD"));
-  this.element = this.gridified.find(".gdfTable");
-  this.element.css({width:1000});
+  this.element = this.gridified.find(".gdfTable").eq(1);
 }
 
 

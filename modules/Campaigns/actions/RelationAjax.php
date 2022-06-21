@@ -6,51 +6,44 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Campaigns_RelationAjax_Action extends Vtiger_RelationAjax_Action
-{
-	public function __construct()
-	{
+class Campaigns_RelationAjax_Action extends Vtiger_RelationAjax_Action {
+
+	public function __construct() {
 		parent::__construct();
 		$this->exposeMethod('addRelationsFromRelatedModuleViewId');
 		$this->exposeMethod('updateStatus');
 	}
 
-	public function requiresPermission(Vtiger_Request $request)
-	{
+	public function requiresPermission(Vtiger_Request $request){
 		$permissions = parent::requiresPermission($request);
 		$mode = $request->getMode();
-		if (! empty($mode)) {
+		if(!empty($mode)) {
 			switch ($mode) {
 				case 'addRelationsFromRelatedModuleViewId':
-					$permissions[] = ['module_parameter' => 'relatedModule', 'action' => 'DetailView'];
-
+					$permissions[] = array('module_parameter' => 'relatedModule', 'action' => 'DetailView');
 					break;
 				case 'updateStatus':
-					$permissions[] = ['module_parameter' => 'relatedModule', 'action' => 'DetailView'];
-					$permissions[] = ['module_parameter' => 'module', 'action' => 'EditView'];
-
+					$permissions[] = array('module_parameter' => 'relatedModule', 'action' => 'DetailView');
+					$permissions[] = array('module_parameter' => 'module', 'action' => 'EditView');
 					break;
 				default:
 					break;
 			}
 		}
-
 		return $permissions;
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+	
+	public function checkPermission(Vtiger_Request $request) {
 		return parent::checkPermission($request);
 	}
-
+	
 	/**
 	 * Function to add relations using related module viewid
 	 * @param Vtiger_Request $request
 	 */
-	public function addRelationsFromRelatedModuleViewId(Vtiger_Request $request)
-	{
+	public function addRelationsFromRelatedModuleViewId(Vtiger_Request $request) {
 		$sourceRecordId = $request->get('sourceRecord');
 		$relatedModuleName = $request->get('relatedModule');
 
@@ -72,18 +65,18 @@ class Campaigns_RelationAjax_Action extends Vtiger_RelationAjax_Action
 				$queryGenerator->initForCustomViewById($viewId);
 
 				$query = $queryGenerator->getQuery();
-				$result = $db->pquery($query, []);
+				$result = $db->pquery($query, array());
 
 				$numOfRows = $db->num_rows($result);
-				for ($i = 0; $i < $numOfRows; $i++) {
+				for ($i=0; $i<$numOfRows; $i++) {
 					$relatedRecordIdsList[] = $db->query_result($result, $i, $fieldName);
 				}
-				if (empty($relatedRecordIdsList)) {
+				if(empty($relatedRecordIdsList)){
 					$response = new Vtiger_Response();
-					$response->setResult([false]);
+					$response->setResult(array(false));
 					$response->emit();
-				} else {
-					foreach ($relatedRecordIdsList as $relatedRecordId) {
+				} else{
+					foreach($relatedRecordIdsList as $relatedRecordId) {
 						$relationModel->addRelation($sourceRecordId, $relatedRecordId);
 					}
 				}
@@ -95,12 +88,9 @@ class Campaigns_RelationAjax_Action extends Vtiger_RelationAjax_Action
 	 * Function to update Relation status
 	 * @param Vtiger_Request $request
 	 */
-	public function updateStatus(Vtiger_Request $request)
-	{
-		$moduleName = $request->getModule();
+	public function updateStatus(Vtiger_Request $request) {
 		$relatedModuleName = $request->get('relatedModule');
 		$relatedRecordId = $request->get('relatedRecord');
-
 		$status = $request->get('status');
 		$response = new Vtiger_Response();
 
@@ -109,11 +99,11 @@ class Campaigns_RelationAjax_Action extends Vtiger_RelationAjax_Action
 			$relatedModuleModel = Vtiger_Module_Model::getInstance($relatedModuleName);
 
 			$relationModel = Vtiger_Relation_Model::getInstance($sourceModuleModel, $relatedModuleModel);
-			$relationModel->updateStatus($request->get('sourceRecord'), [$relatedRecordId => $status]);
+			$relationModel->updateStatus($request->get('sourceRecord'), array($relatedRecordId => $status));
 
-			$response->setResult([true]);
+			$response->setResult(array(true));
 		} else {
-			$response->setError('Campaigns_RelationAjax_Action::updateStatus', $moduleName);
+			$response->setError($code);
 		}
 		$response->emit();
 	}

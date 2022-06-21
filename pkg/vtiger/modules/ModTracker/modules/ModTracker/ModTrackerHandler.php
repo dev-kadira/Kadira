@@ -14,16 +14,21 @@ class ModTrackerHandler extends VTEventHandler {
 
 	function handleEvent($eventName, $data) {
 		global $adb;
-		$current_user_id=$_SESSION["authenticated_user_id"];
-		$current_user = Users_Record_Model::getInstanceById($current_user_id, 'Users');
-		$curid=$current_user->get('id'); 
-		global $current_user;
+		if (isset($_SESSION["authenticated_user_id"])) {
+			$current_user_id = $_SESSION["authenticated_user_id"];
+			$current_user = Users_Record_Model::getInstanceById($current_user_id, 'Users');
+			$curid = $current_user->get('id');
+		} else {
+			//$_SESSION["authenticated_user_id"] is not set when creating/updating via Webservice
+			global $current_user;
+			$curid = $current_user->id;
+		}
 		$moduleName = $data->getModuleName();
 		$isTrackingEnabled = ModTracker::isTrackingEnabledForModule($moduleName);
-		if(!$isTrackingEnabled) {
+		if (!$isTrackingEnabled) {
 			return;
 		}
-		if($eventName == 'vtiger.entity.aftersave.final') {
+		if ($eventName == 'vtiger.entity.aftersave.final') {
 			$recordId = $data->getId();
 			$columnFields = $data->getData();
 			$vtEntityDelta = new VTEntityDelta();

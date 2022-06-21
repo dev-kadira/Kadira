@@ -20,23 +20,21 @@
 
 /**
  * Returns the literal value passed in the constructor, without modifications.
- *
+ * 
  * @package log4php
  * @subpackage pattern
  * @version $Revision: 1326626 $
  * @since 2.3
  */
-class LoggerPatternConverterLiteral extends LoggerPatternConverter
-{
-	private $literalValue;
+class LoggerPatternConverterLiteral extends LoggerPatternConverter {
 
-	public function __construct($literalValue)
-	{
+	private $literalValue;
+	
+	public function __construct($literalValue) {
 		$this->literalValue = $literalValue;
 	}
-
-	public function convert(LoggerLoggingEvent $event)
-	{
+	
+	public function convert(LoggerLoggingEvent $event) {
 		return $this->literalValue;
 	}
 }

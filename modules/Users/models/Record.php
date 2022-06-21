@@ -10,6 +10,7 @@
 
 class Users_Record_Model extends Vtiger_Record_Model
 {
+
 	/**
 	 * Static Function to get the instance of the User Record model for the current user
 	 * @return Users_Record_Model instance
@@ -24,7 +25,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 	/**
 	 * Checks if the key is in property or data.
-	 * @param mixed $key
 	 */
 	public function has($key)
 	{
@@ -98,7 +98,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		return 'index.php?module=Tags&parent=Settings&view=List&record=' . $this->getId();
 	}
-
 	/**
 	 * Function to get the url for the Profile page
 	 * @return <String> - Profile Url
@@ -229,12 +228,12 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 		return $entity->getHomeStuffOrder($this->getId());
 	}
-
 	public static function getCurrentUserModel()
 	{
 		//TODO : Remove the global dependency
 		$currentUser = vglobal('current_user');
 		if (! empty($currentUser)) {
+
 			// Optimization to avoid object creation every-time
 			// Caching is per-id as current_user can get swapped at runtime (ex. workflow)
 			$currentUserModel = null;
@@ -257,7 +256,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 	/**
 	 * Static Function to get the instance of the User Record model from the given Users object
-	 * @param mixed $userObject
 	 * @return Users_Record_Model instance
 	 */
 	public static function getInstanceFromUserObject($userObject)
@@ -273,8 +271,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 	/**
 	 * Static Function to get the instance of all the User Record models
-	 * @param mixed $onlyActive
-	 * @param mixed $excludeDefaultAdmin
 	 * @return <Array> - List of Users_Record_Model instances
 	 */
 	public static function getAll($onlyActive = true, $excludeDefaultAdmin = true)
@@ -324,7 +320,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 		if ($subordinateRoleUsers) {
 			foreach ($subordinateRoleUsers as $role=>$users) {
 				foreach ($users as $user) {
-					$subordinateUsers[$user] = $privilegesModel->get('userlabel');
+					$subordinateUsers[$user] = $privilegesModel->get('first_name') . ' ' . $privilegesModel->get('last_name');
 				}
 			}
 		}
@@ -381,6 +377,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 		return $roleName;
 	}
+
 
 	/**
 	 * Function returns List of Accessible Users for a Module
@@ -458,7 +455,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 			//decode_html - added to handle UTF-8 characters in file names
 			$imageOriginalName = urlencode(decode_html($imageName));
 			if ($url) {
-				$url = $site_URL . '/' . $url;
+				$url = $site_URL . $url;
 			}
 
 			$imageDetails[] = [
@@ -473,10 +470,9 @@ class Users_Record_Model extends Vtiger_Record_Model
 		return $imageDetails;
 	}
 
+
 	/**
 	 * Function to get all the accessible users
-	 * @param mixed $private
-	 * @param mixed $module
 	 * @return <Array>
 	 */
 	public function getAccessibleUsers($private = '', $module = false)
@@ -523,7 +519,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 		$currentUserRoleModel = Settings_Roles_Record_Model::getInstanceById($this->getRole());
 		$childernRoles = $currentUserRoleModel->getAllChildren();
 		$users = $this->getAllUsersOnRoles($childernRoles);
-		$currentUserDetail = [$this->getId() => $this->get('userlabel')];
+		$currentUserDetail = [$this->getId() => $this->get('first_name') . ' ' . $this->get('last_name')];
 
 		return $currentUserDetail + $users;
 	}
@@ -554,12 +550,14 @@ class Users_Record_Model extends Vtiger_Record_Model
 			for ($i = 0; $i < $noOfUsers; ++$i) {
 				$userIds[] = $db->query_result($result, $i, 'userid');
 			}
-			$query = 'SELECT id, userlabel FROM vtiger_users WHERE status = ? AND id IN (' . generateQuestionMarks($userIds) . ')';
+			$query = 'SELECT id, first_name, last_name FROM vtiger_users WHERE status = ? AND id IN (' . generateQuestionMarks($userIds) . ')';
 			$result = $db->pquery($query, ['ACTIVE', $userIds]);
 			$noOfUsers = $db->num_rows($result);
 			for ($j = 0; $j < $noOfUsers; ++$j) {
 				$userId = $db->query_result($result, $j, 'id');
-				$subUsers[$userId] = $db->query_result($result, $j, 'userlabel');
+				$firstName = $db->query_result($result, $j, 'first_name');
+				$lastName = $db->query_result($result, $j, 'last_name');
+				$subUsers[$userId] = $firstName . ' ' . $lastName;
 			}
 		}
 
@@ -568,8 +566,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 	/**
 	 * Function to get all the accessible groups
-	 * @param mixed $private
-	 * @param mixed $module
 	 * @return <Array>
 	 */
 	public function getAccessibleGroups($private = '', $module = false)
@@ -637,10 +633,10 @@ class Users_Record_Model extends Vtiger_Record_Model
 		return false;
 	}
 
+
 	/**
 	 * Function to get the Day Starts picklist values
 	 * @param type $name Description
-	 * @param mixed $stucturedValues
 	 */
 	public static function getDayStartsPicklistValues($stucturedValues)
 	{
@@ -648,31 +644,10 @@ class Users_Record_Model extends Vtiger_Record_Model
 		$hour_format = $fieldModel['hour_format']->getPicklistValues();
 		$start_hour = $fieldModel['start_hour']->getPicklistValues();
 
-		$defaultValues = [
-			'00:00'=> '12:00 AM',
-			'01:00'=>'01:00 AM',
-			'02:00'=>'02:00 AM',
-			'03:00'=>'03:00 AM',
-			'04:00'=>'04:00 AM',
-			'05:00'=>'05:00 AM',
-			'06:00'=> '06:00 AM',
-			'07:00'=>'07:00 AM',
-			'08:00'=>'08:00 AM',
-			'09:00'=>'09:00 AM',
-			'10:00'=>'10:00 AM',
-			'11:00'=>'11:00 AM',
-			'12:00'=>'12:00 PM',
-			'13:00' => '01:00 PM',
-			'14:00'=>'02:00 PM',
-			'15:00'=>'03:00 PM',
-			'16:00'=>'04:00 PM',
-			'17:00'=>'05:00 PM',
-			'18:00'=>'06:00 PM',
-			'19:00'=>'07:00 PM',
-			'20:00' => '08:00 PM',
-			'21:00'=>'09:00 PM',
-			'22:00'=>'10:00 PM',
-			'23:00'=>'11:00 PM'];
+		$defaultValues = ['00:00'=> '12:00 AM', '01:00'=>'01:00 AM', '02:00'=>'02:00 AM', '03:00'=>'03:00 AM', '04:00'=>'04:00 AM', '05:00'=>'05:00 AM',
+			'06:00'                 => '06:00 AM', '07:00'=>'07:00 AM', '08:00'=>'08:00 AM', '09:00'=>'09:00 AM', '10:00'=>'10:00 AM', '11:00'=>'11:00 AM', '12:00'=>'12:00 PM',
+			'13:00'                 => '01:00 PM', '14:00'=>'02:00 PM', '15:00'=>'03:00 PM', '16:00'=>'04:00 PM', '17:00'=>'05:00 PM', '18:00'=>'06:00 PM', '19:00'=>'07:00 PM',
+			'20:00'                 => '08:00 PM', '21:00'=>'09:00 PM', '22:00'=>'10:00 PM', '23:00'=>'11:00 PM'];
 
 		$picklistDependencyData = [];
 		foreach ($hour_format as $value) {
@@ -727,7 +702,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 		return self::$allUserGroups[$userId];
 	}
-
 	public static function getAllUserGroups()
 	{
 		if (empty(self::$allUserGroups)) {
@@ -749,14 +723,13 @@ class Users_Record_Model extends Vtiger_Record_Model
 	 * Function returns the users activity reminder in seconds
 	 * @return string
 	 */
-
 	/**
 	 * Function returns the users activity reminder in seconds
 	 * @return string
 	 */
 	public function getCurrentUserActivityReminderInSeconds()
 	{
-		$activityReminder = isset($this->reminder_interval) ? $this->reminder_interval : 0;
+		$activityReminder = $this->reminder_interval;
 		$activityReminderInSeconds = '';
 		if ($activityReminder != 'None') {
 			preg_match('/([0-9]+)[\s]([a-zA-Z]+)/', $activityReminder, $matches);
@@ -766,20 +739,16 @@ class Users_Record_Model extends Vtiger_Record_Model
 				if ($string) {
 					switch ($string) {
 						case 'Minute':
-						case 'Minutes':
-							$activityReminderInSeconds = $number * 60;
+						case 'Minutes': $activityReminderInSeconds = $number * 60;
 
-							break;
-						case 'Hour':
-							$activityReminderInSeconds = $number * 60 * 60;
+break;
+						case 'Hour': $activityReminderInSeconds = $number * 60 * 60;
 
-							break;
-						case 'Day':
-							$activityReminderInSeconds = $number * 60 * 60 * 24;
+break;
+						case 'Day': $activityReminderInSeconds = $number * 60 * 60 * 24;
 
-							break;
-						default:
-							$activityReminderInSeconds = '';
+break;
+						default: $activityReminderInSeconds = '';
 					}
 				}
 			}
@@ -817,8 +786,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	{
 		$module = $this->getModule();
 
-		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' .
-			$module->getEditViewName() . '&record=' . $this->getId() . '&isDuplicate=true';
+		return 'index.php?module=' . $this->getModuleName() . '&parent=Settings&view=' . $module->getEditViewName() . '&record=' . $this->getId() . '&isDuplicate=true';
 	}
 
 	/**
@@ -932,18 +900,11 @@ class Users_Record_Model extends Vtiger_Record_Model
 	 */
 	public function getDisplayName()
 	{
-		$userLabel = $this->get('userlabel');
-
-		if (! $userLabel) {
-			$userLabel = getFullNameFromArray($this->getModuleName(), $this->getData());
-		}
-
-		return $userLabel;
+		return getFullNameFromArray($this->getModuleName(), $this->getData());
 	}
 
 	/**
 	 * Function to return user object from preference file.
-	 * @param mixed $userId
 	 */
 	public static function getInstanceFromPreferenceFile($userId)
 	{
@@ -955,7 +916,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 	/**
 	 * Function returns all the subordinates based on Reports To field
-	 * @param mixed $forUserId
 	 * @return Array
 	 */
 	public function getAllSubordinatesByReportsToField($forUserId)
@@ -981,7 +941,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 	/**
 	 * Function returns List of Accessible Users given Group
 	 * @param <String> groupid
-	 * @param mixed $groupId
 	 * @return <Array of Users>
 	 */
 	public function getAccessibleGroupUsers($groupId)
@@ -992,7 +951,6 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 		return $getGroupUsers->group_users;
 	}
-
 	/**
 	 * Function returns List of All Group Users
 	 * @return <Array of Group and Users>
@@ -1007,6 +965,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 
 		return $groupUsers;
 	}
+
 
 	/**
 	 * Function to change username
@@ -1068,7 +1027,7 @@ class Users_Record_Model extends Vtiger_Record_Model
 	public static function isUserExists($userName)
 	{
 		$userModuleModel = Users_Module_Model::getCleanInstance('Users');
-		$status = false;
+
 		// To check username existence in db
 		return $userModuleModel->checkDuplicateUser($userName);
 	}

@@ -6,50 +6,45 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Inventory_SubProductsPopupAjax_View extends Inventory_SubProductsPopup_View
-{
-	public function __construct()
-	{
+class Inventory_SubProductsPopupAjax_View extends Inventory_SubProductsPopup_View {
+	
+	function __construct() {
 		parent::__construct();
 		$this->exposeMethod('getListViewCount');
 		$this->exposeMethod('getRecordsCount');
 		$this->exposeMethod('getPageCount');
 	}
-
+	
 	/**
 	 * Function returns module name for which Popup will be initialized
 	 * @param type $request
 	 */
-	public function getModule($request)
-	{
+	public function getModule($request) {
 		return 'Products';
 	}
-
-	public function preProcess(Vtiger_Request $request)
-	{
+	
+	function preProcess(Vtiger_Request $request) {
 		return true;
 	}
 
-	public function postProcess(Vtiger_Request $request)
-	{
+	function postProcess(Vtiger_Request $request) {
 		return true;
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	function process (Vtiger_Request $request) {
 		$mode = $request->get('mode');
-		if (! empty($mode)) {
+		if(!empty($mode)) {
 			$this->invokeExposedMethod($mode, $request);
-
 			return;
 		}
-		$viewer = $this->getViewer($request);
+		$viewer = $this->getViewer ($request);
 
 		$this->initializeListViewContents($request, $viewer);
 		$moduleName = 'Inventory';
-		$viewer->assign('MODULE_NAME', $moduleName);
+		$viewer->assign('MODULE_NAME',$moduleName);
 		echo $viewer->view('PopupContents.tpl', $moduleName, true);
 	}
+	
 }

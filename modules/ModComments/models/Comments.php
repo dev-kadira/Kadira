@@ -6,36 +6,30 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
-class ModComments_CommentsModel
-{
-	public static $ownerNamesCache = [];
+ ************************************************************************************/
+class ModComments_CommentsModel {
 	private $data;
-
-	public function __construct($datarow)
-	{
+	
+	static $ownerNamesCache = array();
+	
+	function __construct($datarow) {
 		$this->data = $datarow;
 	}
-
-	public function author()
-	{
+	
+	function author() {
 		$authorid = $this->data['smcreatorid'];
-		if (! isset(self::$ownerNamesCache[$authorid])) {
+		if(!isset(self::$ownerNamesCache[$authorid])) {
 			self::$ownerNamesCache[$authorid] = getOwnerName($authorid);
 		}
-
 		return self::$ownerNamesCache[$authorid];
 	}
-
-	public function timestamp()
-	{
+	
+	function timestamp(){
 		$date = new DateTimeField($this->data['modifiedtime']);
-
 		return $date->getDisplayDateTimeValue();
 	}
-
-	public function content()
-	{
+	
+	function content() {
 		return decode_html($this->data['commentcontent']);
 	}
 }

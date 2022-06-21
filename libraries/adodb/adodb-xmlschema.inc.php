@@ -1,29 +1,21 @@
 <?php
+// Copyright (c) 2004 ars Cognita Inc., all rights reserved
+/* ******************************************************************************
+    Released under both BSD license and Lesser GPL library license.
+ 	Whenever there is any discrepancy between the two licenses,
+ 	the BSD license will take precedence.
+*******************************************************************************/
 /**
- * ADOdb XML Schema (v0.2).
- *
  * xmlschema is a class that allows the user to quickly and easily
  * build a database on any ADOdb-supported platform using a simple
  * XML schema.
  *
- * This file is part of ADOdb, a Database Abstraction Layer library for PHP.
+ * Last Editor: $Author: jlim $
+ * @author Richard Tango-Lowy & Dan Cech
+ * @version $Revision: 1.12 $
  *
- * @package ADOdb
- * @link https://adodb.org Project's web site and documentation
- * @link https://github.com/ADOdb/ADOdb Source code and issue tracker
- *
- * The ADOdb Library is dual-licensed, released under both the BSD 3-Clause
- * and the GNU Lesser General Public Licence (LGPL) v2.1 or, at your option,
- * any later version. This means you can use it in proprietary products.
- * See the LICENSE.md file distributed with this source code for details.
- * @license BSD-3-Clause
- * @license LGPL-2.1-or-later
- *
- * @copyright 2004-2005 ars Cognita Inc., all rights reserved
- * @copyright 2005-2013 John Lim
- * @copyright 2014 Damien Regad, Mark Newnham and the ADOdb community
- * @author Richard Tango-Lowy
- * @author Dan Cech
+ * @package axmls
+ * @tutorial getting_started.pkg
  */
 
 function _file_get_contents($file)
@@ -248,6 +240,7 @@ class dbTable extends dbObject {
 	* @access private
 	*/
 	var $drop_field = array();
+	var $alter; // GS Fix for constraint impl
 
 	/**
 	* Iniitializes a new table object.
@@ -258,6 +251,10 @@ class dbTable extends dbObject {
 	function __construct( &$parent, $attributes = NULL ) {
 		$this->parent = $parent;
 		$this->name = $this->prefix($attributes['NAME']);
+		// GS Fix for constraint impl
+		if(isset($attributes['ALTER'])) {
+			$this->alter = $attributes['ALTER'];
+		}
 	}
 
 	/**
@@ -332,12 +329,12 @@ class dbTable extends dbObject {
 				if( isset( $this->current_field ) ) {
 					$this->addFieldOpt( $this->current_field, $this->currentElement, $cdata );
 				} else {
-					$this->addTableOpt( $cdata );
+					$this->addTableOpt( $cdata, 'CONSTRAINTS' ); // GS Fix for constraint impl
 				}
 				break;
 			// Table option
 			case 'OPT':
-				$this->addTableOpt( $cdata );
+				$this->addTableOpt( $cdata, 'mysql' ); // GS Fix for constraint impl
 				break;
 			default:
 
@@ -471,9 +468,13 @@ class dbTable extends dbObject {
 	* @param string $opt Table option
 	* @return array Options
 	*/
-	function addTableOpt( $opt ) {
-		if(isset($this->currentPlatform)) {
-			$this->opts[$this->parent->db->databaseType] = $opt;
+	function addTableOpt( $opt, $key = NULL) { // GS Fix for constraint impl
+		if ($key) {
+			$this->opts[$key] = $opt;
+		} else {
+			if(isset($this->currentPlatform)) {
+				$this->opts[$this->parent->db->databaseType] = $opt;
+			}
 		}
 		return $this->opts;
 	}
@@ -556,7 +557,7 @@ class dbTable extends dbObject {
 			}
 		}
 
-		if( empty( $legacy_fields ) ) {
+		if( empty( $legacy_fields ) && !isset($this->alter)) { // GS Fix for constraint impl
 			// Create the new table
 			$sql[] = $xmls->dict->CreateTableSQL( $this->name, $fldarray, $this->opts );
 			logMsg( end( $sql ), 'Generated CreateTableSQL' );
@@ -567,7 +568,7 @@ class dbTable extends dbObject {
 				// Use ChangeTableSQL
 				case 'ALTER':
 					logMsg( 'Generated ChangeTableSQL (ALTERing table)' );
-					$sql[] = $xmls->dict->ChangeTableSQL( $this->name, $fldarray, $this->opts );
+					$sql[] = $xmls->dict->ChangeTableSQL( $this->name, $fldarray, $this->opts, false, $this->alter ); // GS Fix for constraint impl
 					break;
 				case 'REPLACE':
 					logMsg( 'Doing upgrade REPLACE (testing)' );
@@ -1263,6 +1264,12 @@ class adoSchema {
 	var $objectPrefix = '';
 
 	/**
+	* @var long	Original Magic Quotes Runtime value
+	* @access private
+	*/
+	var $mgq;
+
+	/**
 	* @var long	System debug
 	* @access private
 	*/
@@ -1305,9 +1312,14 @@ class adoSchema {
 	* @param object $db ADOdb database connection object.
 	*/
 	function __construct( $db ) {
+		// Initialize the environment
+		$this->mgq = get_magic_quotes_runtime();
+		ini_set("magic_quotes_runtime", 0);
+		#set_magic_quotes_runtime(0);
+
 		$this->db = $db;
 		$this->debug = $this->db->debug;
-		$this->dict = newDataDictionary( $this->db );
+		$this->dict = NewDataDictionary( $this->db );
 		$this->sqlArray = array();
 		$this->schemaVersion = XMLS_SCHEMA_VERSION;
 		$this->executeInline( XMLS_EXECUTE_INLINE );
@@ -2191,7 +2203,10 @@ class adoSchema {
 	* Call this method to clean up after an adoSchema object that is no longer in use.
 	* @deprecated adoSchema now cleans up automatically.
 	*/
-	function Destroy() {}
+	function Destroy() {
+		ini_set("magic_quotes_runtime", $this->mgq );
+		#set_magic_quotes_runtime( $this->mgq );
+	}
 }
 
 /**

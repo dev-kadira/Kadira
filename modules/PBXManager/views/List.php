@@ -6,16 +6,14 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- * */
+ * ***********************************************************************************/
 
-class PBXManager_List_View extends Vtiger_List_View
-{
-	public function process(Vtiger_Request $request)
-	{
+class PBXManager_List_View extends Vtiger_List_View {
+
+	function process(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-
 		$viewName = $request->get('viewname');
 		if ($viewName) {
 			$this->viewName = $viewName;
@@ -34,12 +32,10 @@ class PBXManager_List_View extends Vtiger_List_View
 		$viewer->view('ListViewContents.tpl', $moduleName);
 	}
 
-	public function getRecordActionsFromModule($moduleModel)
-	{
-		$recordActions = [];
+	public function getRecordActionsFromModule($moduleModel) {
+		$recordActions = array();
 		$recordActions['edit'] = false;
 		$recordActions['delete'] = false;
-
 		return $recordActions;
 	}
 }

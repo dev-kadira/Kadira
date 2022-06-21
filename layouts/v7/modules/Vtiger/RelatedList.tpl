@@ -68,19 +68,15 @@
 						</tr>
 						<tr class="searchRow">
 							<th class="inline-search-btn">
-								<button class="btn btn-success btn-lg" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
+								<button class="btn btn-success btn-sm" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
 							</th>
 							{foreach item=HEADER_FIELD from=$RELATED_HEADERS}
 								<th>
 									{if $HEADER_FIELD->get('column') eq 'time_start' or $HEADER_FIELD->get('column') eq 'time_end' or $HEADER_FIELD->getFieldDataType() eq 'reference'}
 									{else}
 										{assign var=FIELD_UI_TYPE_MODEL value=$HEADER_FIELD->getUITypeModel()}
-										{assign var=SEARCH_DETAILS_FIELD_INFO value=array('searchValue' => '', 'comparator' => '')}
-										{if isset($SEARCH_DETAILS[$HEADER_FIELD->getName()])}
-										{assign var=SEARCH_DETAILS_FIELD_INFO value=$SEARCH_DETAILS[$HEADER_FIELD->getName()]}
-										{/if}
-										{include file=vtemplate_path($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(),$RELATED_MODULE_NAME) FIELD_MODEL= $HEADER_FIELD SEARCH_INFO=$SEARCH_DETAILS_FIELD_INFO USER_MODEL=$USER_MODEL}
-										<input type="hidden" class="operatorValue" value="{$SEARCH_DETAILS_FIELD_INFO}">
+										{include file=vtemplate_path($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(),$RELATED_MODULE_NAME) FIELD_MODEL= $HEADER_FIELD SEARCH_INFO=$SEARCH_DETAILS[$HEADER_FIELD->getName()] USER_MODEL=$USER_MODEL}
+										<input type="hidden" class="operatorValue" value="{$SEARCH_DETAILS[$HEADER_FIELD->getName()]['comparator']}">
 									{/if}
 								</th>
 							{/foreach}
@@ -120,7 +116,7 @@
 									{/if}
 
 									{if $IS_DELETABLE}
-										<a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="fa fa-chain-broken"></i></a>
+										<a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="vicon-linkopen"></i></a>
 									{/if}
 								</span>
 

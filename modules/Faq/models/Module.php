@@ -6,16 +6,15 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Faq_Module_Model extends Vtiger_Module_Model
-{
+class Faq_Module_Model extends Vtiger_Module_Model {
+
 	/**
 	 * Function to check whether the module is an entity type module or not
 	 * @return <Boolean> true/false
 	 */
-	public function isQuickCreateSupported()
-	{
+	public function isQuickCreateSupported() {
 		//Faq module is not enabled for quick create
 		return false;
 	}
@@ -24,58 +23,54 @@ class Faq_Module_Model extends Vtiger_Module_Model
 	 * Function to check whether the module is summary view supported
 	 * @return <Boolean> - true/false
 	 */
-	public function isSummaryViewSupported()
-	{
+	public function isSummaryViewSupported() {
 		return false;
 	}
 
-	/**
-	 * Function is used to give links in the All menu bar
-	 */
-	public function getQuickMenuModels()
-	{
-		if ($this->isEntityModule()) {
+	 /**
+	* Function is used to give links in the All menu bar
+	*/
+	public function getQuickMenuModels() {
+		if($this->isEntityModule()) {
 			$moduleName = $this->getName();
 			$listViewModel = Vtiger_ListView_Model::getCleanInstance($moduleName);
 			$basicListViewLinks = $listViewModel->getBasicLinks();
 		}
 
-		if ($basicListViewLinks) {
-			foreach ($basicListViewLinks as $basicListViewLink) {
-				if (is_array($basicListViewLink)) {
+		if($basicListViewLinks) {
+			foreach($basicListViewLinks as $basicListViewLink) {
+				if(is_array($basicListViewLink)) {
 					$links[] = Vtiger_Link_Model::getInstanceFromValues($basicListViewLink);
-				} elseif (is_a($basicListViewLink, 'Vtiger_Link_Model')) {
+				} else if(is_a($basicListViewLink, 'Vtiger_Link_Model')) {
 					$links[] = $basicListViewLink;
 				}
 			}
 		}
-
 		return $links;
 	}
 
-	// Function to get supported utility actions for a module
-	public function getUtilityActionsNames()
-	{
-		return [];
+	/*
+	 * Function to get supported utility actions for a module
+	 */
+	function getUtilityActionsNames() {
+		return array();
 	}
 
 	/**
 	 * Function to get Module Header Links (for Vtiger7)
 	 * @return array
 	 */
-	public function getModuleBasicLinks()
-	{
+	public function getModuleBasicLinks(){
 		$createPermission = Users_Privileges_Model::isPermitted($this->getName(), 'CreateView');
-		$basicLinks = [];
-		if ($createPermission) {
-			$basicLinks[] = [
-				'linktype'  => 'BASIC',
+		$basicLinks = array();
+		if($createPermission) {
+			$basicLinks[] = array(
+				'linktype' => 'BASIC',
 				'linklabel' => 'LBL_ADD_RECORD',
-				'linkurl'   => $this->getCreateRecordUrl(),
-				'linkicon'  => 'fa-plus'
-			];
+				'linkurl' => $this->getCreateRecordUrl(),
+				'linkicon' => 'fa-plus'
+			);
 		}
-
 		return $basicLinks;
 	}
 }

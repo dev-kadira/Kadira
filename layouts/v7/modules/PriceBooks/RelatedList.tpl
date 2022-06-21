@@ -52,7 +52,7 @@
 							</tr>
 							<tr class="searchRow">
 								<th class="inline-search-btn">
-									<button class="btn btn-success btn-lg" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
+									<button class="btn btn-success btn-sm" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
 								</th>
 								{foreach item=HEADER_FIELD from=$RELATED_HEADERS}
 									<th>
@@ -79,7 +79,7 @@
 										{/if}
 										<a href="javascript:void(0);" data-url="index.php?module=PriceBooks&view=ListPriceUpdate&record={$PARENT_RECORD->getId()}&relid={$RELATED_RECORD->getId()}&currentPrice={$LISTPRICE}"
 											class="editListPrice cursorPointer" data-related-recordid='{$RELATED_RECORD->getId()}' data-list-price={$LISTPRICE}><i title="{vtranslate('LBL_EDIT', $MODULE)}" class="fa fa-pencil"></i></a> &nbsp;&nbsp;
-										<a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="fa fa-chain-broken"></i></a>
+										<a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="vicon-linkopen"></i></a>
 									</span>
 								</td>
 								{foreach item=HEADER_FIELD from=$RELATED_HEADERS}

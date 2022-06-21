@@ -59,7 +59,7 @@
 							{if !in_array($MODULE_NAME, $RESTRICTED_MODULES_LIST) && (count($SETTINGS_LINKS) > 0)}
 								<span class="span3">
 									<span class="btn-group pull-right actions {if !$MODULE_ACTIVE}hide{/if}">
-										<button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">
 											<strong>{vtranslate('LBL_SETTINGS', $QUALIFIED_MODULE)}</strong>&nbsp;<i class="caret"></i>
 										</button>
 										<ul class="dropdown-menu pull-right">

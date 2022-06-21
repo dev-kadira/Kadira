@@ -6,30 +6,25 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
-require_once 'modules/com_vtiger_workflow/VTEntityCache.inc';
-require_once 'modules/com_vtiger_workflow/VTWorkflowUtils.php';
+ ************************************************************************************/
+require_once('modules/com_vtiger_workflow/VTEntityCache.inc');
+require_once('modules/com_vtiger_workflow/VTWorkflowUtils.php');
 
-class VTUpdateFieldsTask extends VTTask
-{
+class VTUpdateFieldsTask extends VTTask {
+
 	public $executeImmediately = true;
-	//array which contains the focus instances of reference fields
-	private $referenceFieldFocusList = [];
+	//array which contains the focus instances of reference fields 
+	private $referenceFieldFocusList = array();
 
-	public function getFieldNames()
-	{
-		return ['field_value_mapping'];
+	public function getFieldNames() {
+		return array('field_value_mapping');
 	}
 
-	public function doTask($entity)
-	{
+	public function doTask($entity) {
 		$tmpFiles = $_FILES;
 		unset($_FILES);
-
-		global $adb, $current_user, $default_charset,$default_timezone, $logbg;
-		$referenceModuleUpdated = [];
-
-		$logbg->info('Entering workflow task VTUpdateFieldsTask');
+		global $adb, $current_user, $default_charset,$default_timezone;
+		$referenceModuleUpdated = array();
 		$util = new VTWorkflowUtils();
 		$util->adminUser();
 
@@ -37,33 +32,31 @@ class VTUpdateFieldsTask extends VTTask
 		$entityId = $entity->getId();
 		$recordId = vtws_getIdComponents($entityId);
 		$recordId = $recordId[1];
-		$logbg->debug("Module: ${moduleName}, Record: ${entityId}");
 
 		$moduleHandler = vtws_getModuleHandlerFromName($moduleName, $current_user);
 		$handlerMeta = $moduleHandler->getMeta();
 		$moduleFields = $handlerMeta->getModuleFields();
 
-		$fieldValueMapping = [];
-		if (! empty($this->field_value_mapping)) {
+		$fieldValueMapping = array();
+		if (!empty($this->field_value_mapping)) {
 			$fieldValueMapping = Zend_Json::decode($this->field_value_mapping);
 		}
 
-		if (! empty($fieldValueMapping) && count($fieldValueMapping) > 0) {
-			require_once 'data/CRMEntity.php';
+		$referenceFieldFocus = array();
+		if (!empty($fieldValueMapping) && count($fieldValueMapping) > 0) {
+			require_once('data/CRMEntity.php');
 			$focus = CRMEntity::getInstance($moduleName);
 			$focus->id = $recordId;
 			$focus->mode = 'edit';
 			$focus->retrieve_entity_info($recordId, $moduleName);
 			$focus->clearSingletonSaveFields();
-			$logbg->debug('field values pre: '.print_r($focus->column_fields, true));
-			$logbg->debug('update info: '.print_r($fieldValueMapping, true));
 
 			$util->loggedInUser();
 
 			// The data is transformed from db format to user format, there is a chance that date and currency fields might get tracked for changes which should be avoided
 			$focus->column_fields->pauseTracking();
-			$focus->column_fields = DataTransform::sanitizeDateFieldsForInsert($focus->column_fields, $handlerMeta);
-			$focus->column_fields = DataTransform::sanitizeCurrencyFieldsForInsert($focus->column_fields, $handlerMeta);
+			$focus->column_fields = DataTransform::sanitizeDateFieldsForInsert($focus->column_fields,$handlerMeta);
+			$focus->column_fields = DataTransform::sanitizeCurrencyFieldsForInsert($focus->column_fields,$handlerMeta);
 			$entityFields = $referenceEntityFields = false;
 			$focus->column_fields->resumeTracking();
 
@@ -75,19 +68,19 @@ class VTUpdateFieldsTask extends VTTask
 				}
 				$fieldValueType = $fieldInfo['valuetype'];
 				$fieldValue = trim($fieldInfo['value']);
-				preg_match('/\((\w+) : \((\w+)\) (\w+)\)/', $fieldName, $matches);
-				if (count($matches) > 0) {
+				preg_match('/\((\w+) : \((\w+)\) (\w+)\)/',$fieldName,$matches);
+				if(count($matches) > 0){
 					//reference field update
 					$referenceField = $matches[1];
 					$referencedModule = $matches[2];
 					$referencedFieldName = $matches[3];
 					$refModuleModel = Vtiger_Module_Model::getInstance($referencedModule);
-					if ($refModuleModel && in_array($referencedFieldName, $refModuleModel->getNameFields())) {
+					if ($refModuleModel && in_array($referencedFieldName,$refModuleModel->getNameFields())) {
 						$referenceEntityFields = true;
 					}
 					$referenceRecordId = $focus->column_fields[$referenceField];
-					if (empty($referenceRecordId) || isRecordExists($referenceRecordId) === false ||
-							getSalesEntityType($referenceRecordId) !== $referencedModule) { // if the record belongs to other module, for ex in events we have related to field
+					if(empty($referenceRecordId) || isRecordExists($referenceRecordId) === false || 
+							getSalesEntityType($referenceRecordId) !== $referencedModule){ // if the record belongs to other module, for ex in events we have related to field
 						//if no value exists for the reference field then we dont have to update
 						//if reference record is deleted then we dont have to update
 						continue;
@@ -102,61 +95,61 @@ class VTUpdateFieldsTask extends VTTask
 					$fieldInstance = $referenceModuleFields[$referencedFieldName];
 					$referenceModuleUpdated[$referencedModule][$referenceField] = $referenceRecordId;
 					$fieldName = $referencedFieldName;
-				} else {
+				}else{
 					$moduleFocus = $focus;
 					$fieldInstance = $moduleFields[$fieldName];
 				}
 
 				if ($fieldValueType == 'fieldname') {
 					$fieldDataType = $fieldInstance->getFieldDataType();
-					preg_match('/\((\w+) : \((\w+)\) (\w+)\)/', $fieldValue, $matches1);
-					if (count($matches1) > 0) {
+					preg_match('/\((\w+) : \((\w+)\) (\w+)\)/',$fieldValue,$matches1);
+					if(count($matches1) > 0){
 						$referenceField = $matches1[1];
 						$referencedModule = $matches1[2];
 						$referencedFieldName = $matches1[3];
 						$referenceRecordId = $focus->column_fields[$referenceField];
-						if (empty($referenceRecordId)) {
+						if(empty($referenceRecordId)){
 							//if no value exists for the reference field then we dont have to update
 							continue;
-						} else {
+						}else{
 							$referenceFocus = $this->getReferenceFieldFocus($referencedModule, $referenceField, $referenceRecordId);
-							$fieldValue = $referenceFocus->column_fields[$referencedFieldName];
+							$fieldValue= $referenceFocus->column_fields[$referencedFieldName];
 
 							// while getting the focus currency fields are converted to user format
-							$currencyfieldValueInDB = $referenceFocus->column_fields[$referencedFieldName.'_raw'];
-							$currencyfieldConvertedValue = $referenceFocus->column_fields[$referencedFieldName.'_raw_converted'];
+							$currencyfieldValueInDB = $referenceFocus->column_fields[$referencedFieldName . "_raw"];
+							$currencyfieldConvertedValue = $referenceFocus->column_fields[$referencedFieldName . "_raw_converted"];
 
 							$rightOperandReferenceModuleHandler = vtws_getModuleHandlerFromName($referencedModule, $current_user);
 							$rightOperandReferenceHandlerMeta = $rightOperandReferenceModuleHandler->getMeta();
 							$rightOperandReferenceModuleFields = $rightOperandReferenceHandlerMeta->getModuleFields();
 							$rightOperandFieldInstance = $rightOperandReferenceModuleFields[$referencedFieldName];
-							if ($rightOperandFieldInstance) {
+							if($rightOperandFieldInstance){
 								$rightOperandFieldType = $rightOperandFieldInstance->getFieldDataType();
 							}
 						}
-					} else {
+					}else{
 						$rightOperandFieldInstance = $moduleFields[$fieldValue];
-						if ($rightOperandFieldInstance) {
+						if($rightOperandFieldInstance) {
 							$rightOperandFieldType = $rightOperandFieldInstance->getFieldDataType();
 						}
 
 						// while getting the focus currency fields are converted to user format
-						$currencyfieldValueInDB = $focus->column_fields[$fieldValue.'_raw'];
-						$currencyfieldConvertedValue = $focus->column_fields[$fieldValue.'_raw_converted'];
+						$currencyfieldValueInDB = $focus->column_fields[$fieldValue . "_raw"];
+						$currencyfieldConvertedValue = $focus->column_fields[$fieldValue . "_raw_converted"];
 
 						$fieldValue = $focus->column_fields[$fieldValue];
 					}
 					$fieldValueInDB = $fieldValue;
 
 					// for currency field value should be in database format
-					if (! empty($currencyfieldValueInDB) && $fieldDataType == 'currency' && $fieldInstance->getUIType() != 72) {
+					if (!empty($currencyfieldValueInDB) && $fieldDataType == "currency" && $fieldInstance->getUIType() != 72) {
 						$fieldValueInDB = $currencyfieldValueInDB;
-						if (! empty($currencyfieldConvertedValue)) {
+						if (!empty($currencyfieldConvertedValue)) {
 							$fieldValue = $currencyfieldConvertedValue;
 						}
 					}
 
-					if ($fieldDataType == 'date' && ! empty($fieldValue)) {
+					if($fieldDataType == 'date' && !empty($fieldValue)) {
 						$dbDateValue = getValidDBInsertDateTimeValue($fieldValue);
 						//Convert the DB Date Time Format to User Date Time Format
 						$dateTime = new DateTimeField($dbDateValue);
@@ -166,15 +159,15 @@ class VTUpdateFieldsTask extends VTTask
 						$fieldValue = $date[0];
 					}
 					//for Product Unit Price value converted with based product currency
-					if ($fieldDataType == 'currency' && $fieldName == 'unit_price') {
+					if($fieldDataType == 'currency' && $fieldName == 'unit_price') {
 						$fieldValue = $this->calculateProductUnitPrice($fieldValue);
 					}
 					// for calendar time_start field db value will be in UTC format, we should convert to user format
-					if (trim($fieldInfo['value']) == 'time_start' && $moduleName == 'Calendar' && $fieldDataType == 'time' && ! empty($fieldValue)) {
+					if(trim($fieldInfo['value']) == 'time_start' && $moduleName == 'Calendar' && $fieldDataType == 'time' && !empty($fieldValue)){
 						$date = new DateTime();
-						$dateTime = new DateTimeField($date->format('Y-m-d').' '.$fieldValue);
+						$dateTime = new DateTimeField($date->format('Y-m-d').' '. $fieldValue);
 						$fieldValue = $dateTime->getDisplayTime();
-					} elseif ($fieldDataType == 'time' && ! empty($fieldValue)) {
+					} else if ($fieldDataType == 'time' && !empty($fieldValue)) {
 						$fieldValueInstance = $moduleFields[trim($fieldInfo['value'])];
 						if ($fieldValueInstance) {
 							$fieldValueDataType = $fieldValueInstance->getFieldDataType();
@@ -187,24 +180,24 @@ class VTUpdateFieldsTask extends VTTask
 						}
 					}
 
-					if ($rightOperandFieldType == 'reference') {
-						if (! empty($fieldValue)) {
-							if (! empty($rightOperandFieldInstance)) {
+					if($rightOperandFieldType == "reference") {
+						if(!empty($fieldValue)) {
+							if(!empty($rightOperandFieldInstance)){
 								$referenceList = $rightOperandFieldInstance->getReferenceList();
-								if ((count($referenceList) == 1) && $referenceList[0] == 'Users') {
+								if((count($referenceList) == 1) && $referenceList[0] == "Users") {
 									$userRecordLabels = Vtiger_Functions::getOwnerRecordLabels($fieldValue);
 									$fieldValue = $userRecordLabels[$fieldValue];
-								} elseif ((count($referenceList) == 1) && $referenceList[0] == 'Currency') {
+								}elseif((count($referenceList) == 1) && $referenceList[0] == "Currency"){
 									$fieldValue = getCurrencyName($fieldValue);
-								} elseif ($rightOperandFieldInstance->getFieldName() == 'roleid') {
+								}elseif($rightOperandFieldInstance->getFieldName()=="roleid"){
 									$fieldValue = getRoleName($fieldValue);
-								} else {
+								}else{
 									$fieldValue = Vtiger_Util_Helper::getRecordName($fieldValue);
 								}
-							} else {
+							}else{
 								$fieldValue = Vtiger_Util_Helper::getRecordName($fieldValue);
 							}
-						} else {
+						}else{
 							//Not value is there for reference fields . So skip this field mapping
 							continue;
 						}
@@ -223,9 +216,9 @@ class VTUpdateFieldsTask extends VTTask
 
 					date_default_timezone_set($default_timezone);
 					//for Product Unit Price value converted with based product currency
-					if ($fieldInstance && $fieldInstance->getFieldDataType() == 'currency' && $fieldName == 'unit_price') {
+					if($fieldInstance && $fieldInstance->getFieldDataType() == 'currency' && $fieldName == 'unit_price') {
 						$fieldValue = $this->calculateProductUnitPrice($fieldValue);
-					} else {
+					}else{
 						$fieldValue = $this->convertValueToUserFormat($fieldInstance, $fieldValue);
 					}
 				} else {
@@ -238,14 +231,14 @@ class VTUpdateFieldsTask extends VTTask
 						}
 					}
 					//for Product Unit Price value converted with based product currency
-					if ($fieldInstance && $fieldInstance->getFieldDataType() == 'currency' && $fieldName == 'unit_price') {
+					if($fieldInstance && $fieldInstance->getFieldDataType() == 'currency' && $fieldName == 'unit_price') {
 						$fieldValue = $this->calculateProductUnitPrice($fieldValue);
 					}
 					$fieldValueInDB = $fieldValue;
 				}
 
 				if ($fieldInstance && $fieldInstance->getFieldDataType() === 'owner') {
-					if (! is_numeric($fieldValue)) {
+					if(!is_numeric($fieldValue)){
 						//If name is given
 						$userId = getUserId_Ol($fieldValue);
 						$groupId = getGrpId($fieldValue);
@@ -256,17 +249,17 @@ class VTUpdateFieldsTask extends VTTask
 							$fieldValue = ($userId == 0) ? $groupId : $userId;
 						}
 
-						if ($userId == 0) {
-							$webserviceObject = VtigerWebserviceObject::fromName($adb, 'Groups');
-							$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(), $fieldValue);
+						if($userId == 0) {
+							$webserviceObject = VtigerWebserviceObject::fromName($adb,'Groups');
+							$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(),$fieldValue);
 						} else {
-							$webserviceObject = VtigerWebserviceObject::fromName($adb, 'Users');
-							$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(), $fieldValue);
+							$webserviceObject = VtigerWebserviceObject::fromName($adb,'Users');
+							$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(),$fieldValue);
 						}
 					} else {
 						$ownerType = vtws_getOwnerType($fieldValue);
-						$webserviceObject = VtigerWebserviceObject::fromName($adb, $ownerType);
-						$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(), $fieldValue);
+						$webserviceObject = VtigerWebserviceObject::fromName($adb,$ownerType);
+						$fieldValueInDB = vtws_getId($webserviceObject->getEntityId(),$fieldValue);
 					}
 				}
 
@@ -276,16 +269,16 @@ class VTUpdateFieldsTask extends VTTask
 					$fieldValueInDB = $fieldValue;
 				}
 
-				if ($fieldInstance && $fieldInstance->getFieldDataType() == 'reference') {
-					$referenceModuleList = $fieldInstance->getReferenceList();
-					$fieldReferenceModule = $referenceModuleList[0];
-					$recordId = Vtiger_Util_Helper::getRecordId($fieldValue, $fieldReferenceModule, true);
-					if (! empty($recordId)) {
-						$fieldValue = $recordId;
-					} else {
-						$fieldValue = '';
+				if($fieldInstance && $fieldInstance->getFieldDataType() == 'reference') {
+						$referenceModuleList = $fieldInstance->getReferenceList();
+						$fieldReferenceModule = $referenceModuleList[0];
+						$recordId = Vtiger_Util_Helper::getRecordId($fieldValue, $fieldReferenceModule,true);
+						if(!empty($recordId)) {
+							$fieldValue = $recordId;
+						} else {
+							$fieldValue = '';
+						}
 					}
-				}
 
 				$moduleFocus->column_fields[$fieldName] = $fieldValue;
 				if (count($matches) > 0) {
@@ -326,63 +319,58 @@ class VTUpdateFieldsTask extends VTTask
 			//permission or not.
 			$focus->isWorkFlowFieldUpdate = true;
 			$changedFields = $focus->column_fields->getChanged();
-			if (count($changedFields) > 0) {
+			if(count($changedFields) > 0){
 				// save only if any field is changed
-				$logbg->debug('field values presave: '.print_r($focus->column_fields, true));
 				$focus->saveentity($moduleName);
 			}
 			if ($entityFields == true) {
 				Vtiger_Functions::updateCRMRecordLabel($moduleName, $focus->id);
 			}
-			$referenceIds = [];
-			foreach ($referenceModuleUpdated as $module => $info) {
-				foreach ($info as $refFieldName => $referenceRecordId) {
+				$referenceIds = array();
+			foreach($referenceModuleUpdated as $module => $info){
+				foreach($info as $refFieldName => $referenceRecordId){
 					$referenceFocus = $this->referenceFieldFocusList[$refFieldName][$referenceRecordId];
-					foreach ($referenceFocus->column_fields as $fieldName => $fieldValue) {
-						$referenceFocus->column_fields[$fieldName] = html_entity_decode($fieldValue, ENT_QUOTES, $default_charset);
+						foreach ($referenceFocus->column_fields as $fieldName => $fieldValue) {
+							$referenceFocus->column_fields[$fieldName] = html_entity_decode($fieldValue, ENT_QUOTES, $default_charset);
+						}
+						$referenceFocus->isLineItemUpdate = false;
+						$referenceFocus->isWorkFlowFieldUpdate = true;
+						$referenceFocus->saveentity($referenceFocus->moduleName);
+						if ($referenceEntityFields == true) {
+							Vtiger_Functions::updateCRMRecordLabel($referenceFocus->moduleName, $referenceFocus->id);
+						}
+						$referenceIds[] = $referenceFocus->id;
 					}
-					$referenceFocus->isLineItemUpdate = false;
-					$referenceFocus->isWorkFlowFieldUpdate = true;
-					$referenceFocus->saveentity($referenceFocus->moduleName);
-					if ($referenceEntityFields == true) {
-						Vtiger_Functions::updateCRMRecordLabel($referenceFocus->moduleName, $referenceFocus->id);
-					}
-					$logbg->debug('field values postsave: '.print_r($focus->column_fields, true));
-					$referenceIds[] = $referenceFocus->id;
 				}
-			}
 
 			// Reverting back the action name as there can be some dependencies on this.
 			$_REQUEST['action'] = $actionName;
 		}
 		$util->revertUser();
-		$logbg->info('Exiting workflow task VTUpdateFieldsTask');
 		$_FILES = $tmpFiles;
 	}
 
 	//Function use to convert the field value in to current user format
-	public function convertValueToUserFormat($fieldObj, $fieldValue)
-	{
+	public function convertValueToUserFormat($fieldObj, $fieldValue) {
 		global $current_user;
-		if (! empty($fieldObj)) {
+		if(!empty ($fieldObj)) {
 			// handle the case for Date field
-			if ($fieldObj->getFieldDataType() == 'date') {
-				if (! empty($fieldValue)) {
+			if($fieldObj->getFieldDataType()=="date") {
+				if(!empty($fieldValue)) {
 					$dateFieldObj = new DateTimeField($fieldValue);
 					$fieldValue = $dateFieldObj->getDisplayDate($current_user);
 				}
 			}
 
 			// handle the case for currency field
-			if ($fieldObj->getFieldDataType() == 'currency' && ! empty($fieldValue)) {
-				if ($fieldObj->getUIType() == '71') {
-					$fieldValue = CurrencyField::convertToUserFormat($fieldValue, $current_user, false);
-				} elseif ($fieldObj->getUIType() == '72') {
-					$fieldValue = CurrencyField::convertToUserFormat($fieldValue, $current_user, true);
+			if($fieldObj->getFieldDataType()=="currency" && !empty($fieldValue)) {
+				if($fieldObj->getUIType() == '71') {
+					$fieldValue = CurrencyField::convertToUserFormat($fieldValue,$current_user,false);
+				} else if($fieldObj->getUIType() == '72') {
+					$fieldValue = CurrencyField::convertToUserFormat($fieldValue,$current_user,true);
 				}
 			}
 		}
-
 		return $fieldValue;
 	}
 
@@ -391,44 +379,43 @@ class VTUpdateFieldsTask extends VTTask
 	 * Product Unit Price value converted with based product currency
 	 * @param type $fieldValue
 	 */
-	public function calculateProductUnitPrice($fieldValue)
-	{
+	public function calculateProductUnitPrice($fieldValue) {
 		$currency_details = getAllCurrencies('all');
-		for ($i = 0;$i < count($currency_details);$i++) {
+		for($i=0;$i<count($currency_details);$i++)  {
 			$curid = $currency_details[$i]['curid'];
-			$cur_checkname = 'cur_'.$curid.'_check';
-			$cur_valuename = 'curname'.$curid;
-			if ($cur_valuename == $_REQUEST['base_currency'] && ($_REQUEST[$cur_checkname] == 'on' || $_REQUEST[$cur_checkname] == 1)) {
+			$cur_checkname = 'cur_' . $curid . '_check';
+			$cur_valuename = 'curname' . $curid;
+			if($cur_valuename == $_REQUEST['base_currency'] && ($_REQUEST[$cur_checkname] == 'on' || $_REQUEST[$cur_checkname] == 1)) {
 				$fieldValue = $fieldValue * $currency_details[$i]['conversionrate'];
 				$_REQUEST[$cur_valuename] = $fieldValue;
 			}
 		}
-
 		return $fieldValue;
 	}
 
-	public function getReferenceFieldFocus($referencedModule, $referenceField, $referenceRecordId)
-	{
+	public function getReferenceFieldFocus($referencedModule,$referenceField,$referenceRecordId){
 		global $current_user;
 		$referenceRecordFocus = $this->referenceFieldFocusList[$referenceField][$referenceRecordId];
-		if (empty($referenceRecordFocus)) {
-			$referenceRecordFocus = CRMEntity::getInstance($referencedModule);
-			$referenceRecordFocus->id = $referenceRecordId;
-			$referenceRecordFocus->mode = 'edit';
-			if (isRecordExists($referenceRecordId) || $referencedModule == 'Users') {
-				$referenceRecordFocus->retrieve_entity_info($referenceRecordId, $referencedModule);
-			}
-			$referenceRecordFocus->clearSingletonSaveFields();
+		if(empty($referenceRecordFocus)){
+		$referenceRecordFocus = CRMEntity::getInstance($referencedModule);
+		$referenceRecordFocus->id = $referenceRecordId;
+		$referenceRecordFocus->mode = 'edit';
+		if(isRecordExists($referenceRecordId) || $referencedModule=="Users") {
+			$referenceRecordFocus->retrieve_entity_info($referenceRecordId, $referencedModule);
+		}
+		$referenceRecordFocus->clearSingletonSaveFields();
 
-			$referenceModuleHandler = vtws_getModuleHandlerFromName($referencedModule, $current_user);
-			$referenceHandlerMeta = $referenceModuleHandler->getMeta();
-			$referenceRecordFocus->column_fields->pauseTracking();
-			$referenceRecordFocus->column_fields = DataTransform::sanitizeDateFieldsForInsert($referenceRecordFocus->column_fields, $referenceHandlerMeta);
-			$referenceRecordFocus->column_fields = DataTransform::sanitizeCurrencyFieldsForInsert($referenceRecordFocus->column_fields, $referenceHandlerMeta);
-			$referenceRecordFocus->column_fields->resumeTracking();
+		$referenceModuleHandler = vtws_getModuleHandlerFromName($referencedModule, $current_user);
+		$referenceHandlerMeta = $referenceModuleHandler->getMeta();
+		$referenceRecordFocus->column_fields->pauseTracking();
+		$referenceRecordFocus->column_fields = DataTransform::sanitizeDateFieldsForInsert($referenceRecordFocus->column_fields,$referenceHandlerMeta);
+		$referenceRecordFocus->column_fields = DataTransform::sanitizeCurrencyFieldsForInsert($referenceRecordFocus->column_fields,$referenceHandlerMeta);
+		$referenceRecordFocus->column_fields->resumeTracking();
 			$this->referenceFieldFocusList[$referenceField][$referenceRecordId] = $referenceRecordFocus;
 		}
-
 		return $referenceRecordFocus;
 	}
+
 }
+
+?>

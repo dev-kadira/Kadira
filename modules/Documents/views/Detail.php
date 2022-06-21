@@ -6,25 +6,22 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Documents_Detail_View extends Vtiger_Detail_View
-{
-	public function preProcess(Vtiger_Request $request)
-	{
+class Documents_Detail_View extends Vtiger_Detail_View {
+	
+	function preProcess(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$viewer->assign('NO_SUMMARY', true);
 		parent::preProcess($request);
 	}
-
+	
 	/**
 	 * Function to get Ajax is enabled or not
 	 * @param Vtiger_Record_Model record model
-	 * @param mixed $recordModel
 	 * @return <boolean> true/false
 	 */
-	public function isAjaxEnabled($recordModel)
-	{
+	public function isAjaxEnabled($recordModel) {
 		return true;
 	}
 
@@ -32,8 +29,8 @@ class Documents_Detail_View extends Vtiger_Detail_View
 	 * Function shows basic detail for the record
 	 * @param <type> $request
 	 */
-	public function showModuleBasicView($request)
-	{
+	function showModuleBasicView($request) {
 		return $this->showModuleDetailView($request);
 	}
+
 }

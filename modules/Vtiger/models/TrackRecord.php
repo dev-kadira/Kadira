@@ -6,19 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 /**
  * Vtiger Tracker Record Model Class
  */
-class Vtiger_TrackRecord_Model extends Vtiger_Record_Model
-{
+class Vtiger_TrackRecord_Model extends Vtiger_Record_Model {
+
 	/**
 	 * Function to get the id of the record
 	 * @return <Number> - Record Id
 	 */
-	public function getId()
-	{
+	public function getId() {
 		return $this->get('item_id');
 	}
 
@@ -26,8 +25,7 @@ class Vtiger_TrackRecord_Model extends Vtiger_Record_Model
 	 * Function to get the name of the record
 	 * @return <String> - Entity Name of the Record
 	 */
-	public function getName()
-	{
+	public function getName() {
 		return $this->get('item_summary');
 	}
 
@@ -36,12 +34,10 @@ class Vtiger_TrackRecord_Model extends Vtiger_Record_Model
 	 * @param <Array> $valueMap
 	 * @return Vtiger_TrackRecord_Model instance
 	 */
-	public static function getInstance($valueMap)
-	{
+	public static function getInstance($valueMap) {
 		$instance = new self();
 		$instance->setData($valueMap);
 		$instance->setModule($valueMap['module_name']);
-
 		return $instance;
 	}
 
@@ -50,17 +46,15 @@ class Vtiger_TrackRecord_Model extends Vtiger_Record_Model
 	 * @param <Number> $limit - Limit on the number of records
 	 * @return <Array> - List of Vtiger_TrackRecord_Model instances
 	 */
-	public static function getAll($limit = null)
-	{
-		require_once 'data/Tracker.php';
+	public static function getAll($limit=null) {
+		require_once('data/Tracker.php');
 		$tracFocus = new Tracker();
 		$userModel = Users_Record_Model::getCurrentUserModel();
 		$list = $tracFocus->get_recently_viewed($userModel->getId());
-		$trackRecords = [];
-		foreach ($list as $record) {
+		$trackRecords = array();
+		foreach($list as $record) {
 			$trackRecords[] = self::getInstance($record);
 		}
-
 		return $trackRecords;
 	}
 }

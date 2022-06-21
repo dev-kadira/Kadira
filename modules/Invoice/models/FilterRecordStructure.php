@@ -6,8 +6,7 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Invoice_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model
-{
+class Invoice_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model {
 }

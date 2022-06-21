@@ -6,17 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class ModComments_DetailView_Model extends Vtiger_DetailView_Model
-{
+class ModComments_DetailView_Model extends Vtiger_DetailView_Model {
+
 	/**
 	 * Function to get the detail view links (links and widgets)
 	 * @param <array> $linkParams - parameters which will be used to calicaulate the params
 	 * @return <array> - empty array
 	 */
-	public function getDetailViewLinks($linkParams)
-	{
-		return [];
+	public function getDetailViewLinks($linkParams) {
+		return array();
 	}
+
 }

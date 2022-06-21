@@ -14,6 +14,7 @@ class LoggerPropertyConfigurator {
 	static $singleton = false;
 	
 	function __construct() {
+		LoggerPropertyConfigurator::$singleton = $this;
 	}
 	
 	function configure($configfile) {
@@ -58,7 +59,6 @@ class LoggerPropertyConfigurator {
 	}
 	
 	static function getInstance() {
-		if (!self::$singleton) self::$singleton = new static();
 		return self::$singleton;
 	}
 }

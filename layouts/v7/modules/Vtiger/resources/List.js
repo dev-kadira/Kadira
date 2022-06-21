@@ -2352,15 +2352,6 @@ Vtiger.Class("Vtiger_List_Js", {
 			e.stopPropagation();
 		});
 	},
-    
-    //SalesPaltform.ru begin
-    registerAudioFieldClickEvent: function() {
-        var listViewContentDiv = this.getListViewContainer();       		
-        listViewContentDiv.on('click', 'audio', function (e) {
-			e.stopPropagation();
-		});
-    },
-    //SalesPlatform.ru end    
 	registerConfigureColumnsEvents: function () {
 		var thisInstance = this;
 		var listViewContentDiv = this.getListViewContainer();
@@ -2444,9 +2435,8 @@ Vtiger.Class("Vtiger_List_Js", {
 				//add available field to selected list
 				availFieldsList.on('click', '.item', function (e) {
 					var selectedFieldsEles = selectedFieldsList.find('.item');
-					var limit = jQuery('#maxListFieldsSelectionSize').text();
-					if (selectedFieldsEles.length > limit) {
-						app.helper.showErrorNotification({message: app.vtranslate('JS_YOU_CAN_SELECT_ONLY')+' '+limit+' '+app.vtranslate('JS_ITEMS')});
+					if (selectedFieldsEles.length > 15) {
+						app.helper.showErrorNotification({message: app.vtranslate('JS_ADD_MAX_15_ITEMS')});
 						return false;
 					}
 					var sourceFieldEle = jQuery(e.currentTarget);
@@ -2573,9 +2563,6 @@ Vtiger.Class("Vtiger_List_Js", {
 		this.registerDynamicDropdownPosition();
 		this.registerDropdownPosition();
 		this.registerConfigureColumnsEvents();
-		//SalesPaltform.ru begin
-		this.registerAudioFieldClickEvent();
-		//SalesPlatform.ru end		
 		var recordSelectTrackerObj = this.getRecordSelectTrackerInstance();
 		recordSelectTrackerObj.registerEvents();
 

@@ -83,6 +83,7 @@ class Contacts extends CRMEntity
 		'assistant_name',
 		'assistant_phone'];
 
+
 	public $list_fields_name = [
 		'First Name'   => 'firstname',
 		'Last Name'    => 'lastname',
@@ -144,25 +145,21 @@ class Contacts extends CRMEntity
 		'Emails'           => ['table_name' => 'vtiger_seactivityrel', 'table_index' => 'crmid', 'rel_index' => 'activityid'],
 		'Vendors'          => ['table_name' => 'vtiger_vendorcontactrel', 'table_index' => 'vendorid', 'rel_index' => 'contactid'],
 	];
-
 	public function __construct()
 	{
 		$this->log = Logger::getLogger('contact');
 		$this->db = PearDatabase::getInstance();
 		$this->column_fields = getColumnFields('Contacts');
 	}
-
 	public function Contacts()
 	{
 		self::__construct();
 	}
 
 	// Mike Crowe Mod --------------------------------------------------------Default ordering for us
-
 	/** Function to get the number of Contacts assigned to a particular User.
 	 *  @param varchar $user name - Assigned to User
 	 *  Returns the count of contacts assigned to user.
-	 * @param mixed $user_name
 	 */
 	public function getCount($user_name)
 	{
@@ -173,13 +170,13 @@ class Contacts extends CRMEntity
 		$rows_found = $this->db->getRowCount($result);
 		$row = $this->db->fetchByAssoc($result, 0);
 
+
 		$log->debug('Exiting getCount method ...');
 
 		return $row['count(*)'];
 	}
 
 	// This function doesn't seem to be used anywhere. Need to check and remove it.
-
 	/** Function to get the Contact Details assigned to a particular User based on the starting count and the number of subsequent records.
 	 *  @param varchar $user_name - Assigned User
 	 *  @param integer $from_index - Initial record number to be displayed
@@ -197,6 +194,7 @@ class Contacts extends CRMEntity
 		return $this->process_list_query1($query);
 	}
 
+
 	/** Function to process list query for a given query
 	 *  @param $query
 	 *  Returns the results of query in array format
@@ -207,10 +205,8 @@ class Contacts extends CRMEntity
 		$log->debug('Entering process_list_query1(' . $query . ') method ...');
 
 		$result = &$this->db->pquery($query, [], true, "Error retrieving {$this->object_name} list: ");
-
 		$list = [];
 		$rows_found = $this->db->getRowCount($result);
-
 		if ($rows_found != 0) {
 			$contact = [];
 			for ($index = 0 , $row = $this->db->fetchByAssoc($result, $index); $row && $index < $rows_found;$index++, $row = $this->db->fetchByAssoc($result, $index)) {
@@ -221,6 +217,9 @@ class Contacts extends CRMEntity
 						$contact[$columnName] = '';
 					}
 				}
+				// TODO OPTIMIZE THE QUERY ACCOUNT NAME AND ID are set separetly for every vtiger_contactdetails and hence
+				// vtiger_account query goes for ecery single vtiger_account row
+
 				$list[] = $contact;
 			}
 		}
@@ -231,10 +230,12 @@ class Contacts extends CRMEntity
 		$response['next_offset'] = $next_offset;
 		$response['previous_offset'] = $previous_offset;
 
+
 		$log->debug('Exiting process_list_query1 method ...');
 
 		return $response;
 	}
+
 
 	/** Function to process list query for Plugin with Security Parameters for a given query
 	 *  @param $query
@@ -245,7 +246,6 @@ class Contacts extends CRMEntity
 		global $log,$adb,$current_user;
 		$log->debug('Entering process_list_query1(' . $query . ') method ...');
 		$permitted_field_lists = [];
-
 		require 'user_privileges/user_privileges_' . $current_user->id . '.php';
 		if ($is_admin == true || $profileGlobalPermission[1] == 0 || $profileGlobalPermission[2] == 0) {
 			$sql1 = 'select columnname from vtiger_field where tabid=4 and block <> 75 and vtiger_field.presence in (0,2)';
@@ -259,32 +259,31 @@ class Contacts extends CRMEntity
 				array_push($params1, $profileList);
 			}
 		}
-
 		$result1 = $this->db->pquery($sql1, $params1);
 		for ($i = 0;$i < $adb->num_rows($result1);$i++) {
 			$permitted_field_lists[] = $adb->query_result($result1, $i, 'columnname');
 		}
 
-		$list = [];
 		$result = &$this->db->pquery($query, [], true, "Error retrieving {$this->object_name} list: ");
+		$list = [];
 		$rows_found = $this->db->getRowCount($result);
-
 		if ($rows_found != 0) {
 			for ($index = 0 , $row = $this->db->fetchByAssoc($result, $index); $row && $index < $rows_found;$index++, $row = $this->db->fetchByAssoc($result, $index)) {
 				$contact = [];
 
-				$contact['lastname'] = in_array('lastname', $permitted_field_lists) ? $row['lastname'] : '';
-				$contact['firstname'] = in_array('firstname', $permitted_field_lists) ? $row['firstname'] : '';
-				$contact['email'] = in_array('email', $permitted_field_lists) ? $row['email'] : '';
+				$contact[lastname] = in_array('lastname', $permitted_field_lists) ? $row[lastname] : '';
+				$contact[firstname] = in_array('firstname', $permitted_field_lists) ? $row[firstname] : '';
+				$contact[email] = in_array('email', $permitted_field_lists) ? $row[email] : '';
+
 
 				if (in_array('accountid', $permitted_field_lists)) {
-					$contact['accountname'] = $row['accountname'];
-					$contact['account_id'] = $row['accountid'];
+					$contact[accountname] = $row[accountname];
+					$contact[account_id] = $row[accountid];
 				} else {
-					$contact['accountname'] = '';
-					$contact['account_id'] = '';
+					$contact[accountname] = '';
+					$contact[account_id] = '';
 				}
-				$contact['contactid'] = $row['contactid'];
+				$contact[contactid] = $row[contactid];
 				$list[] = $contact;
 			}
 		}
@@ -299,14 +298,11 @@ class Contacts extends CRMEntity
 		return $response;
 	}
 
+
 	/** Returns a list of the associated opportunities
 	 * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
 	 * All Rights Reserved..
 	 * Contributor(s): ______________________________________..
-	 * @param mixed $id
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_opportunities($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -380,14 +376,11 @@ class Contacts extends CRMEntity
 		return $return_value;
 	}
 
+
 	/** Returns a list of the associated tasks
 	 * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
 	 * All Rights Reserved..
 	 * Contributor(s): ______________________________________..
-	 * @param mixed $id
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_activities($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -462,7 +455,6 @@ class Contacts extends CRMEntity
 
 		return $return_value;
 	}
-
 	/**
 	 * Function to get Contact related Task & Event which have activity type Held, Completed or Deferred.
 	 * @param  integer   $id      - contactid
@@ -496,14 +488,10 @@ class Contacts extends CRMEntity
 
 		return getHistory('Contacts', $query, $id);
 	}
-
 	/**
 	 * Function to get Contact related Tickets.
 	 * @param  integer   $id      - contactid
 	 * returns related Ticket records in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_tickets($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -569,9 +557,6 @@ class Contacts extends CRMEntity
 	 * Function to get Contact related Quotes
 	 * @param  integer   $id  - contactid
 	 * returns related Quotes record in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_quotes($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -623,14 +608,10 @@ class Contacts extends CRMEntity
 
 		return $return_value;
 	}
-
 	/**
 	 * Function to get Contact related SalesOrder
 	 * @param  integer   $id  - contactid
 	 * returns related SalesOrder record in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_salesorder($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -639,7 +620,6 @@ class Contacts extends CRMEntity
 		$this_module = $currentModule;
 
 		$related_module = vtlib_getModuleNameById($rel_tab_id);
-
 		require_once "modules/${related_module}/${related_module}.php";
 		$other = new $related_module();
 		vtlib_setup_modulevars($related_module, $other);
@@ -670,20 +650,7 @@ class Contacts extends CRMEntity
 		}
 
 		$userNameSql = getSqlForNameInDisplayFormat(['first_name'=> 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'], 'Users');
-
-		$query = "select case when (vtiger_users.user_name not like '') then ${userNameSql} else vtiger_groups.groupname end as user_name,vtiger_crmentity.*, 
-			vtiger_salesorder.*, vtiger_quotes.subject as quotename, vtiger_account.accountname, vtiger_contactdetails.lastname 
-			from vtiger_salesorder inner join vtiger_crmentity on vtiger_crmentity.crmid=vtiger_salesorder.salesorderid 
-			LEFT JOIN vtiger_salesordercf ON vtiger_salesordercf.salesorderid = vtiger_salesorder.salesorderid 
-			LEFT JOIN vtiger_sobillads ON vtiger_sobillads.sobilladdressid = vtiger_salesorder.salesorderid 
-			LEFT JOIN vtiger_soshipads ON vtiger_soshipads.soshipaddressid = vtiger_salesorder.salesorderid 
-			left join vtiger_users on vtiger_users.id=vtiger_crmentity.smownerid 
-			left outer join vtiger_quotes on vtiger_quotes.quoteid=vtiger_salesorder.quoteid 
-			left outer join vtiger_account on vtiger_account.accountid=vtiger_salesorder.accountid 
-			LEFT JOIN vtiger_invoice_recurring_info ON vtiger_invoice_recurring_info.salesorderid = vtiger_salesorder.salesorderid 
-			left outer join vtiger_contactdetails on vtiger_contactdetails.contactid=vtiger_salesorder.contactid 
-			left join vtiger_groups on vtiger_groups.groupid=vtiger_crmentity.smownerid 
-			where vtiger_crmentity.deleted=0  and  vtiger_salesorder.contactid = " . $id;
+		$query = "select case when (vtiger_users.user_name not like '') then ${userNameSql} else vtiger_groups.groupname end as user_name,vtiger_crmentity.*, vtiger_salesorder.*, vtiger_quotes.subject as quotename, vtiger_account.accountname, vtiger_contactdetails.lastname from vtiger_salesorder inner join vtiger_crmentity on vtiger_crmentity.crmid=vtiger_salesorder.salesorderid LEFT JOIN vtiger_salesordercf ON vtiger_salesordercf.salesorderid = vtiger_salesorder.salesorderid LEFT JOIN vtiger_sobillads ON vtiger_sobillads.sobilladdressid = vtiger_salesorder.salesorderid LEFT JOIN vtiger_soshipads ON vtiger_soshipads.soshipaddressid = vtiger_salesorder.salesorderid left join vtiger_users on vtiger_users.id=vtiger_crmentity.smownerid left outer join vtiger_quotes on vtiger_quotes.quoteid=vtiger_salesorder.quoteid left outer join vtiger_account on vtiger_account.accountid=vtiger_salesorder.accountid LEFT JOIN vtiger_invoice_recurring_info ON vtiger_invoice_recurring_info.start_period = vtiger_salesorder.salesorderid left outer join vtiger_contactdetails on vtiger_contactdetails.contactid=vtiger_salesorder.contactid left join vtiger_groups on vtiger_groups.groupid=vtiger_crmentity.smownerid where vtiger_crmentity.deleted=0  and  vtiger_salesorder.contactid = " . $id;
 
 		$return_value = GetRelatedList($this_module, $related_module, $other, $query, $button, $returnset);
 
@@ -696,14 +663,10 @@ class Contacts extends CRMEntity
 
 		return $return_value;
 	}
-
 	/**
 	 * Function to get Contact related Products
 	 * @param  integer   $id  - contactid
 	 * returns related Products record in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_products($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -775,9 +738,6 @@ class Contacts extends CRMEntity
 	 * Function to get Contact related PurchaseOrder
 	 * @param  integer   $id  - contactid
 	 * returns related PurchaseOrder record in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_purchase_orders($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -834,10 +794,6 @@ class Contacts extends CRMEntity
 	 * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
 	 * All Rights Reserved..
 	 * Contributor(s): ______________________________________..
-	 * @param mixed $id
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_emails($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -900,11 +856,9 @@ class Contacts extends CRMEntity
 
 	/** Returns a list of the associated Campaigns
 	 * @param $id -- campaign id :: Type Integer
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 * @returns list of campaigns in array format
 	 */
+
 	public function get_campaigns($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
 		global $log, $singlepane_view,$currentModule,$current_user;
@@ -969,9 +923,6 @@ class Contacts extends CRMEntity
 	 * Function to get Contact related Invoices
 	 * @param  integer   $id      - contactid
 	 * returns related Invoices record in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_invoices($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -1051,9 +1002,6 @@ class Contacts extends CRMEntity
 	 * Function to get Contact related vendors.
 	 * @param  integer   $id      - contactid
 	 * returns related vendor records in array format
-	 * @param mixed $cur_tab_id
-	 * @param mixed $rel_tab_id
-	 * @param mixed $actions
 	 */
 	public function get_vendors($id, $cur_tab_id, $rel_tab_id, $actions = false)
 	{
@@ -1116,7 +1064,6 @@ class Contacts extends CRMEntity
 	/** Function to export the contact records in CSV Format
 	 * @param reference variable - where condition is passed when the query is executed
 	 * Returns Export Contacts Query.
-	 * @param mixed $where
 	 */
 	public function create_export_query($where)
 	{
@@ -1158,6 +1105,7 @@ class Contacts extends CRMEntity
 		return $query;
 	}
 
+
 	/** Function to get the Columnnames of the Contacts
 	 * Used By vtigerCRM Word Plugin
 	 * Returns the Merge Fields for Word Plugin
@@ -1191,9 +1139,7 @@ class Contacts extends CRMEntity
 
 		return $mergeflds;
 	}
-
 	//End
-
 	/** Function to get the Contacts assigned to a user with a valid email address.
 	 * @param varchar $username - User Name
 	 * @param varchar $emailaddress - Email Addr for each contact.
@@ -1243,6 +1189,7 @@ class Contacts extends CRMEntity
 	 *  @param varchar $user_name - User Name
 	 *  Returns query
 	 */
+
 	public function get_contactsforol($user_name)
 	{
 		global $log,$adb;
@@ -1299,8 +1246,8 @@ class Contacts extends CRMEntity
 		return $query;
 	}
 
+
 	/** Function to handle module specific operations when saving a entity
-	 * @param mixed $module
 	 */
 	public function save_module($module)
 	{
@@ -1356,73 +1303,32 @@ class Contacts extends CRMEntity
 	 * @param String This module name
 	 * @param Array List of Entity Id's from which related records need to be transfered
 	 * @param Integer Id of the the Record to which the related records are to be moved
-	 * @param mixed $module
-	 * @param mixed $transferEntityIds
-	 * @param mixed $entityId
 	 */
 	public function transferRelatedRecords($module, $transferEntityIds, $entityId)
 	{
 		global $adb,$log;
 		$log->debug("Entering function transferRelatedRecords (${module}, ${transferEntityIds}, ${entityId})");
 
-		$rel_table_arr = [
-			'Potentials'       => 'vtiger_contpotentialrel',
-			'Potentials'       => 'vtiger_potential',
-			'Activities'       => 'vtiger_cntactivityrel',
-			'Emails'           => 'vtiger_seactivityrel',
-			'HelpDesk'         => 'vtiger_troubletickets',
-			'Quotes'           => 'vtiger_quotes',
-			'PurchaseOrder'    => 'vtiger_purchaseorder',
-			'SalesOrder'       => 'vtiger_salesorder',
-			'Products'         => 'vtiger_seproductsrel',
-			'Documents'        => 'vtiger_senotesrel',
-			'Attachments'      => 'vtiger_seattachmentsrel',
-			'Campaigns'        => 'vtiger_campaigncontrel',
-			'Invoice'          => 'vtiger_invoice',
-			'ServiceContracts' => 'vtiger_servicecontracts',
-			'Project'          => 'vtiger_project',
-			'Assets'           => 'vtiger_assets',
-			'Vendors'          => 'vtiger_vendorcontactrel'];
+		$rel_table_arr = ['Potentials'=> 'vtiger_contpotentialrel', 'Potentials'=>'vtiger_potential', 'Activities'=>'vtiger_cntactivityrel',
+			'Emails'                     => 'vtiger_seactivityrel', 'HelpDesk'=>'vtiger_troubletickets', 'Quotes'=>'vtiger_quotes', 'PurchaseOrder'=>'vtiger_purchaseorder',
+			'SalesOrder'                 => 'vtiger_salesorder', 'Products'=>'vtiger_seproductsrel', 'Documents'=>'vtiger_senotesrel',
+			'Attachments'                => 'vtiger_seattachmentsrel', 'Campaigns'=>'vtiger_campaigncontrel', 'Invoice'=>'vtiger_invoice',
+			'ServiceContracts'           => 'vtiger_servicecontracts', 'Project'=>'vtiger_project', 'Assets'=>'vtiger_assets',
+			'Vendors'                    => 'vtiger_vendorcontactrel'];
 
-		$tbl_field_arr = [
-			'vtiger_contpotentialrel' => 'potentialid',
-			'vtiger_potential'        => 'potentialid',
-			'vtiger_cntactivityrel'   => 'activityid',
-			'vtiger_seactivityrel'    => 'activityid',
-			'vtiger_troubletickets'   => 'ticketid',
-			'vtiger_quotes'           => 'quoteid',
-			'vtiger_purchaseorder'    => 'purchaseorderid',
-			'vtiger_salesorder'       => 'salesorderid',
-			'vtiger_seproductsrel'    => 'productid',
-			'vtiger_senotesrel'       => 'notesid',
-			'vtiger_seattachmentsrel' => 'attachmentsid',
-			'vtiger_campaigncontrel'  => 'campaignid',
-			'vtiger_invoice'          => 'invoiceid',
-			'vtiger_servicecontracts' => 'servicecontractsid',
-			'vtiger_project'          => 'projectid',
-			'vtiger_assets'           => 'assetsid',
-			'vtiger_vendorcontactrel' => 'vendorid'
-		];
+		$tbl_field_arr = ['vtiger_contpotentialrel'=> 'potentialid', 'vtiger_potential'=>'potentialid', 'vtiger_cntactivityrel'=>'activityid',
+			'vtiger_seactivityrel'                    => 'activityid', 'vtiger_troubletickets'=>'ticketid', 'vtiger_quotes'=>'quoteid', 'vtiger_purchaseorder'=>'purchaseorderid',
+			'vtiger_salesorder'                       => 'salesorderid', 'vtiger_seproductsrel'=>'productid', 'vtiger_senotesrel'=>'notesid',
+			'vtiger_seattachmentsrel'                 => 'attachmentsid', 'vtiger_campaigncontrel'=>'campaignid', 'vtiger_invoice'=>'invoiceid',
+			'vtiger_servicecontracts'                 => 'servicecontractsid', 'vtiger_project'=>'projectid', 'vtiger_assets'=>'assetsid',
+			'vtiger_vendorcontactrel'                 => 'vendorid'];
 
-		$entity_tbl_field_arr = [
-			'vtiger_contpotentialrel' => 'contactid',
-			'vtiger_potential'        => 'contact_id',
-			'vtiger_cntactivityrel'   => 'contactid',
-			'vtiger_seactivityrel'    => 'crmid',
-			'vtiger_troubletickets'   => 'contact_id',
-			'vtiger_quotes'           => 'contactid',
-			'vtiger_purchaseorder'    => 'contactid',
-			'vtiger_salesorder'       => 'contactid',
-			'vtiger_seproductsrel'    => 'crmid',
-			'vtiger_senotesrel'       => 'crmid',
-			'vtiger_seattachmentsrel' => 'crmid',
-			'vtiger_campaigncontrel'  => 'contactid',
-			'vtiger_invoice'          => 'contactid',
-			'vtiger_servicecontracts' => 'sc_related_to',
-			'vtiger_project'          => 'linktoaccountscontacts',
-			'vtiger_assets'           => 'contact',
-			'vtiger_vendorcontactrel' => 'contactid'
-		];
+		$entity_tbl_field_arr = ['vtiger_contpotentialrel'=> 'contactid', 'vtiger_potential'=>'contact_id', 'vtiger_cntactivityrel'=>'contactid',
+			'vtiger_seactivityrel'                           => 'crmid', 'vtiger_troubletickets'=>'contact_id', 'vtiger_quotes'=>'contactid', 'vtiger_purchaseorder'=>'contactid',
+			'vtiger_salesorder'                              => 'contactid', 'vtiger_seproductsrel'=>'crmid', 'vtiger_senotesrel'=>'crmid',
+			'vtiger_seattachmentsrel'                        => 'crmid', 'vtiger_campaigncontrel'=>'contactid', 'vtiger_invoice'=>'contactid',
+			'vtiger_servicecontracts'                        => 'sc_related_to', 'vtiger_project'=>'linktoaccountscontacts', 'vtiger_assets'=>'contact',
+			'vtiger_vendorcontactrel'                        => 'contactid'];
 
 		foreach ($transferEntityIds as $transferId) {
 			foreach ($rel_table_arr as $rel_module=>$rel_table) {
@@ -1553,7 +1459,6 @@ class Contacts extends CRMEntity
 			LEFT JOIN vtiger_account ON vtiger_account.accountid=vtiger_potential.related_to
 			WHERE vtiger_crmentity.deleted=0 AND vtiger_potential.related_to=?';
 		$pot_res = $this->db->pquery($pot_q, [$id]);
-
 		$pot_ids_list = [];
 		for ($k = 0;$k < $this->db->num_rows($pot_res);$k++) {
 			$pot_id = $this->db->query_result($pot_res, $k, 'crmid');
@@ -1568,7 +1473,6 @@ class Contacts extends CRMEntity
 		//Backup Contact-Trouble Tickets Relation
 		$tkt_q = 'SELECT ticketid FROM vtiger_troubletickets WHERE contact_id=?';
 		$tkt_res = $this->db->pquery($tkt_q, [$id]);
-
 		if ($this->db->num_rows($tkt_res) > 0) {
 			$tkt_ids_list = [];
 			for ($k = 0;$k < $this->db->num_rows($tkt_res);$k++) {
@@ -1583,7 +1487,6 @@ class Contacts extends CRMEntity
 		//Backup Contact-PurchaseOrder Relation
 		$po_q = 'SELECT purchaseorderid FROM vtiger_purchaseorder WHERE contactid=?';
 		$po_res = $this->db->pquery($po_q, [$id]);
-
 		if ($this->db->num_rows($po_res) > 0) {
 			$po_ids_list = [];
 			for ($k = 0;$k < $this->db->num_rows($po_res);$k++) {
@@ -1598,7 +1501,6 @@ class Contacts extends CRMEntity
 		//Backup Contact-SalesOrder Relation
 		$so_q = 'SELECT salesorderid FROM vtiger_salesorder WHERE contactid=?';
 		$so_res = $this->db->pquery($so_q, [$id]);
-
 		if ($this->db->num_rows($so_res) > 0) {
 			$so_ids_list = [];
 			for ($k = 0;$k < $this->db->num_rows($so_res);$k++) {
@@ -1613,7 +1515,6 @@ class Contacts extends CRMEntity
 		//Backup Contact-Quotes Relation
 		$quo_q = 'SELECT quoteid FROM vtiger_quotes WHERE contactid=?';
 		$quo_res = $this->db->pquery($quo_q, [$id]);
-
 		if ($this->db->num_rows($quo_res) > 0) {
 			$quo_ids_list = [];
 			for ($k = 0;$k < $this->db->num_rows($quo_res);$k++) {
@@ -1622,7 +1523,6 @@ class Contacts extends CRMEntity
 			$params = [$id, RB_RECORD_UPDATED, 'vtiger_quotes', 'contactid', 'quoteid', implode(',', $quo_ids_list)];
 			$this->db->pquery('INSERT INTO vtiger_relatedlists_rb VALUES (?,?,?,?,?,?)', $params);
 		}
-
 		//removing the relationship of contacts with Quotes
 		$this->db->pquery('UPDATE vtiger_quotes SET contactid=0 WHERE contactid=?', [$id]);
 		//remove the portal info the contact
@@ -1672,7 +1572,7 @@ class Contacts extends CRMEntity
 	public static function getPortalEmailContents($entityData, $password, $type = '')
 	{
 		require_once 'config.inc.php';
-		global $PORTAL_URL, $HELPDESK_SUPPORT_EMAIL_ID;
+		global $PORTAL_URL;
 
 		$adb = PearDatabase::getInstance();
 		$moduleName = $entityData->getModuleName();
@@ -1688,6 +1588,7 @@ class Contacts extends CRMEntity
 		$result = $adb->pquery($query, []);
 		$body = decode_html($adb->query_result($result, 0, 'body'));
 		$contents = $body;
+
 		$contents = str_replace('$contact_name$', $entityData->get('firstname') . ' ' . $entityData->get('lastname'), $contents);
 		$contents = str_replace('$login_name$', $entityData->get('email'), $contents);
 		$contents = str_replace('$password$', $password, $contents);
@@ -1750,15 +1651,12 @@ class Contacts extends CRMEntity
 	{
 		$relatedIds = [];
 		$db = PearDatabase::getInstance();
-
 		$query = 'SELECT DISTINCT vtiger_crmentity.crmid FROM vtiger_contactdetails LEFT JOIN vtiger_contpotentialrel ON 
             vtiger_contpotentialrel.contactid = vtiger_contactdetails.contactid LEFT JOIN vtiger_potential ON 
             (vtiger_potential.potentialid = vtiger_contpotentialrel.potentialid OR vtiger_potential.contact_id = 
             vtiger_contactdetails.contactid) INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_potential.potentialid 
             WHERE vtiger_crmentity.deleted = 0 AND vtiger_contactdetails.contactid = ?';
-
 		$result = $db->pquery($query, [$id]);
-
 		for ($i = 0; $i < $db->num_rows($result); $i++) {
 			$relatedIds[] = $db->query_result($result, $i, 'crmid');
 		}
@@ -1770,14 +1668,11 @@ class Contacts extends CRMEntity
 	{
 		$relatedIds = [];
 		$db = PearDatabase::getInstance();
-
 		$query = 'SELECT DISTINCT vtiger_crmentity.crmid FROM vtiger_troubletickets INNER JOIN vtiger_crmentity ON 
             vtiger_crmentity.crmid = vtiger_troubletickets.ticketid LEFT JOIN vtiger_contactdetails ON 
             vtiger_contactdetails.contactid = vtiger_troubletickets.contact_id WHERE vtiger_crmentity.deleted = 0 AND 
             vtiger_contactdetails.contactid = ?';
-
 		$result = $db->pquery($query, [$id]);
-
 		for ($i = 0; $i < $db->num_rows($result); $i++) {
 			$relatedIds[] = $db->query_result($result, $i, 'crmid');
 		}

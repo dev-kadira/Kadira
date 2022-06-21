@@ -12,7 +12,6 @@
 {assign var="PRIVATE_COMMENT_MODULES" value=Vtiger_Functions::getPrivateCommentModules()}
 {assign var=IS_CREATABLE value=$COMMENTS_MODULE_MODEL->isPermitted('CreateView')}
 {assign var=IS_EDITABLE value=$COMMENTS_MODULE_MODEL->isPermitted('EditView')}
-{assign var=IS_DELETABLE value=$COMMENTS_MODULE_MODEL->isPermitted('Delete')}
 
 <div class="commentContainer recentComments">
 	<div class="commentTitle">
@@ -27,18 +26,16 @@
 				</div>
 				<div class='row'>
 					<div class="col-xs-6 pull-right paddingTop10 paddingLeft0">
-						<div class="paddingTop5">
-							<div style="text-align: right;">
-								{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
-									<div class="" style="margin: 7px 0;">
-										<label>
-											<input type="checkbox" id="is_private" style="margin:2px 0px -2px 0px">&nbsp;&nbsp;{vtranslate('LBL_INTERNAL_COMMENT')}
-										</label>&nbsp;&nbsp;
-										<i class="fa fa-question-circle cursorPointer" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_INFO')}"></i>&nbsp;&nbsp;
-									</div>
-								{/if}
-								<button class="btn btn-success btn-lg detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
-							</div>
+						<div style="text-align: right;">
+							{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
+								<div class="" style="margin: 7px 0;">
+									<label>
+										<input type="checkbox" id="is_private" style="margin:2px 0px -2px 0px" checked>&nbsp;&nbsp;{vtranslate('LBL_INTERNAL_COMMENT')}
+									</label>&nbsp;&nbsp;
+									<i class="fa fa-question-circle cursorPointer" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_INFO')}"></i>&nbsp;&nbsp;
+								</div>
+							{/if}
+							<button class="btn btn-success btn-sm detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
 						</div>
 					</div>
 					{if $FIELD_MODEL->getProfileReadWritePermission()}
@@ -174,12 +171,6 @@
 																{vtranslate('LBL_EDIT',$MODULE_NAME)}
 															</a>
 														{/if}
-														{if $IS_DELETABLE}
-															{if $IS_CREATABLE}&nbsp;&nbsp;&nbsp;{/if}
-															<a href="javascript:void(0);" class="cursorPointer deleteCommentSummary feedback" style="color: blue;">
-																{vtranslate('LBL_DELETE',$MODULE_NAME)}
-															</a>
-														{/if}
 													</span>
 												</div>
 												{if $COMMENT->getCommentedTime() neq $COMMENT->getModifiedTime()}
@@ -236,7 +227,7 @@
 					</label>
 				</div>
 			{/if}
-			<button class="btn btn-success btn-lg detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
+			<button class="btn btn-success btn-sm detailViewSaveComment" type="button" data-mode="add">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
 			<a href="javascript:void(0);" class="cursorPointer closeCommentBlock cancelLink" type="reset">{vtranslate('LBL_CANCEL', $MODULE_NAME)}</a>
 		</div>
 	</div>
@@ -252,7 +243,7 @@
 		</div>
 		<input type="hidden" name="is_private">
 		<div class="pull-right row">
-			<button class="btn btn-success btn-lg detailViewSaveComment" type="button" data-mode="edit">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
+			<button class="btn btn-success btn-sm detailViewSaveComment" type="button" data-mode="edit">{vtranslate('LBL_POST', $MODULE_NAME)}</button>
 			<a href="javascript:void(0);" class="cursorPointer closeCommentBlock cancelLink" type="reset">{vtranslate('LBL_CANCEL', $MODULE_NAME)}</a>
 		</div>
 	</div>

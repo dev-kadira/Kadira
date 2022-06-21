@@ -6,12 +6,13 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 require_once 'modules/Emails/mail.php';
-class Inventory_Save_Action extends Vtiger_Save_Action
-{
-	protected function getRecordModelFromRequest(Vtiger_Request $request)
-	{
+class Inventory_Save_Action extends Vtiger_Save_Action {
+    
+    protected function getRecordModelFromRequest(Vtiger_Request $request) {
 		return parent::getRecordModelFromRequest($request);
+		
 	}
+    
 }

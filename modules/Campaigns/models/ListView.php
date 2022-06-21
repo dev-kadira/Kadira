@@ -6,48 +6,48 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Campaigns_ListView_Model extends Vtiger_ListView_Model
-{
+class Campaigns_ListView_Model extends Vtiger_ListView_Model {
+
 	/**
 	 * Function to get the list of listview links for the module
 	 * @param <Array> $linkParams
 	 * @return <Array> - Associate array of Link Type to List of Vtiger_Link_Model instances
 	 */
-	public function getListViewLinks($linkParams)
-	{
+	public function getListViewLinks($linkParams) {
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 		$moduleModel = $this->getModule();
 
-		$linkTypes = ['LISTVIEWBASIC', 'LISTVIEW', 'LISTVIEWSETTING'];
+		$linkTypes = array('LISTVIEWBASIC', 'LISTVIEW', 'LISTVIEWSETTING');
 		$links = Vtiger_Link_Model::getAllByType($moduleModel->getId(), $linkTypes, $linkParams);
 
-		$basicLinks = [];
+		$basicLinks = array();
 
 		$createPermission = Users_Privileges_Model::isPermitted($moduleModel->getName(), 'CreateView');
-		if ($createPermission) {
-			$basicLinks[] = [
-				'linktype'  => 'LISTVIEWBASIC',
-				'linklabel' => 'LBL_ADD_RECORD',
-				'linkurl'   => $moduleModel->getCreateRecordUrl(),
-				'linkicon'  => ''
-			];
+		if($createPermission) {
+			$basicLinks[] = array(
+					'linktype' => 'LISTVIEWBASIC',
+					'linklabel' => 'LBL_ADD_RECORD',
+					'linkurl' => $moduleModel->getCreateRecordUrl(),
+					'linkicon' => ''
+			);
 		}
 
-		foreach ($basicLinks as $basicLink) {
+		foreach($basicLinks as $basicLink) {
 			$links['LISTVIEWBASIC'][] = Vtiger_Link_Model::getInstanceFromValues($basicLink);
 		}
 
-		$advancedLinks = [];
+		$advancedLinks = array();
 
-		foreach ($advancedLinks as $advancedLink) {
+		foreach($advancedLinks as $advancedLink) {
 			$links['LISTVIEW'][] = Vtiger_Link_Model::getInstanceFromValues($advancedLink);
 		}
+        
+        if($currentUserModel->isAdminUser()) {
 
-		if ($currentUserModel->isAdminUser()) {
 			$settingsLinks = $this->getSettingLinks();
-			foreach ($settingsLinks as $settingsLink) {
+			foreach($settingsLinks as $settingsLink) {
 				$links['LISTVIEWSETTING'][] = Vtiger_Link_Model::getInstanceFromValues($settingsLink);
 			}
 		}

@@ -14,8 +14,8 @@ $languageStrings = array(
 	'LBL_SEND_MAIL_PDF'            => 'Send Email with PDF'         , // TODO: Review
 	'LBL_ADD_RECORD'               => 'Add Purchase Order'          , 
 	'LBL_RECORDS_LIST'             => 'Purchase Order List'         , 
-	'LBL_COPY_SHIPPING_ADDRESS'    => 'Copy Shipping Address'       , // TODO: Review
-	'LBL_COPY_BILLING_ADDRESS'     => 'Copy Billing Address'        , // TODO: Review
+	'LBL_COPY_SHIPPING_ADDRESS'    => 'Copy Delivery Address'       , // TODO: Review
+	'LBL_COPY_BILLING_ADDRESS'     => 'Copy Invoice Address'        , // TODO: Review
 	'LBL_PO_INFORMATION'           => 'Purchase Order Information'  , 
 	'PurchaseOrder No'             => 'Purchase Order No.'          , 
 	'Requisition No'               => 'Requisition No.'             , 
@@ -27,11 +27,11 @@ $languageStrings = array(
         'LBL_LIST_PRICE'               => 'List Price',
         'List Price'                   => 'List Price',
     'LBL_COPY_COMPANY_ADDRESS' => 'Copy Company Address',
-    'LBL_COPY_ACCOUNT_ADDRESS' => 'Copy Organization Address',
+    'LBL_COPY_ACCOUNT_ADDRESS' => 'Copy Organisation Address',
 	'LBL_SELECT_ADDRESS_OPTION' => 'Select Address to copy',
-	'LBL_BILLING_ADDRESS' => 'Billing Address',
+	'LBL_BILLING_ADDRESS' => 'Invoice Address',
 	'LBL_COMPANY_ADDRESS' => 'Company Address',
-	'LBL_ACCOUNT_ADDRESS' => 'Organization Address',
+	'LBL_ACCOUNT_ADDRESS' => 'Organisation Address',
 	'LBL_VENDOR_ADDRESS' => 'Vendor Address',
 	'LBL_CONTACT_ADDRESS' => 'Contact Address',
 
@@ -42,14 +42,14 @@ $languageStrings = array(
 );
 
 $jsLanguageStrings = array(
-    'JS_ORGANIZATION_NOT_FOUND'=> 'Organization empty',
-    'JS_ORGANIZATION_NOT_FOUND_MESSAGE'=> 'Please select an organization before you copy address',
-	'JS_ACCOUNT_NOT_FOUND' => 'Organization empty!',
-	'JS_ACCOUNT_NOT_FOUND_MESSAGE' =>  'Please select an organization before you copy address',
+    'JS_ORGANIZATION_NOT_FOUND'=> 'Organisation empty',
+    'JS_ORGANIZATION_NOT_FOUND_MESSAGE'=> 'Please select an organisation before you copy the address',
+	'JS_ACCOUNT_NOT_FOUND' => 'Organisation empty!',
+	'JS_ACCOUNT_NOT_FOUND_MESSAGE' =>  'Please select an organisation before you copy the address',
 	'JS_VENDOR_NOT_FOUND' => 'Vendor Empty', 
-	'JS_VENDOR_NOT_FOUND_MESSAGE' => 'Please select an vendor before you copy address',
+	'JS_VENDOR_NOT_FOUND_MESSAGE' => 'Please select a vendor before you copy the address',
 	'JS_CONTACT_NOT_FOUND' => 'Contact Empty', 
-	'JS_CONTACT_NOT_FOUND_MESSAGE' =>  'Please select an contact before you copy address',
+	'JS_CONTACT_NOT_FOUND_MESSAGE' =>  'Please select a contact before you copy the address',
 
   'JS_PLEASE_REMOVE_LINE_ITEM_THAT_IS_DELETED' => 'Please remove line item that is deleted',
 

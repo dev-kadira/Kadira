@@ -99,4 +99,10 @@ $languageStrings = array(
 	'LBL_UPLOAD_ICS'=>'Upload ICS File',
 	'LBL_IMPORT_FROM_ICS_FILE'=>'Import from ICS file',
 	'LBL_SELECT_ICS_FILE' => 'Select ICS file',
+    
+        //Scheduled Import translations
+        'LBL_ENABLE_CRON' => '<b>Please do enable Scheduled Import cron job from settings scheduler</b>',
+        'LBL_SCHEDULE_IMPORT_SUBJECT' => 'vtiger CRM - Scheduled Import Report for',
+        'LBL_IMPORT_COMPLETED' => 'vtiger CRM has just completed your import process. <br/><br/>',
+        'LBL_CHECK_IMPORT_STATUS' => '<br/><br/> We recommend you to login to the CRM and check few records to confirm that the import has been successful.'
 );

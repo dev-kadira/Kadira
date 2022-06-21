@@ -24,6 +24,13 @@
                         </td>
                     </tr>
                 {/if}
+                {if $ENABLE_SCHEDULE_IMPORT_CRON}
+                    <tr>
+                        <td style="padding-left: 15px;">
+                            {'LBL_ENABLE_CRON'|@vtranslate:$MODULE}
+                        </td>
+                    </tr>
+                {/if}
                 <tr>
                     <td>
                         <table cellpadding="10" cellspacing="0" align="center" class="table table-borderless">

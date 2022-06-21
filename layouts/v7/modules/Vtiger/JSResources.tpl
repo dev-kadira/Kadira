@@ -13,7 +13,7 @@
     <script type="text/javascript" src="{vresource_url('layouts/v7/lib/jquery/purl.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/lib/jquery/select2/select2.min.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/lib/jquery/jquery.class.min.js')}"></script>
-    <script type="text/javascript" src="{vresource_url('layouts/v7/lib/jquery/jquery-ui-1.11.3.custom/jquery-ui.js')}"></script>
+    <script type="text/javascript" src="{vresource_url('layouts/v7/lib/jquery/jquery-ui-1.12.0.custom/jquery-ui.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/lib/todc/js/popper.min.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/lib/todc/js/bootstrap.min.js')}"></script>
     <script type="text/javascript" src="{vresource_url('libraries/jquery/jstorage.min.js')}"></script>
@@ -53,10 +53,7 @@
     <script type="text/javascript" src="{vresource_url('layouts/v7/modules/Google/resources/Settings.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/modules/Vtiger/resources/CkEditor.js')}"></script>
     <script type="text/javascript" src="{vresource_url('layouts/v7/modules/Documents/resources/Documents.js')}"></script>
-    {*Salesplatform.ru begin PBXManager porting*}
-    <script type="text/javascript" src="libraries/visibility/visibility.min.js"></script>
-    <script type="text/javascript" src="libraries/jquery/pnotify/jquery.pnotify.min.js"></script>
-    {*Salesplatform.ru end PBXManager porting*}    
+   
     {foreach key=index item=jsModel from=$SCRIPTS}
         <script type="{$jsModel->getType()}" src="{vresource_url($jsModel->getSrc())}"></script>
     {/foreach}

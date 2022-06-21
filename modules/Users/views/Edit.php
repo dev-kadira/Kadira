@@ -6,18 +6,16 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Users_Edit_View extends Users_PreferenceEdit_View
-{
-	public function preProcess(Vtiger_Request $request)
-	{
+Class Users_Edit_View extends Users_PreferenceEdit_View {
+
+	public function preProcess(Vtiger_Request $request) {
 		parent::preProcess($request, false);
 		$this->preProcessSettings($request);
 	}
 
-	public function preProcessSettings(Vtiger_Request $request)
-	{
+	public function preProcessSettings(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 		$qualifiedModuleName = $request->getModule(false);
@@ -27,11 +25,11 @@ class Users_Edit_View extends Users_PreferenceEdit_View
 		$settingsModel = Settings_Vtiger_Module_Model::getInstance();
 		$menuModels = $settingsModel->getMenus();
 
-		if (! empty($selectedMenuId)) {
+		if(!empty($selectedMenuId)) {
 			$selectedMenu = Settings_Vtiger_Menu_Model::getInstanceById($selectedMenuId);
-		} elseif (! empty($moduleName) && $moduleName != 'Vtiger') {
-			$fieldItem = Settings_Vtiger_Index_View::getSelectedFieldFromModule($menuModels, $moduleName);
-			if ($fieldItem) {
+		} elseif(!empty($moduleName) && $moduleName != 'Vtiger') {
+			$fieldItem = Settings_Vtiger_Index_View::getSelectedFieldFromModule($menuModels,$moduleName);
+			if($fieldItem){
 				$selectedMenu = Settings_Vtiger_Menu_Model::getInstanceById($fieldItem->get('blockid'));
 				$fieldId = $fieldItem->get('fieldid');
 			} else {
@@ -44,20 +42,20 @@ class Users_Edit_View extends Users_PreferenceEdit_View
 			$firstKey = key($menuModels);
 			$selectedMenu = $menuModels[$firstKey];
 		}
+        
+        //Specific change for Vtiger7
+        $settingsMenItems = array();
+        foreach($menuModels as $menuModel) {
+            $menuItems = $menuModel->getMenuItems();
+            foreach($menuItems as $menuItem) {
+                $settingsMenItems[$menuItem->get('name')] = $menuItem;
+            }
+        }
+        $viewer->assign('SETTINGS_MENU_ITEMS', $settingsMenItems);
+        $viewer->assign('ACTIVE_BLOCK', array('block' => 'LBL_USER_MANAGEMENT', 
+                                              'menu' => 'LBL_USERS'));
 
-		//Specific change for Vtiger7
-		$settingsMenItems = [];
-		foreach ($menuModels as $menuModel) {
-			$menuItems = $menuModel->getMenuItems();
-			foreach ($menuItems as $menuItem) {
-				$settingsMenItems[$menuItem->get('name')] = $menuItem;
-			}
-		}
-		$viewer->assign('SETTINGS_MENU_ITEMS', $settingsMenItems);
-		$viewer->assign('ACTIVE_BLOCK', ['block' => 'LBL_USER_MANAGEMENT',
-			'menu'                                  => 'LBL_USERS']);
-
-		$viewer->assign('SELECTED_FIELDID', $fieldId);
+		$viewer->assign('SELECTED_FIELDID',$fieldId);
 		$viewer->assign('SELECTED_MENU', $selectedMenu);
 		$viewer->assign('SETTINGS_MENUS', $menuModels);
 		$viewer->assign('MODULE', $moduleName);
@@ -67,36 +65,32 @@ class Users_Edit_View extends Users_PreferenceEdit_View
 		$viewer->view('SettingsMenuStart.tpl', $qualifiedModuleName);
 	}
 
-	public function postProcessSettings(Vtiger_Request $request)
-	{
+	public function postProcessSettings(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$qualifiedModuleName = $request->getModule(false);
 		$viewer->view('SettingsMenuEnd.tpl', $qualifiedModuleName);
 	}
 
-	public function postProcess(Vtiger_Request $request)
-	{
+	public function postProcess(Vtiger_Request $request) {
 		$this->postProcessSettings($request);
 		parent::postProcess($request);
 	}
-
-	public function getHeaderScripts(Vtiger_Request $request)
-	{
+	
+	public function getHeaderScripts(Vtiger_Request $request) {
 		$headerScriptInstances = parent::getHeaderScripts($request);
 		$moduleName = $request->getModule();
 
-		$jsFileNames = [
+		$jsFileNames = array(
 			'modules.Settings.Vtiger.resources.Index',
-			'~layouts/v7/lib/jquery/Lightweight-jQuery-In-page-Filtering-Plugin-instaFilta/instafilta.js',
-		];
+			"~layouts/v7/lib/jquery/Lightweight-jQuery-In-page-Filtering-Plugin-instaFilta/instafilta.js",
+		);
 
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-
-		return array_merge($headerScriptInstances, $jsScriptInstances);
+		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+		return $headerScriptInstances;
 	}
-
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		parent::process($request);
 	}
 }

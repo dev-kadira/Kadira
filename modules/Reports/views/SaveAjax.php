@@ -6,20 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Reports_SaveAjax_View extends Vtiger_IndexAjax_View
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Reports_SaveAjax_View extends Vtiger_IndexAjax_View {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 		return $permissions;
 	}
-
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		$mode = $request->getMode();
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
@@ -40,7 +37,7 @@ class Reports_SaveAjax_View extends Vtiger_IndexAjax_View
 			$reportModel->saveAdvancedFilters();
 			$reportData = $reportModel->getReportData($pagingModel);
 			$data = $reportData['data'];
-		} elseif ($mode === 'generate') {
+		} else if ($mode === 'generate') {
 			$reportData = $reportModel->generateData($pagingModel);
 			$data = $reportData['data'];
 		}
@@ -52,14 +49,14 @@ class Reports_SaveAjax_View extends Vtiger_IndexAjax_View
 		$viewer->assign('RECORD_ID', $record);
 		$viewer->assign('PAGING_MODEL', $pagingModel);
 		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('NEW_COUNT', $reportData['count']);
+		$viewer->assign('NEW_COUNT',$reportData['count']);
 		$viewer->assign('REPORT_RUN_INSTANCE', ReportRun::getInstance($record));
 		$viewer->assign('REPORT_MODEL', $reportModel);
 		$viewer->view('ReportContents.tpl', $moduleName);
 	}
 
-	public function validateRequest(Vtiger_Request $request)
-	{
+	public function validateRequest(Vtiger_Request $request) {
 		$request->validateWriteAccess();
 	}
+
 }

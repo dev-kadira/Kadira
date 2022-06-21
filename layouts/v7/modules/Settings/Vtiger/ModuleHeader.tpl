@@ -174,7 +174,7 @@
 							{foreach item=LISTVIEW_BASICACTION from=$LISTVIEW_LINKS['LISTVIEWBASIC']}
 								{if $MODULE eq 'Users'} {assign var=LANGMODULE value=$MODULE} {/if}
 								<li>
-									<button class="btn btn-outline-primary addButton module-buttons"
+									<button class="btn btn-default addButton module-buttons"
 										id="{$MODULE}_listView_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($LISTVIEW_BASICACTION->getLabel())}" 
 										{if $MODULE eq 'Workflows'}
 											onclick='Settings_Workflows_List_Js.triggerCreate("{$LISTVIEW_BASICACTION->getUrl()}&mode=V7Edit")'

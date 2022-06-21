@@ -38,7 +38,7 @@ class Mobile_WS_FetchModuleOwners extends Mobile_WS_Controller {
             $userRecord = Users_Record_Model::getInstanceById($userId, 'Users');
             $usersList[] = array(
                 'value' => $usersWSId . 'x' . $userId,
-                'label' => decode_html($userRecord->get("first_name") . ' ' . $userRecord->get('last_name'))
+                'label' => decode_html($userRecord->get("userlabel"))
             );
         }
         return $usersList;

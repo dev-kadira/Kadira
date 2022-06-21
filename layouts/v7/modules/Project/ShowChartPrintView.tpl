@@ -23,7 +23,6 @@
 			<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css" type="text/css">
 
 			<script src="libraries/jquery/jquery.min.js"></script>
-			<script src="libraries/jquery/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
 
 			<script src="libraries/jquery/gantt/libs/jquery.livequery.min.js"></script>
 			<script src="libraries/jquery/gantt/libs/jquery.timers.js"></script>
@@ -96,7 +95,7 @@
 			<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
 			<div id="gantEditorTemplates" style="display:none;">
 				<div class="__template__" type="TASKSEDITHEAD"><!--
-				<table class="gdfTable" cellspacing="0" cellpadding="0" style="width: 1000px; top: 0px;">
+				<table class="gdfTable" cellspacing="0" cellpadding="0">
 				 <thead>
 				 <tr style='height:50px'>
 					<th class="gdfColHeader" style="width:35px;"></th>

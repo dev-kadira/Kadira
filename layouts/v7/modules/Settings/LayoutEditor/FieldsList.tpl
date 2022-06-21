@@ -15,7 +15,7 @@
 
 	<div class="row fieldsListContainer" style="padding:1% 0">
 		<div class="col-sm-6">
-			<button class="btn btn-outline-primary addButton addCustomBlock" type="button">
+			<button class="btn btn-default addButton addCustomBlock" type="button">
 				<i class="fa fa-plus"></i>&nbsp;&nbsp;
 				{vtranslate('LBL_ADD_CUSTOM_BLOCK', $QUALIFIED_MODULE)}
 			</button>
@@ -60,7 +60,7 @@
 										</span>
 										&nbsp;
 										{if $BLOCK_MODEL->isAddCustomFieldEnabled()}
-											<button class="btn btn-outline-primary addButton btn-sm addCustomField" type="button">
+											<button class="btn btn-default addButton btn-sm addCustomField" type="button">
 												<i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_CUSTOM_FIELD', $QUALIFIED_MODULE)}
 											</button>&nbsp;&nbsp;
 										{/if}
@@ -457,7 +457,7 @@
 								{if $BLOCK_MODEL->isHidden()} checked value='0' {else} value='1' {/if} class ='cursorPointer' id="hiddenCollapseBlock" name="" 
 								data-on-text="{vtranslate('LBL_YES', $QUALIFIED_MODULE)}" data-off-text="{vtranslate('LBL_NO', $QUALIFIED_MODULE)}" data-on-color="primary" data-block-id="{$BLOCK_MODEL->get('id')}"/>
 					</span>&nbsp;
-					<button class="btn btn-outline-primary addButton addCustomField" type="button">
+					<button class="btn btn-default addButton addCustomField" type="button">
 						<i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_CUSTOM_FIELD', $QUALIFIED_MODULE)}
 					</button>&nbsp;&nbsp;
 					<button class="inActiveFields addButton btn btn-default btn-sm">{vtranslate('LBL_SHOW_HIDDEN_FIELDS', $QUALIFIED_MODULE)}</button>&nbsp;&nbsp;

@@ -6,26 +6,29 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Documents_Edit_View extends Vtiger_Edit_View
-{
+Class Documents_Edit_View extends Vtiger_Edit_View {
+	
 	/**
 	 * Function to get the list of Script models to be included
 	 * @param Vtiger_Request $request
 	 * @return <Array> - List of Vtiger_JsScript_Model instances
 	 */
-	public function getHeaderScripts(Vtiger_Request $request)
-	{
+	function getHeaderScripts(Vtiger_Request $request) {
 		$headerScriptInstances = parent::getHeaderScripts($request);
 
-		$jsFileNames = [
-			'libraries.jquery.ckeditor.ckeditor',
-			'libraries.jquery.ckeditor.adapters.jquery',
-			'modules.Vtiger.resources.CkEditor',
-		];
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+		$moduleName = $request->getModule();
 
-		return array_merge($headerScriptInstances, $jsScriptInstances);
+		$jsFileNames = array(
+				"libraries.jquery.ckeditor.ckeditor",
+				"libraries.jquery.ckeditor.adapters.jquery",
+				'modules.Vtiger.resources.CkEditor',
+		);
+		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+		return $headerScriptInstances;
 	}
+
 }
+?>

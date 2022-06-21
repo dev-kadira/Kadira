@@ -6,34 +6,31 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 /**
  * Vtiger Action Model Class
  */
-class Vtiger_Utility_Model extends Vtiger_Action_Model
-{
-	public function isUtilityTool()
-	{
+class Vtiger_Utility_Model extends Vtiger_Action_Model {
+
+	public function isUtilityTool() {
 		return true;
 	}
 
-	public function isModuleEnabled($module)
-	{
+	public function isModuleEnabled($module) {
 		$db = PearDatabase::getInstance();
-		if (! $module->isEntityModule()) {
-			if (! $module->isUtilityActionEnabled()) {
-				return false;
-			}
+		if(!$module->isEntityModule()) {
+            if(!$module->isUtilityActionEnabled())
+                return false;
 		}
 		$tabId = $module->getId();
 		$sql = 'SELECT 1 FROM vtiger_profile2utility WHERE tabid = ? AND activityid = ? LIMIT 1';
-		$params = [$tabId, $this->getId()];
+		$params = array($tabId, $this->getId());
 		$result = $db->pquery($sql, $params);
-		if ($result && $db->num_rows($result) > 0) {
+		if($result && $db->num_rows($result) > 0) {
 			return true;
 		}
-
 		return false;
 	}
+
 }

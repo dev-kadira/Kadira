@@ -8,24 +8,27 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  * ********************************************************************************** */
-// Class for reloading the Reports headers
+/*
+ * Class for reloading the Reports headers
+ */
 
-class Reports_ListAjax_View extends Reports_List_View
-{
-	public function __construct()
-	{
+class Reports_ListAjax_View extends Reports_List_View {
+	
+	function __construct() {
 		parent::__construct();
 		$this->exposeMethod('getListViewCount');
 		$this->exposeMethod('getRecordsCount');
 		$this->exposeMethod('getPageCount');
 	}
 
-	public function process(Vtiger_Request $request)
-	{
-		$mode = $request->get('mode');
-		if (! empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
+	function preProcess(Vtiger_Request $request, $display=true) {
+		
+	}
 
+	function process(Vtiger_Request $request) {
+		$mode = $request->get('mode');
+		if(!empty($mode)) {
+			$this->invokeExposedMethod($mode, $request);
 			return;
 		}
 		$viewer = $this->getViewer($request);
@@ -43,4 +46,5 @@ class Reports_ListAjax_View extends Reports_List_View
 
 		$viewer->view('ListViewFolders.tpl', $moduleName);
 	}
+
 }

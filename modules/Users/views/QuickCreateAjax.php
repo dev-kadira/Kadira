@@ -6,26 +6,23 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Users_QuickCreateAjax_View extends Vtiger_QuickCreateAjax_View
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
-		return [];
+class Users_QuickCreateAjax_View extends Vtiger_QuickCreateAjax_View {
+
+	public function requiresPermission(\Vtiger_Request $request) {
+		return array();
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+    
+    public function checkPermission(Vtiger_Request $request) {
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
 
-		if (! $currentUserModel->isAdminUser()) {
+		if (!$currentUserModel->isAdminUser()) {
 			throw new AppException(vtranslate('LBL_PERMISSION_DENIED', 'Vtiger'));
 		}
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 
 		$recordModel = Users_Record_Model::getCleanInstance($moduleName);
@@ -34,17 +31,15 @@ class Users_QuickCreateAjax_View extends Vtiger_QuickCreateAjax_View
 		$fieldList = $moduleModel->getFields();
 		$requestFieldList = array_intersect_key($request->getAll(), $fieldList);
 
-		foreach ($requestFieldList as $fieldName => $fieldValue) {
+		foreach($requestFieldList as $fieldName => $fieldValue){
 			$fieldModel = $fieldList[$fieldName];
-			if ($fieldModel->isEditable()) {
+			if($fieldModel->isEditable()) {
 				$recordModel->set($fieldName, $fieldModel->getDBInsertValue($fieldValue));
 			}
 		}
 
-		$recordStructureInstance = Users_RecordStructure_Model::getInstanceFromRecordModel(
-			$recordModel,
-			Users_RecordStructure_Model::RECORD_STRUCTURE_MODE_QUICKCREATE
-		);
+		$recordStructureInstance = Users_RecordStructure_Model::getInstanceFromRecordModel($recordModel,
+										Users_RecordStructure_Model::RECORD_STRUCTURE_MODE_QUICKCREATE);
 
 		$viewer = $this->getViewer($request);
 		$viewer->assign('CURRENTDATE', date('Y-n-j'));
@@ -57,17 +52,20 @@ class Users_QuickCreateAjax_View extends Vtiger_QuickCreateAjax_View
 
 		$viewer->assign('SCRIPTS', $this->getHeaderScripts($request));
 
-		echo $viewer->view('QuickCreate.tpl', $moduleName, true);
+		echo $viewer->view('QuickCreate.tpl',$moduleName,true);
+
 	}
 
-	public function getHeaderScripts(Vtiger_Request $request)
-	{
+
+	public function getHeaderScripts(Vtiger_Request $request) {
+
 		$moduleName = $request->getModule();
 
-		$jsFileNames = [
-			"modules.${moduleName}.resources.Edit"
-		];
+		$jsFileNames = array(
+			"modules.$moduleName.resources.Edit"
+		);
 
-		return $this->checkAndConvertJsScripts($jsFileNames);
+		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+		return $jsScriptInstances;
 	}
 }

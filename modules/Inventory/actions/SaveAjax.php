@@ -6,7 +6,6 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
-class Inventory_SaveAjax_Action extends Vtiger_SaveAjax_Action
-{
+ *************************************************************************************/
+class Inventory_SaveAjax_Action extends Vtiger_SaveAjax_Action {
 }

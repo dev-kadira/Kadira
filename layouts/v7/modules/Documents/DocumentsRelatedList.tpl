@@ -38,7 +38,7 @@
                                 {elseif $RELATED_LINK->get('_linklabel') === '_add_task'}
                                     {assign var=RELATED_MODULE_NAME value='Calendar'}
                                 {/if}
-                                <button type="button" module="{$RELATED_MODULE_NAME}"  class="btn addButton btn-outline-primary
+                                <button type="button" module="{$RELATED_MODULE_NAME}"  class="btn addButton btn-default
                                     {if $IS_SELECT_BUTTON eq true} selectRelation {/if} "
                                     {if $IS_SELECT_BUTTON eq true} data-moduleName={$RELATED_LINK->get('_module')->get('name')} {/if}
                                     {if ($RELATED_LINK->isPageLoadLink())}
@@ -53,7 +53,7 @@
 								{if $IS_CREATE_PERMITTED}
 									<div class="col-sm-3">
 										<div class="dropdown">
-											<button type="button" class="btn btn-lg btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 												<span class="fa fa-plus" title="{vtranslate('LBL_NEW_DOCUMENT', $MODULE)}"></span>&nbsp;&nbsp;{vtranslate('LBL_NEW_DOCUMENT', $RELATED_MODULE_NAME)}&nbsp; <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu">
@@ -134,20 +134,16 @@
                 </tr>
                 <tr class="searchRow">
                         <th class="inline-search-btn">
-                            <button class="btn btn-success btn-lg" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
+                            <button class="btn btn-success btn-sm" data-trigger="relatedListSearch">{vtranslate("LBL_SEARCH",$MODULE)}</button>
                         </th>
                             {foreach item=HEADER_FIELD from=$RELATED_HEADERS}
                                 <th>
                                     {if $HEADER_FIELD->get('column') eq 'time_start' or $HEADER_FIELD->get('column') eq 'time_end' or $HEADER_FIELD->get('column') eq 'folderid' or $HEADER_FIELD->getFieldDataType() eq 'reference'}
                                     {else}    
                                         {assign var=FIELD_UI_TYPE_MODEL value=$HEADER_FIELD->getUITypeModel()}
-                                        {assign var=SEARCH_DETAILS_FIELD_INFO value=array('searchValue' => '', 'comparator' => '')}
-                                        {if isset($SEARCH_DETAILS[$HEADER_FIELD->getName()])}
-                                            {assign var=SEARCH_DETAILS_FIELD_INFO value=$SEARCH_DETAILS[$HEADER_FIELD->getName()]}
-                                        {/if}
                                         {include file=vtemplate_path($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(),$RELATED_MODULE_NAME)
-                                        FIELD_MODEL= $HEADER_FIELD SEARCH_INFO=$SEARCH_DETAILS_FIELD_INFO USER_MODEL=$USER_MODEL}
-                                        <input type="hidden" class="operatorValue" value="{$SEARCH_DETAILS_FIELD_INFO['comparator']}">
+                                        FIELD_MODEL= $HEADER_FIELD SEARCH_INFO=$SEARCH_DETAILS[$HEADER_FIELD->getName()] USER_MODEL=$USER_MODEL}
+                                        <input type="hidden" class="operatorValue" value="{$SEARCH_DETAILS[$HEADER_FIELD->getName()]['comparator']}">
                                     {/if}
                                 </th>
                             {/foreach}
@@ -168,7 +164,7 @@
                         <span class="actionImages">
                             <a name="relationEdit" data-url="{$RELATED_RECORD->getEditViewUrl()}"><i title="{vtranslate('LBL_EDIT', $MODULE)}" class="fa fa-pencil"></i></a> &nbsp;&nbsp;
                             {if $IS_DELETABLE}
-                            <a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="fa fa-chain-broken"></i></a>&nbsp;&nbsp;
+                            <a class="relationDelete"><i title="{vtranslate('LBL_UNLINK', $MODULE)}" class="vicon-linkopen"></i></a>&nbsp;&nbsp;
                             {/if}
                             {assign var=RECORD_ID value=$RELATED_RECORD->getId()}
                             {assign var="DOCUMENT_RECORD_MODEL" value=Vtiger_Record_Model::getInstanceById($RECORD_ID)}

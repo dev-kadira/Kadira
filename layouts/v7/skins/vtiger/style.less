@@ -576,7 +576,7 @@ a.menu-item:hover{
     color: #fff;
     cursor: pointer;
     display: block;
-    background-color: #005191;
+    background-color: #175388;
     padding: 2.5% 2% !important;
     margin-left: 2px;
     opacity: 0.8;
@@ -676,6 +676,7 @@ a.menu-item:hover{
 }
 .app-menu .app-list-divider {
     border-top: 1px solid;
+    color: #2a6192;
 }
 .app-menu .menu-items-wrapper {
     padding-left: 8px;
@@ -758,7 +759,7 @@ a.menu-item:hover{
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease;
-    background: #005191;
+    background: #2c3b49;
     padding: 6px;
     border-radius: 20px;
     margin-top: -2px;
@@ -860,7 +861,6 @@ a.menu-item:hover{
     height: inherit;
 }
 .viewContent .content-area{
-    padding-top: 10px;
     padding-left : 3%;
 }
 .viewContent .content-area.full-width{
@@ -981,10 +981,12 @@ input[type="password"].inputElement{
     width : 100%;
     min-width: 100px;
 }
-.listViewContentHeader{
-    background-color: #efefef;
-}
+
 .listViewContentHeaderValues{
+    //width : 96%;
+    //overflow:hidden;
+    //text-overflow: ellipsis;
+    //display: inline-block;
     vertical-align: middle; 
     white-space: nowrap;
 }
@@ -1265,7 +1267,7 @@ input[type="password"].inputElement{
 }
 .integrations-container > div:hover,
 .common-links-container > div:hover{
-    background: #005191;
+    background: #2c3b49;
 }
 .integrations-container > div a,
 .common-links-container > div a{
@@ -1607,7 +1609,6 @@ ul.unstyled{
     margin-top: 10px;
     overflow: scroll;
     border-width: thin;
-    margin-left: 1px;
 }
 
 .listview-table{
@@ -1969,8 +1970,6 @@ strong, b, th{
 }
 .detailview-table {
     table-layout : fixed;
-    border-spacing: 3px 3px;
-    border-collapse: separate;
 }
 
 .detailViewInfo .fieldLabel{
@@ -1978,11 +1977,6 @@ strong, b, th{
 }
 .detailview-table .fieldLabel{
     width : 20%;
-    border: 0px;
-    font-weight: bold;
-    background-color: #ededed;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
 }
 
 .detailview-table .fieldValue{
@@ -3096,7 +3090,7 @@ strong, b, th{
     display: inline-block;
     width: 100%;
     float:left;
-    background: #005191;
+    background: #2c3b49;
     height: 100%;
 }
 
@@ -3419,7 +3413,7 @@ strong, b, th{
 }
 
 .updates_timeline #more_button .update_icon .moreRecentUpdates{
-    background: #005191;
+    background: #2c3b49;
     border-radius: 15%;
 }
 
@@ -6499,7 +6493,7 @@ hr{
     margin: 20px 0px 20px 0px;
 }
 .highLightMail{
-    background-color: #005191;
+    background-color: #2C3B49;
 }
 .whiteFont{
     color: #FFFFFF;
@@ -6882,13 +6876,13 @@ div.tooltip-inner{
 
 //calender settings select2 issues
 #detailView .detailview-table .input-group.editElement,
-.calendar-timezone .input-group.editElement {
-    width: auto;
-    display: inline-flex;
+.calendar-timezone .input-group.editElement{
+    width:100%;
+    display: inline-block;
 }
-.summaryViewEntries .input-group.editElement {
-  width: auto;
-  display: inline-flex;
+.summaryViewEntries .input-group.editElement{
+   width:100%;
+    display:flex;
 }
 .summaryView .summaryViewFields .input-group{
     line-height: 0; 
@@ -8694,10 +8688,7 @@ body .fc {
     opacity: 0;
     z-index: 10001;
     background-color: #fff;
-    position: relative;
-    display: inline-flex;
 }
-
 .fieldBlockContainer .inputElement.textAreaElement {
     max-width:none;
     width: 100%;

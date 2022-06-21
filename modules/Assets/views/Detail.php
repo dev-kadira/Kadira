@@ -6,14 +6,14 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ ************************************************************************************/
 
-class Assets_Detail_View extends Vtiger_Detail_View
-{
-	public function preProcess(Vtiger_Request $request)
-	{
+class Assets_Detail_View extends Vtiger_Detail_View {
+
+	function preProcess(Vtiger_Request $request) {
 		$viewer = $this->getViewer($request);
 		$viewer->assign('NO_SUMMARY', true);
 		parent::preProcess($request);
 	}
+
 }

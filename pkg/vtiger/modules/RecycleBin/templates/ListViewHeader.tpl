@@ -16,7 +16,7 @@
 				<span class="btn-toolbar span4">
 					{if $LISTVIEW_MASSACTIONS}
 					<span class="btn-group listViewMassActions">
-						<button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"><strong>{vtranslate('LBL_ACTIONS', $MODULE)}</strong>&nbsp;&nbsp;<i class="caret"></i></button>
+						<button class="btn dropdown-toggle" data-toggle="dropdown"><strong>{vtranslate('LBL_ACTIONS', $MODULE)}</strong>&nbsp;&nbsp;<i class="caret"></i></button>
 						<ul class="dropdown-menu">
 							{foreach item="LISTVIEW_MASSACTION" from=$LISTVIEW_MASSACTIONS}
 								<li id="{$MODULE}_listView_massAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($LISTVIEW_MASSACTION->getLabel())}">

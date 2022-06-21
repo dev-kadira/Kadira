@@ -43,7 +43,7 @@
                 <div class="span4">
                     <span class="btn-group pull-right">
                         <button class="btn" id="relatedListPreviousPageButton" {if !$PAGING->isPrevPageExists()} disabled="disabled" {/if} type="button"><span class="icon-chevron-left"></span></button>
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="relatedListPageJump" data-toggle="dropdown" {if $PAGE_COUNT eq 1} disabled {/if}">
+                        <button class="btn dropdown-toggle" type="button" id="relatedListPageJump" data-toggle="dropdown" {if $PAGE_COUNT eq 1} disabled {/if}">
                                 <i class="vtGlyph vticon-pageJump" title="{vtranslate('LBL_LISTVIEW_PAGE_JUMP',$moduleName)}"></i>
                         </button>
                         <ul class="listViewBasicAction dropdown-menu" id="relatedListPageJumpDropDown">
@@ -111,7 +111,7 @@
                                            class="editListPrice cursorPointer" data-related-recordid='{$RELATED_RECORD->getId()}' data-list-price={$LISTPRICE}>
                                             <i class="icon-pencil alignMiddle" title="{vtranslate('LBL_EDIT', $MODULE)}"></i>
                                         </a>
-                                        <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-remove-circle alignMiddle"></i></a>
+                                        <a class="relationDelete"><i title="{vtranslate('LBL_DELETE', $MODULE)}" class="icon-trash alignMiddle"></i></a>
                                     </span>
                                 </div>
                             </td>

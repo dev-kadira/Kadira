@@ -22,10 +22,10 @@
 			{assign var=CALENDAR_MODEL value = Vtiger_Module_Model::getInstance('Calendar')}
 			<div class="pull-right" style="margin-top: -5px;">
 				{if $CALENDAR_MODEL->isPermitted('CreateView')}
-					<button class="btn addButton btn-lg btn-outline-primary createActivity toDotask textOverflowEllipsis max-width-100" title="{vtranslate('LBL_ADD_TASK',$MODULE_NAME)}" type="button" href="javascript:void(0)" data-url="sourceModule={$RECORD->getModuleName()}&sourceRecord={$RECORD->getId()}&relationOperation=true" >
+					<button class="btn addButton btn-sm btn-default createActivity toDotask textOverflowEllipsis max-width-100" title="{vtranslate('LBL_ADD_TASK',$MODULE_NAME)}" type="button" href="javascript:void(0)" data-url="sourceModule={$RECORD->getModuleName()}&sourceRecord={$RECORD->getId()}&relationOperation=true" >
 						<i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_TASK',$MODULE_NAME)}
 					</button>&nbsp;&nbsp;
-					<button class="btn addButton btn-lg btn-outline-primary createActivity textOverflowEllipsis max-width-100" title="{vtranslate('LBL_ADD_EVENT',$MODULE_NAME)}" data-name="Events"
+					<button class="btn addButton btn-sm btn-default createActivity textOverflowEllipsis max-width-100" title="{vtranslate('LBL_ADD_EVENT',$MODULE_NAME)}" data-name="Events"
 							data-url="index.php?module=Events&view=QuickCreateAjax" href="javascript:void(0)" type="button">
 						<i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_EVENT',$MODULE_NAME)}
 					</button>

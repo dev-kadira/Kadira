@@ -6,30 +6,26 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Emails_BasicAjax_Action extends Vtiger_Action_Controller
-{
-	public function requiresPermission(\Vtiger_Request $request)
-	{
+class Emails_BasicAjax_Action extends Vtiger_Action_Controller {
+
+	public function requiresPermission(\Vtiger_Request $request) {
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		return $permissions;
 	}
-
-	public function checkPermission(Vtiger_Request $request)
-	{
+	
+	public function checkPermission(Vtiger_Request $request) {
 		return parent::checkPermission($request);
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->get('module');
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 		$searchValue = $request->get('searchValue');
 
-		$emailsResult = [];
+		$emailsResult = array();
 		if ($searchValue) {
 			$emailsResult = $moduleModel->searchEmails($request->get('searchValue'));
 		}
@@ -39,3 +35,5 @@ class Emails_BasicAjax_Action extends Vtiger_Action_Controller
 		$response->emit();
 	}
 }
+
+?>

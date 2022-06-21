@@ -1,23 +1,4 @@
 <?php
-/**
- * Memory caching.
- *
- * This file is part of ADOdb, a Database Abstraction Layer library for PHP.
- *
- * @package ADOdb
- * @link https://adodb.org Project's web site and documentation
- * @link https://github.com/ADOdb/ADOdb Source code and issue tracker
- *
- * The ADOdb Library is dual-licensed, released under both the BSD 3-Clause
- * and the GNU Lesser General Public Licence (LGPL) v2.1 or, at your option,
- * any later version. This means you can use it in proprietary products.
- * See the LICENSE.md file distributed with this source code for details.
- * @license BSD-3-Clause
- * @license LGPL-2.1-or-later
- *
- * @copyright 2000-2013 John Lim
- * @copyright 2014 Damien Regad, Mark Newnham and the ADOdb community
- */
 
 // security - hide paths
 if (!defined('ADODB_DIR')) die();
@@ -28,13 +9,36 @@ $ADODB_INCLUDED_MEMCACHE = 1;
 global $ADODB_INCLUDED_CSV;
 if (empty($ADODB_INCLUDED_CSV)) include_once(ADODB_DIR.'/adodb-csvlib.inc.php');
 
+/*
+
+  @version   v5.20.9  21-Dec-2016
+  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+  @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
+  Released under both BSD license and Lesser GPL library license.
+  Whenever there is any discrepancy between the two licenses,
+  the BSD license will take precedence. See License.txt.
+  Set tabs to 4 for best viewing.
+
+  Latest version is available at http://adodb.sourceforge.net
+
+Usage:
+
+$db = NewADOConnection($driver);
+$db->memCache = true; /// should we use memCache instead of caching in files
+$db->memCacheHost = array($ip1, $ip2, $ip3);
+$db->memCachePort = 11211; /// this is default memCache port
+$db->memCacheCompress = false; /// Use 'true' to store the item compressed (uses zlib)
+
+$db->Connect(...);
+$db->CacheExecute($sql);
+
+  Note the memcache class is shared by all connections, is created during the first call to Connect/PConnect.
+
+  Class instance is stored in $ADODB_CACHE
+*/
+
 	class ADODB_Cache_MemCache {
 		var $createdir = false; // create caching directory structure?
-
-		// $library will be populated with the proper library on connect
-		// and is used later when there are differences in specific calls
-		// between memcache and memcached
-		var $library = false;
 
 		//-----------------------------
 		// memcache specific variables
@@ -56,23 +60,18 @@ if (empty($ADODB_INCLUDED_CSV)) include_once(ADODB_DIR.'/adodb-csvlib.inc.php');
 		// implement as lazy connection. The connection only occurs on CacheExecute call
 		function connect(&$err)
 		{
-			// do we have memcache or memcached?
-			if (class_exists('Memcache')) {
-				$this->library='Memcache';
-				$memcache = new MemCache;
-			} elseif (class_exists('Memcached')) {
-				$this->library='Memcached';
-				$memcache = new MemCached;
-			} else {
-				$err = 'Neither the Memcache nor Memcached PECL extensions were found!';
+			if (!function_exists('memcache_pconnect')) {
+				$err = 'Memcache module PECL extension not found!';
 				return false;
 			}
+
+			$memcache = new MemCache;
 
 			if (!is_array($this->hosts)) $this->hosts = array($this->hosts);
 
 			$failcnt = 0;
 			foreach($this->hosts as $host) {
-				if (!@$memcache->addServer($host,$this->port)) {
+				if (!@$memcache->addServer($host,$this->port,true)) {
 					$failcnt += 1;
 				}
 			}
@@ -94,25 +93,8 @@ if (empty($ADODB_INCLUDED_CSV)) include_once(ADODB_DIR.'/adodb-csvlib.inc.php');
 			}
 			if (!$this->_memcache) return false;
 
-			$failed=false;
-			switch ($this->library) {
-				case 'Memcache':
-					if (!$this->_memcache->set($filename, $contents, $this->compress ? MEMCACHE_COMPRESSED : 0, $secs2cache)) {
-						$failed=true;
-					}
-					break;
-				case 'Memcached':
-					if (!$this->_memcache->set($filename, $contents, $secs2cache)) {
-						$failed=true;
-					}
-					break;
-				default:
-					$failed=true;
-					break;
-			}
-
-			if($failed) {
-				if ($debug) ADOConnection::outp(" Failed to save data at the memcache server!<br>\n");
+			if (!$this->_memcache->set($filename, $contents, $this->compress ? MEMCACHE_COMPRESSED : 0, $secs2cache)) {
+				if ($debug) ADOConnection::outp(" Failed to save data at the memcached server!<br>\n");
 				return false;
 			}
 
@@ -128,7 +110,7 @@ if (empty($ADODB_INCLUDED_CSV)) include_once(ADODB_DIR.'/adodb-csvlib.inc.php');
 
 			$rs = $this->_memcache->get($filename);
 			if (!$rs) {
-				$err = 'Item with such key doesn\'t exist on the memcache server.';
+				$err = 'Item with such key doesn\'t exists on the memcached server.';
 				return $false;
 			}
 
@@ -194,8 +176,8 @@ if (empty($ADODB_INCLUDED_CSV)) include_once(ADODB_DIR.'/adodb-csvlib.inc.php');
 			$del = $this->_memcache->delete($filename);
 
 			if ($debug)
-				if (!$del) ADOConnection::outp("flushcache: $key entry doesn't exist on memcache server!<br>\n");
-				else ADOConnection::outp("flushcache: $key entry flushed from memcache server!<br>\n");
+				if (!$del) ADOConnection::outp("flushcache: $key entry doesn't exist on memcached server!<br>\n");
+				else ADOConnection::outp("flushcache: $key entry flushed from memcached server!<br>\n");
 
 			return $del;
 		}

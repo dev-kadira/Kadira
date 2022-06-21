@@ -6,10 +6,9 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 vimport('~~/modules/Invoice/InvoicePDFController.php');
 
-class Invoice_ExportPDF_Action extends Inventory_ExportPDF_Action
-{
+class Invoice_ExportPDF_Action extends Inventory_ExportPDF_Action {
 }

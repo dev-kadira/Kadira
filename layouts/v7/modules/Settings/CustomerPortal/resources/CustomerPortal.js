@@ -141,13 +141,10 @@ Vtiger.Class('Settings_Customer_Portal_Js', {}, {
 					});
 
 					var fieldInfo = jQuery('input[name="selectedFields_'+moduleName+'"]').val();
-					if (fieldInfo != 'null' && isAllMandatoryFieldsSelected(mandatoryFields, JSON.parse(fieldInfo))) {
+                                        //Removed mandatory fields checkingRinde
+					if (fieldInfo != 'null') {
 						selectedFields[moduleName] = fieldInfo;
-					} else {
-						returnFormData = false;
-						message = app.vtranslate('JS_MANDATORY_FIELDS_MISSING');
 					}
-
 					var relModuleInfo = jQuery('input[name="relatedModules_'+moduleName+'"]').val();
 					if (typeof relModuleInfo != 'undefined') {
 						relatedModuleInfo[moduleName] = relModuleInfo;

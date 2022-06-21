@@ -8,42 +8,40 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Inventory_SendEmail_View extends Vtiger_ComposeEmail_View
-{
+class Inventory_SendEmail_View extends Vtiger_ComposeEmail_View {
+
 	/**
 	 * Function which will construct the compose email
 	 * This will handle the case of attaching the invoice pdf as attachment
-	 * @param Vtiger_Request $request
+	 * @param Vtiger_Request $request 
 	 */
-	public function composeMailData(Vtiger_Request $request)
-	{
+	public function composeMailData(Vtiger_Request $request) {
 		parent::composeMailData($request);
 		$viewer = $this->getViewer($request);
 		$inventoryRecordId = $request->get('record');
-		$recordModel = Vtiger_Record_Model::getInstanceById($inventoryRecordId, $request->getModule());
-		$pdfFileName = $recordModel->getPDFFileName();
+        $recordModel = Vtiger_Record_Model::getInstanceById($inventoryRecordId, $request->getModule());
+        $pdfFileName = $recordModel->getPDFFileName();
 
-		$fileComponents = explode('/', $pdfFileName);
+        $fileComponents = explode('/', $pdfFileName);
 
-		$fileName = $fileComponents[count($fileComponents) - 1];
-		//remove the fileName
-		array_pop($fileComponents);
+        $fileName = $fileComponents[count($fileComponents)-1];
+        //remove the fileName
+        array_pop($fileComponents);
 
-		$attachmentDetails = [[
-			'attachment'   => $fileName,
-			'path'         => implode('/', $fileComponents),
-			'size'         => filesize($pdfFileName),
-			'type'         => 'pdf',
-			'nondeletable' => true
-		]];
+		$attachmentDetails = array(array(
+            'attachment' =>$fileName,
+            'path' => implode('/',$fileComponents),
+            'size' => filesize($pdfFileName),
+				'type' => 'pdf',
+				'nondeletable' => true
+		));
 
 		$this->populateTo($request);
 		$viewer->assign('ATTACHMENTS', $attachmentDetails);
 		echo $viewer->view('ComposeEmailForm.tpl', 'Emails', true);
 	}
 
-	public function populateTo($request)
-	{
+	public function populateTo($request){
 		$viewer = $this->getViewer($request);
 
 		$inventoryRecordId = $request->get('record');
@@ -51,38 +49,37 @@ class Inventory_SendEmail_View extends Vtiger_ComposeEmail_View
 		$inventoryModule = $recordModel->getModule();
 		$inventotyfields = $inventoryModule->getFields();
 
-		$toEmailConsiderableFields = ['contact_id', 'account_id', 'vendor_id'];
+		$toEmailConsiderableFields = array('contact_id','account_id','vendor_id');
 		$db = PearDatabase::getInstance();
-		$to = [];
-		$to_info = [];
-		$toMailNamesList = [];
-
-		foreach ($toEmailConsiderableFields as $fieldName) {
-			if (! array_key_exists($fieldName, $inventotyfields)) {
+		$to = array();
+		$to_info = array();
+		$toMailNamesList = array();
+		foreach($toEmailConsiderableFields as $fieldName){
+			if(!array_key_exists($fieldName, $inventotyfields)){
 				continue;
 			}
 			$fieldModel = $inventotyfields[$fieldName];
-			if (! $fieldModel->isViewable()) {
+			if(!$fieldModel->isViewable()) {
 				continue;
 			}
 			$fieldValue = $recordModel->get($fieldName);
-			if (empty($fieldValue)) {
+			if(empty($fieldValue)) {
 				continue;
 			}
 			$referenceModule = Vtiger_Functions::getCRMRecordType($fieldValue);
 			$fieldLabel = decode_html(Vtiger_Util_Helper::getRecordName($fieldValue));
 			$referenceModuleModel = Vtiger_Module_Model::getInstance($referenceModule);
-			if (! $referenceModuleModel) {
+			if (!$referenceModuleModel) {
 				continue;
 			}
-			if (isRecordExists($fieldValue)) {
+			if(isRecordExists($fieldValue)) {
 				$referenceRecordModel = Vtiger_Record_Model::getInstanceById($fieldValue, $referenceModule);
 				if ($referenceRecordModel->get('emailoptout')) {
 					continue;
 				}
 			}
 			$emailFields = $referenceModuleModel->getFieldsByType('email');
-			if (count($emailFields) <= 0) {
+			if(count($emailFields) <= 0) {
 				continue;
 			}
 
@@ -90,24 +87,23 @@ class Inventory_SendEmail_View extends Vtiger_ComposeEmail_View
 			$queryGenerator = new QueryGenerator($referenceModule, $current_user);
 			$queryGenerator->setFields(array_keys($emailFields));
 			$query = $queryGenerator->getQuery();
-			$query .= ' AND crmid = '.$fieldValue;
+			$query .= ' AND crmid = ' . $fieldValue;
 
-			$result = $db->pquery($query, []);
+			$result = $db->pquery($query, array());
 			$num_rows = $db->num_rows($result);
-			if ($num_rows <= 0) {
+			if($num_rows <= 0) {
 				continue;
 			}
-			foreach ($emailFields as $fieldName => $emailFieldModel) {
-				$emailValue = $db->query_result($result, 0, $fieldName);
-				if (! empty($emailValue)) {
+			foreach($emailFields as $fieldName => $emailFieldModel) {
+				$emailValue = $db->query_result($result,0,$fieldName);
+				if(!empty($emailValue)){
 					$to[] = $emailValue;
 					$to_info[$fieldValue][] = $emailValue;
-					$toMailNamesList[$fieldValue][] = ['label' => decode_html($fieldLabel), 'value' => $emailValue];
-
+					$toMailNamesList[$fieldValue][] = array('label' => decode_html($fieldLabel), 'value' => $emailValue);
 					break;
 				}
 			}
-			if (! empty($to)) {
+			if(!empty($to)) {
 				break;
 			}
 		}
@@ -115,4 +111,5 @@ class Inventory_SendEmail_View extends Vtiger_ComposeEmail_View
 		$viewer->assign('TOMAIL_NAMES_LIST', json_encode($toMailNamesList, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 		$viewer->assign('TOMAIL_INFO', $to_info);
 	}
+
 }

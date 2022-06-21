@@ -113,7 +113,7 @@
 													{/foreach}
 													{if $IMAGE_DETAILS[0]['id'] eq null}
 														<div class='col-lg-2'>
-															<img height="25px" width="25px" src="layouts/v7/skins/images/user.png">
+															<i class="fa fa-user userDefaultIcon"></i>
 														</div>
 													{/if}
 													<div class="usersinfo col-lg-9 textOverflowEllipsis" title="{$LISTVIEW_ENTRY->get('last_name')}">

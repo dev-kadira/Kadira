@@ -6,178 +6,125 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 require_once 'vtlib/Vtiger/Block.php';
 
-class Vtiger_Block_Model extends Vtiger_Block
-{
+class Vtiger_Block_Model extends Vtiger_Block {
+
 	public $fields = false;
 
-	/**
-	 * __update
-	 *
-	 * @return void
-	 */
-	public function __update()
-	{
-		$db = PearDatabase::getInstance();
-
-		$query = 'UPDATE vtiger_blocks SET blocklabel=?,display_status=? WHERE blockid=?';
-		$params = [$this->label, $this->display_status, $this->id];
-		$db->pquery($query, $params);
-	}
-
-	/**
-	 * getFields
-	 *
-	 * @return void
-	 */
-	public function getFields()
-	{
-		if (empty($this->fields)) {
+	public function getFields() {
+		if(empty($this->fields)) {
 			$moduleFields = Vtiger_Field_Model::getAllForModule($this->module);
-			$this->fields = [];
-
-			// if block does not contains any fields
-			if (! isset($moduleFields[$this->id]) || ! is_array($moduleFields[$this->id])) {
-				$moduleFields[$this->id] = [];
-			}
-
-			foreach ($moduleFields[$this->id] as $field) {
-				$this->fields[$field->get('name')] = $field;
+            $this->fields = array();
+            
+            // if block does not contains any fields 
+            if(!is_array($moduleFields[$this->id])){
+                $moduleFields[$this->id] = array();
+            }
+            
+			foreach($moduleFields[$this->id] as $field){
+                    $this->fields[$field->get('name')] = $field;
 			}
 		}
-
 		return $this->fields;
 	}
-
-	/**
-	 * setFields
-	 *
-	 * @param  mixed $fieldModelList
-	 * @return void
-	 */
-	public function setFields($fieldModelList)
-	{
-		$this->fields = $fieldModelList;
-
-		return $this;
-	}
+    
+    public function setFields($fieldModelList) {
+        $this->fields = $fieldModelList;
+        return $this;
+    }
 
 	/**
 	 * Function to get the value of a given property
 	 * @param <String> $propertyName
 	 * @return <Object>
 	 */
-	public function get($propertyName)
-	{
-		if (property_exists($this, $propertyName)) {
-			return $this->{$propertyName};
+	public function get($propertyName) {
+		if(property_exists($this,$propertyName)){
+			return $this->$propertyName;
 		}
 	}
+    
+    public function set($propertyName, $value) {
+        if(property_exists($this,$propertyName)){
+            $this->$propertyName = $value;
+        }
+        return $this;
+    }
+    
+    public function isCustomized() {
+        return ($this->iscustom != 0) ? true : false;
+    }
+    
+    public function __update() {
+        $db = PearDatabase::getInstance();
+        
+        $query = 'UPDATE vtiger_blocks SET blocklabel=?,display_status=? WHERE blockid=?';
+        $params = array($this->label, $this->display_status, $this->id);
+        $db->pquery($query, $params);
+    }
 
 	/**
-	 * set
-	 *
-	 * @param  mixed $propertyName
-	 * @param  mixed $value
-	 * @return void
-	 */
-	public function set($propertyName, $value)
-	{
-		if (property_exists($this, $propertyName)) {
-			$this->{$propertyName} = $value;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * isCustomized
-	 *
-	 * @return void
-	 */
-	public function isCustomized()
-	{
-		return ($this->iscustom != 0) ? true : false;
-	}
-
-	/**
-	 * Function which indicates whether the block is shown or hidden
-	 * @return : <boolean>
-	 */
-	public function isHidden()
-	{
-		if ($this->get('display_status') == '0') {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Function to get the in active fields for the block
-	 * @param type $raw - true to send field in model format or false to send in array format
-	 * @return type - arrays
-	 */
-	public function getInActiveFields($raw = true)
-	{
-		$inActiveFields = [];
-		$fields = $this->getFields();
-
-		foreach ($fields as $fieldName => $fieldModel) {
-			if (! $fieldModel->isActiveField()) {
-				if ($raw) {
-					$inActiveFields[$fieldName] = $fieldModel;
-				} else {
-					$fieldDetails = $fieldModel->getFieldInfo();
-					$fieldDetails['fieldid'] = $fieldModel->getId();
-					$inActiveFields[$fieldName] = $fieldDetails;
-				}
-			}
-		}
-
-		return $inActiveFields;
-	}
+     * Function which indicates whether the block is shown or hidden
+     * @return : <boolean>
+     */
+    public function isHidden(){
+        if($this->get('display_status') == '0') {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Function to get the in active fields for the block
+     * @param type $raw - true to send field in model format or false to send in array format
+     * @return type - arrays
+     */
+    public function getInActiveFields($raw=true) {
+        $inActiveFields = array();
+        $fields = $this->getFields();
+        foreach($fields as $fieldName => $fieldModel) {
+            if(!$fieldModel->isActiveField()) {
+                if($raw){
+                    $inActiveFields[$fieldName] = $fieldModel;
+                }else{
+                    $fieldDetails = $fieldModel->getFieldInfo();
+                    $fieldDetails['fieldid'] = $fieldModel->getId();
+                    $inActiveFields[$fieldName] = $fieldDetails;
+                }
+            }
+        }
+        return $inActiveFields;
+    }
 
 	/**
 	 * Function to retrieve block instances for a module
 	 * @param <type> $moduleModel - module instance
 	 * @return <array> - list of Vtiger_Block_Model
 	 */
-	public static function getAllForModule($moduleModel)
-	{
-		$blockObjects = Vtiger_Cache::get('ModuleBlocks', $moduleModel->getId());
+	public static function getAllForModule($moduleModel) {
+		$blockObjects = Vtiger_Cache::get('ModuleBlocks',$moduleModel->getId());
+        
+        if(!$blockObjects){
+            $blockObjects = parent::getAllForModule($moduleModel);
+            if($blockObjects)
+                Vtiger_Cache::set('ModuleBlocks',$moduleModel->getId(),$blockObjects);
+        }
+        $blockModelList = array();
 
-		if (! $blockObjects) {
-			$blockObjects = parent::getAllForModule($moduleModel);
-			if ($blockObjects) {
-				Vtiger_Cache::set('ModuleBlocks', $moduleModel->getId(), $blockObjects);
-			}
-		}
-		$blockModelList = [];
-
-		if ($blockObjects) {
-			foreach ($blockObjects as $blockObject) {
+		if($blockObjects) {
+			foreach($blockObjects as $blockObject) {
 				$blockModelList[] = self::getInstanceFromBlockObject($blockObject);
 			}
 		}
-
 		return $blockModelList;
 	}
-
-	/**
-	 * getInstance
-	 *
-	 * @param  mixed $value
-	 * @param  mixed $moduleInstance
-	 * @return void
-	 */
-	public static function getInstance($value, $moduleInstance = false)
-	{
+	
+	public static function getInstance($value, $moduleInstance = false) {
 		$blockInstance = parent::getInstance($value, $moduleInstance);
-
-		return self::getInstanceFromBlockObject($blockInstance);
+		$blockModel = self::getInstanceFromBlockObject($blockInstance);
+		return $blockModel;
 	}
 
 	/**
@@ -185,117 +132,87 @@ class Vtiger_Block_Model extends Vtiger_Block
 	 * @param Vtiger_Block $blockObject - vtlib block object
 	 * @return Vtiger_Block_Model
 	 */
-	public static function getInstanceFromBlockObject(Vtiger_Block $blockObject)
-	{
+	public static function getInstanceFromBlockObject(Vtiger_Block $blockObject) {
 		$objectProperties = get_object_vars($blockObject);
 		$blockClassName = Vtiger_Loader::getComponentClassName('Model', 'Block', $blockObject->module->name);
 		$blockModel = new $blockClassName();
-		foreach ($objectProperties as $properName=>$propertyValue) {
-			$blockModel->{$properName} = $propertyValue;
+		foreach($objectProperties as $properName=>$propertyValue) {
+			$blockModel->$properName = $propertyValue;
 		}
-
 		return $blockModel;
 	}
-
-	/**
-	 * updateSequenceNumber
-	 *
-	 * @param  mixed $sequenceList
-	 * @param  mixed $moduleName
-	 * @return void
-	 */
-	public static function updateSequenceNumber($sequenceList, $moduleName = false)
-	{
-		$db = PearDatabase::getInstance();
-		$query = 'UPDATE vtiger_blocks SET sequence = CASE blockid ';
-		$paramArray = [];
-		foreach ($sequenceList as $blockId => $sequence) {
-			$query .= ' WHEN ? THEN ?';
+    
+    public static function updateSequenceNumber($sequenceList, $moduleName = false) {
+        $db = PearDatabase::getInstance();
+        $query = 'UPDATE vtiger_blocks SET sequence = CASE blockid ';
+		$paramArray = array();
+        foreach ($sequenceList as $blockId => $sequence){
+            $query .=' WHEN ? THEN ?';
 			array_push($paramArray, $blockId);
 			array_push($paramArray, $sequence);
-		}
-		$query .= ' END ';
-		$query .= ' WHERE blockid IN (' . generateQuestionMarks($sequenceList) . ')';
+        }
+        $query .=' END ';
+        $query .= ' WHERE blockid IN ('.generateQuestionMarks($sequenceList).')';
 		$resultArray = array_merge($paramArray, array_keys($sequenceList));
-		$db->pquery($query, $resultArray);
-
-		// To clear cache
-		if ($moduleName) {
-			$moduleInstance = Vtiger_Module_Model::getInstance($moduleName);
-			Vtiger_Cache::flushModuleBlocksCache($moduleInstance);
-		}
-		// End
-	}
-
-	/**
-	 * checkFieldsExists
-	 *
-	 * @param  mixed $blockId
-	 * @return void
-	 */
-	public static function checkFieldsExists($blockId)
-	{
-		$db = PearDatabase::getInstance();
-		$query = 'SELECT 1 FROM vtiger_field WHERE block=?';
-		$result = $db->pquery($query, [$blockId]);
-
-		return ($db->num_rows($result) > 0) ? true : false;
-	}
-
+        $db->pquery($query, $resultArray);
+        
+        // To clear cache
+        if($moduleName){
+            $moduleInstance = Vtiger_Module_Model::getInstance($moduleName);
+            Vtiger_Cache::flushModuleBlocksCache($moduleInstance);
+        }
+        // End
+    }
+    
+    public static function checkFieldsExists($blockId) {
+        $db = PearDatabase::getInstance();
+        $query = 'SELECT 1 FROM vtiger_field WHERE block=?';
+        $result = $db->pquery($query, array($blockId));
+        return ($db->num_rows($result) > 0) ? true : false;
+    }
+	
 	/**
 	 * Function to push all blocks down after sequence number
-	 * @param type $fromSequence
-	 * @param mixed $sourceModuleTabId
+	 * @param type $fromSequence 
 	 */
-	public static function pushDown($fromSequence, $sourceModuleTabId)
-	{
+	public static function pushDown($fromSequence, $sourceModuleTabId) {
 		$db = PearDatabase::getInstance();
 		$query = 'UPDATE vtiger_blocks SET sequence=sequence+1 WHERE sequence > ? and tabid=?';
-		$result = $db->pquery($query, [$fromSequence, $sourceModuleTabId]);
-
-		// To clear Cache
-		$moduleModel = Vtiger_Module_Model::getInstance($sourceModuleTabId);
-		Vtiger_Cache::flushModuleBlocksCache($moduleModel);
-		// End
+		$result = $db->pquery($query, array($fromSequence,$sourceModuleTabId));
+        
+        // To clear Cache
+        $moduleModel = Vtiger_Module_Model::getInstance($sourceModuleTabId);
+        Vtiger_Cache::flushModuleBlocksCache($moduleModel);
+        // End
 	}
-
-	/**
-	 * getAllBlockSequenceList
-	 *
-	 * @param  mixed $moduleTabId
-	 * @return void
-	 */
-	public static function getAllBlockSequenceList($moduleTabId)
-	{
-		$db = PearDatabase::getInstance();
-		$query = 'SELECT blockid,sequence FROM vtiger_blocks where tabid=?';
-		$result = $db->pquery($query, [$moduleTabId]);
-		$response = [];
-		$num_rows = $db->num_rows($result);
-		for ($i = 0; $i < $num_rows; $i++) {
-			$row = $db->query_result_rowdata($result, $i);
-			$response[$row['blockid']] = $row['sequence'];
-		}
-
-		return $response;
-	}
+    
+    public static function getAllBlockSequenceList($moduleTabId) {
+        $db = PearDatabase::getInstance();
+        $query = 'SELECT blockid,sequence FROM vtiger_blocks where tabid=?';
+        $result = $db->pquery($query, array($moduleTabId));
+        $response = array();
+        $num_rows = $db->num_rows($result);
+        for($i=0; $i<$num_rows; $i++) {
+            $row = $db->query_result_rowdata($result, $i);
+            $response[$row['blockid']] = $row['sequence'];
+        }
+        return $response;
+    }
 
 	/**
 	 * Function to check whether duplicate exist or not
 	 * @param <String> $blockLabel
 	 * @param <Number> ModuleId
-	 * @param mixed $tabId
 	 * @return <Boolean> true/false
 	 */
-	public static function checkDuplicate($blockLabel, $tabId)
-	{
+	public static function checkDuplicate($blockLabel, $tabId) {
 		$db = PearDatabase::getInstance();
 
-		$result = $db->pquery('SELECT 1 FROM vtiger_blocks WHERE blocklabel = ? AND tabid = ?', [$blockLabel, $tabId]);
+		$result = $db->pquery('SELECT 1 FROM vtiger_blocks WHERE blocklabel = ? AND tabid = ?', array($blockLabel, $tabId));
 		if ($db->num_rows($result)) {
 			return true;
 		}
-
 		return false;
 	}
+	
 }

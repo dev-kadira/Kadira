@@ -6,65 +6,44 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Vtiger_RemoveWidget_Action extends Vtiger_IndexAjax_View
-{
-	/**
-	 * requiresPermission
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function requiresPermission(Vtiger_Request $request)
-	{
-		if ($request->get('module') != 'Dashboard') {
+class Vtiger_RemoveWidget_Action extends Vtiger_IndexAjax_View {
+
+	public function requiresPermission(Vtiger_Request $request){
+		if($request->get('module') != 'Dashboard'){
 			$request->set('custom_module', 'Dashboard');
-			$permissions[] = ['module_parameter' => 'custom_module', 'action' => 'DetailView'];
-		} else {
-			$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
+			$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'DetailView');
+		}else{
+			$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		}
-
+		
 		return $permissions;
 	}
-
-	/**
-	 * process
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function process(Vtiger_Request $request)
-	{
+	
+	public function process(Vtiger_Request $request) {
 		$currentUser = Users_Record_Model::getCurrentUserModel();
 		$linkId = $request->get('linkid');
 		$response = new Vtiger_Response();
-
+		
 		if ($request->has('reportid')) {
 			$widget = Vtiger_Widget_Model::getInstanceWithReportId($request->get('reportid'), $currentUser->getId());
-		} elseif ($request->has('widgetid')) {
+		} else if ($request->has('widgetid')) {
 			$widget = Vtiger_Widget_Model::getInstanceWithWidgetId($request->get('widgetid'), $currentUser->getId());
-		} else {
+        } else {
 			$widget = Vtiger_Widget_Model::getInstance($linkId, $currentUser->getId());
 		}
 
-		if (! $widget->isDefault()) {
+		if (!$widget->isDefault()) {
 			$widget->remove();
-			$response->setResult(['linkid' => $linkId, 'name' => $widget->getName(), 'url' => $widget->getUrl(), 'title' => vtranslate($widget->getTitle(), $request->getModule())]);
+			$response->setResult(array('linkid' => $linkId, 'name' => $widget->getName(), 'url' => $widget->getUrl(), 'title' => vtranslate($widget->getTitle(), $request->getModule())));
 		} else {
 			$response->setError(vtranslate('LBL_CAN_NOT_REMOVE_DEFAULT_WIDGET', $moduleName));
 		}
 		$response->emit();
 	}
 
-	/**
-	 * validateRequest
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function validateRequest(Vtiger_Request $request)
-	{
+	public function validateRequest(Vtiger_Request $request) {
 		$request->validateWriteAccess();
 	}
 }

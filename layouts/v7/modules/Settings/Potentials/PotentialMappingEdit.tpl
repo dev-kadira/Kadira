@@ -116,7 +116,7 @@
                             </table>
                             <div class="row">
                                 <span class="col-sm-4">
-                                    <button id="addMapping" class="btn btn-outline-primary addButton" type="button" style="margin-left: 10px;">
+                                    <button id="addMapping" class="btn btn-default addButton" type="button" style="margin-left: 10px;">
                                         <i class="fa fa-plus"></i>&nbsp;&nbsp;{vtranslate('LBL_ADD_MAPPING', $QUALIFIED_MODULE)}
                                     </button>
                                 </span>

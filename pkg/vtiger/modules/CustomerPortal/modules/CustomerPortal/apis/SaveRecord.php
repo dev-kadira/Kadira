@@ -20,16 +20,12 @@ class CustomerPortal_SaveRecord extends CustomerPortal_FetchRecord {
 
 	function process(CustomerPortal_API_Request $request) {
 		$response = new CustomerPortal_API_Response();
-		global $current_user, $adb;
+		global $current_user;
 		$current_user = $this->getActiveUser();
 
 		if ($current_user) {
 			$module = $request->get('module');
 
-                        $recordId = $request->get('recordId');
-                        if($recordId){
-                            $module = VtigerWebserviceObject::fromId($adb, $recordId)->getEntityName();
-                        }
 			if (!CustomerPortal_Utils::isModuleActive($module)) {
 				throw new Exception("Module not accessible", 1412);
 				exit;

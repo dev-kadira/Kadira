@@ -12,7 +12,7 @@
 {strip}
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="record-header clearfix">
-            <div class="hidden-sm hidden-xs recordImage bgproject app-{$SELECTED_MENU_CATEGORY}">
+            <div class="recordImage bgproject app-{$SELECTED_MENU_CATEGORY}">
                 <div class="name"><span><strong> <i class="vicon-project"></i> </strong></span></div>
             </div>
             <div class="recordBasicInfo">

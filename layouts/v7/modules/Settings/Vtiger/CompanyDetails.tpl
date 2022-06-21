@@ -21,7 +21,7 @@
 		<hr>*}
 		<div class="clearfix">
 			<div class="btn-group pull-right editbutton-container">
-				<button id="updateCompanyDetails" class="btn btn-outline-primary ">{vtranslate('LBL_EDIT',$QUALIFIED_MODULE)}</button>
+				<button id="updateCompanyDetails" class="btn btn-default ">{vtranslate('LBL_EDIT',$QUALIFIED_MODULE)}</button>
 			</div>
 		</div>
 		{assign var=WIDTHTYPE value=$CURRENT_USER_MODEL->get('rowheight')}

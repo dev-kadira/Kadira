@@ -6,17 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Reports_ChartSave_Action extends Reports_Save_Action
-{
-	public function process(Vtiger_Request $request)
-	{
+class Reports_ChartSave_Action extends Reports_Save_Action {
+
+	public function process(Vtiger_Request $request) {
+		$moduleName = $request->getModule();
+
 		$record = $request->get('record');
 		$reportModel = new Reports_Record_Model();
 		$reportModel->setModule('Reports');
-
-		if (! empty($record) && ! $request->get('isDuplicate')) {
+		if(!empty($record) && !$request->get('isDuplicate')) {
 			$reportModel->setId($record);
 		}
 
@@ -34,17 +34,15 @@ class Reports_ChartSave_Action extends Reports_Save_Action
 		$reportModel->set('advancedFilter', $request->get('advanced_filter'));
 		$reportModel->set('reporttype', 'chart');
 
-		$dataFields = $request->get('datafields', 'count(*)');
-		if (is_string($dataFields)) {
-			$dataFields = [$dataFields];
-		}
 
-		$reportModel->set('reporttypedata', Zend_Json::encode(
-			[
-				'type'        => $request->get('charttype', 'pieChart'),
-				'groupbyfield'=> $request->get('groupbyfield'),
-				'datafields'  => $dataFields]
-		));
+		$dataFields = $request->get('datafields', 'count(*)');
+		if(is_string($dataFields)) $dataFields = array($dataFields);
+
+		$reportModel->set('reporttypedata', Zend_Json::encode(array(
+																'type'=>$request->get('charttype', 'pieChart'),
+																'groupbyfield'=>$request->get('groupbyfield'),
+																'datafields'=>$dataFields)
+															));
 		$reportModel->save();
 
 		$scheduleReportModel = new Reports_ScheduleReports_Model();
@@ -60,6 +58,6 @@ class Reports_ChartSave_Action extends Reports_Save_Action
 		$scheduleReportModel->set('specificemails', $request->get('specificemails'));
 		$scheduleReportModel->saveScheduleReport();
 		$loadUrl = $reportModel->getDetailViewUrl();
-		header("Location: ${loadUrl}");
+		header("Location: $loadUrl");
 	}
 }

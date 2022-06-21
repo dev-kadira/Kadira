@@ -10,14 +10,14 @@
  * The Initial Developer of the Original Code is SugarCRM, Inc.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.;
  * All Rights Reserved.
- * Contributor(s): kapsule
- */
+ * Contributor(s): ______________________________________.
+*/
 
 // Adjust error_reporting favourable to deployment.
 version_compare(PHP_VERSION, '5.5.0') <= 0 ? error_reporting(E_WARNING & ~E_NOTICE & ~E_DEPRECATED & E_ERROR) : error_reporting(E_WARNING & ~E_NOTICE & ~E_DEPRECATED & E_ERROR & ~E_STRICT); // PRODUCTION
-//ini_set('display_errors', 'on');
-//version_compare(PHP_VERSION, '5.5.0') <= 0 ? error_reporting(E_WARNING & ~E_NOTICE & ~E_DEPRECATED) : error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);   // DEBUGGING
+//ini_set('display_errors','on'); version_compare(PHP_VERSION, '5.5.0') <= 0 ? error_reporting(E_WARNING & ~E_NOTICE & ~E_DEPRECATED) : error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);   // DEBUGGING
 //ini_set('display_errors','on'); error_reporting(E_ALL); // STRICT DEVELOPMENT
+
 
 include 'vtigerversion.php';
 
@@ -31,30 +31,30 @@ $CALENDAR_DISPLAY = 'true';
 $USE_RTE = 'true';
 
 // helpdesk support email id and support name (Example: 'support@vtiger.com' and 'vtiger support')
-$HELPDESK_SUPPORT_EMAIL_ID = 'dogi.developer@gmail.com';
-$HELPDESK_SUPPORT_NAME = 'your-support name';
+$HELPDESK_SUPPORT_EMAIL_ID = 'admin@cadira.com';
+$HELPDESK_SUPPORT_NAME = 'Cadira';
 $HELPDESK_SUPPORT_EMAIL_REPLY_ID = $HELPDESK_SUPPORT_EMAIL_ID;
 
 /* database configuration
-db_server
-db_port
-db_hostname
-db_username
-db_password
-db_name
- */
+	  db_server
+	  db_port
+	  db_hostname
+	  db_username
+	  db_password
+	  db_name
+*/
 
-$dbconfig['db_server'] = 'localhost';
+$dbconfig['db_server'] = '172.19.170.249';
 $dbconfig['db_port'] = ':3306';
-$dbconfig['db_username'] = 'dogiusr';
-$dbconfig['db_password'] = 'DogiUser*598_';
-$dbconfig['db_name'] = 'dogicrm';
+$dbconfig['db_username'] = 'root';
+$dbconfig['db_password'] = 'superweb';
+$dbconfig['db_name'] = 'cadira';
 $dbconfig['db_type'] = 'mysqli';
 $dbconfig['db_status'] = 'true';
 
 // TODO: test if port is empty
 // TODO: set db_hostname dependending on db_type
-$dbconfig['db_hostname'] = $dbconfig['db_server'].$dbconfig['db_port'];
+$dbconfig['db_hostname'] = $dbconfig['db_server'] . $dbconfig['db_port'];
 
 // log_sql default value = false
 $dbconfig['log_sql'] = false;
@@ -87,7 +87,7 @@ if (! getenv('SITE_URL')) {
 	putenv("SITE_URL=${scheme}${host}${path}");
 }
 if (! getenv('WEBSERVICE_URL')) {
-	$webservice_url = getenv('SITE_URL').'/webservice.php';
+	$webservice_url = getenv('SITE_URL') . '/webservice.php';
 
 	putenv("WEBSERVICE_URL=${webservice_url}");
 }
@@ -95,10 +95,10 @@ if (! getenv('WEBSERVICE_URL')) {
 $site_URL = getenv('SITE_URL');
 
 // url for customer portal (Example: http://vtiger.com/portal)
-$PORTAL_URL = $site_URL.'/customerportal';
+$PORTAL_URL = $site_URL . '/customerportal';
 
 // root directory path
-$root_directory = realpath(__DIR__).'/';
+$root_directory = realpath(__DIR__) . '/';
 
 // cache direcory path
 $cache_dir = 'cache/';
@@ -114,7 +114,7 @@ $upload_dir = 'cache/upload/';
 
 // maximum file size for uploaded files in bytes also used when uploading import files
 // upload_maxsize default value = 3000000
-$upload_maxsize = 3145728; //3MB
+$upload_maxsize = 3145728;//3MB
 
 // flag to allow export functionality
 // 'all' to allow anyone to use exports
@@ -153,7 +153,7 @@ $default_password = '';
 $create_default_user = false;
 
 //Master currency name
-$currency_name = 'Euro';
+$currency_name = 'USA, Dollars';
 
 // default charset
 // default charset default value = 'UTF-8' or 'ISO-8859-1'
@@ -170,10 +170,10 @@ $display_empty_home_blocks = false;
 $disable_stats_tracking = false;
 
 // Generating Unique Application Key
-$application_unique_key = '6af8598a21229c3d435e76383ffe1f0e';
+$application_unique_key = '06ef920cec73b770d7c7752dc898be9d';
 
 // trim descriptions, titles in listviews to this value
-$listview_max_textlength = '40';
+$listview_max_textlength = 40;
 
 // Maximum time limit for PHP script execution (in seconds)
 $php_max_execution_time = 0;
@@ -189,7 +189,7 @@ if (isset($default_timezone) && function_exists('date_default_timezone_set')) {
 //Set the default layout
 $default_layout = 'v7';
 
-//Maximiun scheduled workflows default value set to 10
-$max_scheduled_workflows = 10;
+//Maximum Listview Fields Selection Size
+$maxListFieldsSelectionSize = 15;
 
 include_once 'config.security.php';

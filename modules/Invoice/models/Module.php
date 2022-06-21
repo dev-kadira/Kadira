@@ -6,8 +6,8 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Invoice_Module_Model extends Inventory_Module_Model
-{
+class Invoice_Module_Model extends Inventory_Module_Model {
+
 }

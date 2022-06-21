@@ -46,11 +46,16 @@ $languageStrings = array(
     'Monthly' => 'Mensual',
     'Quarterly' => 'Trimestral',
     'Yearly' => 'Anual',
+    'Net 01 day' => '01 día',
+    'Net 05 days' => '05 días',
+    'Net 07 days' => '07 días',
+    'Net 10 days' => '10 días',
+    'Net 15 days' => '15 días',
     'Net 30 days' => '30 días',
     'Net 45 days' => '45 días',
     'Net 60 days' => '60 días',
     'Cancel' => 'Cancelada',
-    
+    'Next Invoice Date' => 'Fecha de próxima factura',
 
   'LBL_THIS' => 'Este',
   'LBL_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_OR_REPLACE_THIS_ITEM' => 'Se ha eliminado del sistema. Por favor elimine o reemplace este artículo',

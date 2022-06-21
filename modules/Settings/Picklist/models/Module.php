@@ -538,7 +538,6 @@ class Settings_Picklist_Module_Model extends Vtiger_Module_Model {
 	public static function getPicklistColorByValue($fieldName, $fieldValue) {
 		$db = PearDatabase::getInstance();
 		$tableName = "vtiger_$fieldName";
-		$color = '';
 		if(Vtiger_Utils::CheckTable($tableName)) {
 			$colums = $db->getColumnNames($tableName);
 			$fieldValue = decode_html($fieldValue);

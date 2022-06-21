@@ -64,7 +64,7 @@
 											<button class="btn btn-sm btn-default installExtension addButton" style="margin-right:5px;">{vtranslate('LBL_MORE_DETAILS', $QUALIFIED_MODULE)}</button>
 											{if $EXTENSION->isAlreadyExists()}
 												{if ($EXTENSION->isUpgradable())}
-													<button class="oneclickInstallFree btn btn-success btn-lg margin0px {if $IS_AUTH}authenticated {else} loginRequired{/if}">
+													<button class="oneclickInstallFree btn btn-success btn-sm margin0px {if $IS_AUTH}authenticated {else} loginRequired{/if}">
 														{vtranslate('LBL_UPGRADE', $QUALIFIED_MODULE)}
 													</button>
 												{else}
@@ -80,7 +80,7 @@
 												{/if}
 											{else}
 												{if $EXTENSION->get('price') eq 'Free' or $EXTENSION->get('price') eq 0}
-													<button class="oneclickInstallFree btn btn-success btn-lg {if $IS_AUTH}authenticated {else} loginRequired{/if}">{vtranslate('LBL_INSTALL', $QUALIFIED_MODULE)}</button>
+													<button class="oneclickInstallFree btn btn-success btn-sm {if $IS_AUTH}authenticated {else} loginRequired{/if}">{vtranslate('LBL_INSTALL', $QUALIFIED_MODULE)}</button>
 												{else}
 													<button class="oneclickInstallPaid btn btn-info btn-sm {if $IS_AUTH}authenticated {else} loginRequired{/if}" data-trial=false>{vtranslate('LBL_BUY',$QUALIFIED_MODULE)}${$EXTENSION->get('price')}</button>   
 												{/if}

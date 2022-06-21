@@ -41,12 +41,12 @@
  * The above would print:
  * 
  * <pre>
- *   <log4php:eventSet xmlns:log4php="http://logging.apache.org/log4php/" version="0.3" includesLocationInfo="true">
- *     <log4php:event logger="root" level="INFO" thread="13802" timestamp="1252456226491">
- *       <log4php:message><![CDATA[Hello World!]]></log4php:message>
- *       <log4php:locationInfo class="main" file="examples/php/layout_xml.php" line="6" method="main" />
- *     </log4php:event>
- *   </log4php:eventSet>
+ * <log4php:eventSet xmlns:log4php="http://logging.apache.org/log4php/" version="0.3" includesLocationInfo="true">
+ * 	<log4php:event logger="root" level="INFO" thread="13802" timestamp="1252456226491">
+ * 		<log4php:message><![CDATA[Hello World!]]></log4php:message>
+ * 		<log4php:locationInfo class="main" file="examples/php/layout_xml.php" line="6" method="main" />
+ * 	</log4php:event>
+ * </log4php:eventSet>
  * </pre>
  *
  * @version $Revision: 1213283 $

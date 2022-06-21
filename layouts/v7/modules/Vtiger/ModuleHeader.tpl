@@ -64,7 +64,7 @@
 									{foreach item=BASIC_ACTION from=$MODULE_BASIC_ACTIONS}
 										{if $BASIC_ACTION->getLabel() == 'LBL_IMPORT'}
 											<li>
-												<button id="{$MODULE}_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($BASIC_ACTION->getLabel())}" type="button" class="btn btn-lg addButton btn-default module-buttons"
+												<button id="{$MODULE}_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($BASIC_ACTION->getLabel())}" type="button" class="btn addButton btn-default module-buttons"
 														{if stripos($BASIC_ACTION->getUrl(), 'javascript:')===0}
 													onclick='{$BASIC_ACTION->getUrl()|substr:strlen("javascript:")};'
 														{else}
@@ -76,7 +76,7 @@
 											</li>
 										{else}
 											<li>
-												<button id="{$MODULE}_listView_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($BASIC_ACTION->getLabel())}" type="button" class="btn btn-lg addButton btn-default module-buttons"
+												<button id="{$MODULE}_listView_basicAction_{Vtiger_Util_Helper::replaceSpaceWithUnderScores($BASIC_ACTION->getLabel())}" type="button" class="btn addButton btn-default module-buttons"
 														{if stripos($BASIC_ACTION->getUrl(), 'javascript:')===0}
 													onclick='{$BASIC_ACTION->getUrl()|substr:strlen("javascript:")};'
 														{else}
@@ -91,7 +91,7 @@
 									{if $MODULE_SETTING_ACTIONS|@count gt 0}
 										<li>
 											<div class="settingsIcon">
-												<button type="button" class="btn btn-lg btn-default module-buttons dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="{vtranslate('LBL_SETTINGS', $MODULE)}">
+												<button type="button" class="btn btn-default module-buttons dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="{vtranslate('LBL_SETTINGS', $MODULE)}">
 													<span class="fa fa-wrench" aria-hidden="true"></span>&nbsp;{vtranslate('LBL_CUSTOMIZE', 'Reports')}&nbsp; <span class="caret"></span>
 												</button>
 												<ul class="detailViewSetting dropdown-menu">

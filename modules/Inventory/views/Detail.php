@@ -6,12 +6,10 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Inventory_Detail_View extends Vtiger_Detail_View
-{
-	public function preProcess(Vtiger_Request $request, $display = true)
-	{
+class Inventory_Detail_View extends Vtiger_Detail_View {
+	function preProcess(Vtiger_Request $request, $display=true) {
 		$viewer = $this->getViewer($request);
 		$viewer->assign('NO_SUMMARY', true);
 		parent::preProcess($request);
@@ -21,10 +19,8 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 	 * Function returns Inventory details
 	 * @param Vtiger_Request $request
 	 */
-	public function showModuleDetailView(Vtiger_Request $request)
-	{
+	function showModuleDetailView(Vtiger_Request $request) {
 		$this->showLineItemDetails($request);
-
 		return parent::showModuleDetailView($request);
 	}
 
@@ -33,30 +29,27 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 	 * @param Vtiger_Request $request
 	 * @return type
 	 */
-	public function showDetailViewByMode(Vtiger_Request $request)
-	{
+	function showDetailViewByMode(Vtiger_Request $request) {
 		$requestMode = $request->get('requestMode');
-		if ($requestMode == 'full') {
+		if($requestMode == 'full') {
 			return $this->showModuleDetailView($request);
 		}
 		echo parent::showDetailViewByMode($request);
 	}
 
-	public function showModuleBasicView($request)
-	{
+	function showModuleBasicView($request) {
 		$requestMode = $request->get('requestMode');
-		if ($requestMode == 'full') {
+		if($requestMode == 'full') {
 			return $this->showModuleDetailView($request);
 		}
 		echo parent::showModuleBasicView($request);
 	}
 
-	public function showModuleSummaryView($request)
-	{
+	function showModuleSummaryView($request) {
 		$recordId = $request->get('record');
 		$moduleName = $request->getModule();
 
-		if (! $this->record) {
+		if (!$this->record) {
 			$this->record = Vtiger_DetailView_Model::getInstance($moduleName, $recordId);
 		}
 		$recordModel = $this->record->getRecord();
@@ -80,8 +73,7 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 	 * Function returns Inventory Line Items
 	 * @param Vtiger_Request $request
 	 */
-	public function showLineItemDetails(Vtiger_Request $request)
-	{
+	function showLineItemDetails(Vtiger_Request $request) {
 		$record = $request->get('record');
 		$moduleName = $request->getModule();
 
@@ -111,8 +103,8 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 		$finalDetails['deductTaxes'] = $deductTaxes;
 		//Deducted tax details convertion ended
 
-		$currencyFieldsList = ['adjustment', 'grandTotal', 'hdnSubTotal', 'preTaxTotal', 'tax_totalamount',
-			'shtax_totalamount', 'discountTotal_final', 'discount_amount_final', 'shipping_handling_charge', 'totalAfterDiscount', 'deductTaxesTotalAmount'];
+		$currencyFieldsList = array('adjustment', 'grandTotal', 'hdnSubTotal', 'preTaxTotal', 'tax_totalamount',
+									'shtax_totalamount', 'discountTotal_final', 'discount_amount_final', 'shipping_handling_charge', 'totalAfterDiscount', 'deductTaxesTotalAmount');
 		foreach ($currencyFieldsList as $fieldName) {
 			$finalDetails[$fieldName] = Vtiger_Currency_UIType::transformDisplayValue($finalDetails[$fieldName], null, true);
 		}
@@ -122,22 +114,22 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 
 		//##Product details convertion started
 		$productsCount = count($relatedProducts);
-		for ($i = 1; $i <= $productsCount; $i++) {
+		for ($i=1; $i<=$productsCount; $i++) {
 			$product = $relatedProducts[$i];
 
 			//Product tax details convertion started
 			if ($taxtype == 'individual') {
 				$taxDetails = $product['taxes'];
 				$taxCount = count($taxDetails);
-				for ($j = 0; $j < $taxCount; $j++) {
+				for($j=0; $j<$taxCount; $j++) {
 					$taxDetails[$j]['amount'] = Vtiger_Currency_UIType::transformDisplayValue($taxDetails[$j]['amount'], null, true);
 				}
 				$product['taxes'] = $taxDetails;
 			}
 			//Product tax details convertion ended
 
-			$currencyFieldsList = ['taxTotal', 'netPrice', 'listPrice', 'unitPrice', 'productTotal', 'purchaseCost', 'margin',
-				'discountTotal', 'discount_amount', 'totalAfterDiscount'];
+			$currencyFieldsList = array('taxTotal', 'netPrice', 'listPrice', 'unitPrice', 'productTotal','purchaseCost','margin',
+										'discountTotal', 'discount_amount', 'totalAfterDiscount');
 			foreach ($currencyFieldsList as $fieldName) {
 				$product[$fieldName.$i] = Vtiger_Currency_UIType::transformDisplayValue($product[$fieldName.$i], null, true);
 			}
@@ -147,21 +139,21 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 		//##Product details convertion ended
 
 		$selectedChargesAndItsTaxes = $relatedProducts[1]['final_details']['chargesAndItsTaxes'];
-		if (! $selectedChargesAndItsTaxes) {
-			$selectedChargesAndItsTaxes = [];
+		if (!$selectedChargesAndItsTaxes) {
+			$selectedChargesAndItsTaxes = array();
 		}
 
-		$shippingTaxes = [];
+		$shippingTaxes = array();
 		$allShippingTaxes = getAllTaxes('all', 'sh');
 		foreach ($allShippingTaxes as $shTaxInfo) {
 			$shippingTaxes[$shTaxInfo['taxid']] = $shTaxInfo;
 		}
 
-		$selectedTaxesList = [];
+		$selectedTaxesList = array();
 		foreach ($selectedChargesAndItsTaxes as $chargeId => $chargeInfo) {
 			if ($chargeInfo['taxes']) {
 				foreach ($chargeInfo['taxes'] as $taxId => $taxPercent) {
-					$taxInfo = [];
+					$taxInfo = array();
 					$amount = $calculatedOn = $chargeInfo['value'];
 
 					if ($shippingTaxes[$taxId]['method'] === 'Compound') {
@@ -170,15 +162,15 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 							foreach ($compoundTaxes as $comTaxId) {
 								$calculatedOn += ((float)$amount * (float)$chargeInfo['taxes'][$comTaxId]) / 100;
 							}
-							$taxInfo['method'] = 'Compound';
-							$taxInfo['compoundon'] = $compoundTaxes;
+							$taxInfo['method']		= 'Compound';
+							$taxInfo['compoundon']	= $compoundTaxes;
 						}
 					}
 					$calculatedAmount = ((float)$calculatedOn * (float)$taxPercent) / 100;
 
-					$taxInfo['name'] = $shippingTaxes[$taxId]['taxlabel'];
-					$taxInfo['percent'] = $taxPercent;
-					$taxInfo['amount'] = Vtiger_Currency_UIType::transformDisplayValue($calculatedAmount, null, true);
+					$taxInfo['name']	= $shippingTaxes[$taxId]['taxlabel'];
+					$taxInfo['percent']	= $taxPercent;
+					$taxInfo['amount']	= Vtiger_Currency_UIType::transformDisplayValue($calculatedAmount, null, true);
 
 					$selectedTaxesList[$chargeId][$taxId] = $taxInfo;
 				}
@@ -187,11 +179,11 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 
 		$selectedChargesList = Inventory_Charges_Model::getChargeModelsList(array_keys($selectedChargesAndItsTaxes));
 		foreach ($selectedChargesList as $chargeId => $chargeModel) {
-			$chargeInfo['name'] = $chargeModel->getName();
-			$chargeInfo['amount'] = Vtiger_Currency_UIType::transformDisplayValue($selectedChargesAndItsTaxes[$chargeId]['value'], null, true);
-			$chargeInfo['percent'] = $selectedChargesAndItsTaxes[$chargeId]['percent'];
-			$chargeInfo['taxes'] = $selectedTaxesList[$chargeId];
-			$chargeInfo['deleted'] = $chargeModel->get('deleted');
+			$chargeInfo['name']		= $chargeModel->getName();
+			$chargeInfo['amount']	= Vtiger_Currency_UIType::transformDisplayValue($selectedChargesAndItsTaxes[$chargeId]['value'], null, true);
+			$chargeInfo['percent']	= $selectedChargesAndItsTaxes[$chargeId]['percent'];
+			$chargeInfo['taxes']	= $selectedTaxesList[$chargeId];
+			$chargeInfo['deleted']	= $chargeModel->get('deleted');
 
 			$selectedChargesList[$chargeId] = $chargeInfo;
 		}
@@ -200,13 +192,12 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 		$viewer->assign('RELATED_PRODUCTS', $relatedProducts);
 		$viewer->assign('SELECTED_CHARGES_AND_ITS_TAXES', $selectedChargesList);
 		$viewer->assign('RECORD', $recordModel);
-		$viewer->assign('MODULE_NAME', $moduleName);
+		$viewer->assign('MODULE_NAME',$moduleName);
 
 //		$viewer->view('LineItemsDetail.tpl', 'Inventory');
 	}
 
-	public function getActivities(Vtiger_Request $request)
-	{
+	public function getActivities(Vtiger_Request $request) {
 		$moduleName = 'Calendar';
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 
@@ -223,7 +214,7 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 			$pagingModel->set('page', $pageNumber);
 			$pagingModel->set('limit', 10);
 
-			if (! $this->record) {
+			if (!$this->record) {
 				$this->record = Vtiger_DetailView_Model::getInstance($moduleName, $recordId);
 			}
 			$recordModel = $this->record->getRecord();
@@ -247,22 +238,20 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 	 * @param Vtiger_Request $request
 	 * @return <Array> - List of Vtiger_JsScript_Model instances
 	 */
-	public function getOverlayHeaderScripts(Vtiger_Request $request)
-	{
+	function getOverlayHeaderScripts(Vtiger_Request $request) {
 		$headerScriptInstances = parent::getOverlayHeaderScripts($request);
 		$moduleName = $request->getModule();
-		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
+		$moduleDetailFile = 'modules.' . $moduleName . '.resources.Detail';
 		unset($headerScriptInstances[$moduleDetailFile]);
-		$jsFileNames = [
+		$jsFileNames = array(
 			'modules.Inventory.resources.Detail',
-		];
+		);
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-
-		return array_merge($headerScriptInstances, $jsScriptInstances);
+		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+		return $headerScriptInstances;
 	}
 
-	public function getHeaderScripts(Vtiger_Request $request)
-	{
+	function getHeaderScripts(Vtiger_Request $request) {
 		$headerScriptInstances = parent::getHeaderScripts($request);
 
 		$moduleName = $request->getModule();
@@ -271,18 +260,20 @@ class Inventory_Detail_View extends Vtiger_Detail_View
 		$modulePopUpFile = 'modules.'.$moduleName.'.resources.Popup';
 		$moduleEditFile = 'modules.'.$moduleName.'.resources.Edit';
 		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
-		unset($headerScriptInstances[$modulePopUpFile], $headerScriptInstances[$moduleEditFile], $headerScriptInstances[$moduleDetailFile]);
+		unset($headerScriptInstances[$modulePopUpFile]);
+		unset($headerScriptInstances[$moduleEditFile]);
+		unset($headerScriptInstances[$moduleDetailFile]);
 
-		$jsFileNames = [
+		$jsFileNames = array(
 			'modules.Inventory.resources.Popup',
 			'modules.Inventory.resources.Detail',
 			'modules.Inventory.resources.Edit',
-			"modules.${moduleName}.resources.Detail",
-		];
+			"modules.$moduleName.resources.Detail",
+		);
 		$jsFileNames[] = $moduleEditFile;
 		$jsFileNames[] = $modulePopUpFile;
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-
-		return array_merge($headerScriptInstances, $jsScriptInstances);
+		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+		return $headerScriptInstances;
 	}
 }

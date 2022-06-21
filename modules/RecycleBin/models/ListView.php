@@ -16,22 +16,23 @@ class RecycleBin_ListView_Model extends Vtiger_ListView_Model {
 	 * @param <Number> $viewId - Custom View Id
 	 * @return Vtiger_ListView_Model instance
 	 */
-	public static function getInstance($moduleName, $sourceModule) {
-		$db = PearDatabase::getInstance();
-		$currentUser = vglobal('current_user');
+	public static function getInstance($moduleName, $viewId='0', $listHeaders = array()) {
+            list($moduleName, $sourceModule) = func_get_args();
+            $db = PearDatabase::getInstance();
+            $currentUser = vglobal('current_user');
 
-		$modelClassName = Vtiger_Loader::getComponentClassName('Model', 'ListView', $moduleName);
-		$instance = new $modelClassName();
+            $modelClassName = Vtiger_Loader::getComponentClassName('Model', 'ListView', $moduleName);
+            $instance = new $modelClassName();
 
-		$sourceModuleModel = Vtiger_Module_Model::getInstance($sourceModule);
-		$queryGenerator = new EnhancedQueryGenerator($sourceModuleModel->get('name'), $currentUser);
-		$cvidObj = CustomView_Record_Model::getAllFilterByModule($sourceModuleModel->get('name')); 
-        $cvid = $cvidObj->getId('cvid'); 
-        $queryGenerator->initForCustomViewById($cvid);
+            $sourceModuleModel = Vtiger_Module_Model::getInstance($sourceModule);
+            $queryGenerator = new EnhancedQueryGenerator($sourceModuleModel->get('name'), $currentUser);
+            $cvidObj = CustomView_Record_Model::getAllFilterByModule($sourceModuleModel->get('name')); 
+            $cvid = $cvidObj->getId('cvid'); 
+            $queryGenerator->initForCustomViewById($cvid);
 
-		$controller = new ListViewController($db, $currentUser, $queryGenerator);
+            $controller = new ListViewController($db, $currentUser, $queryGenerator);
 
-		return $instance->set('module', $sourceModuleModel)->set('query_generator', $queryGenerator)->set('listview_controller', $controller);
+            return $instance->set('module', $sourceModuleModel)->set('query_generator', $queryGenerator)->set('listview_controller', $controller);
 	}
 
 	/**

@@ -6,10 +6,9 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-function Contacts_sendCustomerPortalLoginDetails($entityData)
-{
+function Contacts_sendCustomerPortalLoginDetails($entityData){
 	$adb = PearDatabase::getInstance();
 	$moduleName = $entityData->getModuleName();
 	$wsId = $entityData->getId();
@@ -23,24 +22,23 @@ function Contacts_sendCustomerPortalLoginDetails($entityData)
 
 	if ($isPortalEnabled) {
 		//If portal enabled / disabled, then trigger following actions
-		$sql = 'SELECT id, user_name, user_password, isactive FROM vtiger_portalinfo WHERE id=?';
-		$result = $adb->pquery($sql, [$entityId]);
+		$sql = "SELECT id, user_name, user_password, isactive FROM vtiger_portalinfo WHERE id=?";
+		$result = $adb->pquery($sql, array($entityId));
 
-		$insert = true;
-		$update = false;
+		$insert = true; $update = false;
 		if ($adb->num_rows($result)) {
 			$insert = false;
-			$dbusername = $adb->query_result($result, 0, 'user_name');
-			$isactive = $adb->query_result($result, 0, 'isactive');
-			if ($email == $dbusername && $isactive == 1 && ! $entityData->isNew()) {
+			$dbusername = $adb->query_result($result,0,'user_name');
+			$isactive = $adb->query_result($result,0,'isactive');
+			if($email == $dbusername && $isactive == 1 && !$entityData->isNew()){
 				$update = false;
-			} elseif ($isPortalEnabled) {
-				$sql = 'UPDATE vtiger_portalinfo SET user_name=?, isactive=? WHERE id=?';
-				$adb->pquery($sql, [$email, 1, $entityId]);
+			} else if($isPortalEnabled) {
+				$sql = "UPDATE vtiger_portalinfo SET user_name=?, isactive=? WHERE id=?";
+				$adb->pquery($sql, array($email, 1, $entityId));
 				$update = true;
 			} else {
-				$sql = 'UPDATE vtiger_portalinfo SET user_name=?, isactive=? WHERE id=?';
-				$adb->pquery($sql, [$email, 0, $entityId]);
+				$sql = "UPDATE vtiger_portalinfo SET user_name=?, isactive=? WHERE id=?";
+				$adb->pquery($sql, array($email, 0, $entityId));
 				$update = false;
 			}
 		}
@@ -52,16 +50,16 @@ function Contacts_sendCustomerPortalLoginDetails($entityData)
 		//create new portal user
 		$sendEmail = false;
 		if ($insert) {
-			$sql = 'INSERT INTO vtiger_portalinfo(id,user_name,user_password,cryptmode,type,isactive) VALUES(?,?,?,?,?,?)';
-			$params = [$entityId, $email, $enc_password, 'CRYPT', 'C', 1];
+			$sql = "INSERT INTO vtiger_portalinfo(id,user_name,user_password,cryptmode,type,isactive) VALUES(?,?,?,?,?,?)";
+			$params = array($entityId, $email, $enc_password, 'CRYPT', 'C', 1);
 			$adb->pquery($sql, $params);
 			$sendEmail = true;
 		}
 
 		//update existing portal user password
 		if ($update && $isEmailChanged) {
-			$sql = 'UPDATE vtiger_portalinfo SET user_password=?, cryptmode=? WHERE id=?';
-			$params = [$enc_password, 'CRYPT', $entityId];
+			$sql = "UPDATE vtiger_portalinfo SET user_password=?, cryptmode=? WHERE id=?";
+			$params = array($enc_password, 'CRYPT', $entityId);
 			$adb->pquery($sql, $params);
 			$sendEmail = true;
 		}
@@ -69,29 +67,31 @@ function Contacts_sendCustomerPortalLoginDetails($entityData)
 		//trigger send email
 		if ($sendEmail && $entityData->get('emailoptout') == 0) {
 			global $current_user,$HELPDESK_SUPPORT_EMAIL_ID, $HELPDESK_SUPPORT_NAME;
-			require_once 'modules/Emails/mail.php';
-			$emailData = Contacts::getPortalEmailContents($entityData, $password, 'LoginDetails');
+			require_once("modules/Emails/mail.php");
+			$emailData = Contacts::getPortalEmailContents($entityData,$password,'LoginDetails');
 			$subject = $emailData['subject'];
-			if (empty($subject)) {
+			if(empty($subject)) {
 				$subject = 'Customer Portal Login Details';
 			}
 
 			$contents = $emailData['body'];
-			$contents = decode_html(getMergedDescription($contents, $entityId, 'Contacts'));
-			if (empty($contents)) {
+			$contents= decode_html(getMergedDescription($contents, $entityId, 'Contacts'));
+			if(empty($contents)) {
 				require_once 'config.inc.php';
 				global $PORTAL_URL;
 				$contents = 'LoginDetails';
-				$contents .= "<br><br> User ID : ${email}";
-				$contents .= '<br> Password: '.$password;
-				$portalURL = vtranslate('Please ', $moduleName).'<a href="'.$PORTAL_URL.'" style="font-family:Arial, Helvetica, sans-serif;font-size:13px;">'.vtranslate('click here', $moduleName).'</a>';
-				$contents .= '<br>'.$portalURL;
+				$contents .= "<br><br> User ID : $email";
+				$contents .= "<br> Password: ".$password;
+				$portalURL = vtranslate('Please ',$moduleName).'<a href="'.$PORTAL_URL.'" style="font-family:Arial, Helvetica, sans-serif;font-size:13px;">'. vtranslate('click here', $moduleName).'</a>';
+				$contents .= "<br>".$portalURL;
 			}
-			$subject = decode_html(getMergedDescription($subject, $entityId, 'Contacts'));
-			send_mail('Contacts', $email, $HELPDESK_SUPPORT_NAME, $HELPDESK_SUPPORT_EMAIL_ID, $subject, $contents, '', '', '', '', '', true);
+			$subject = decode_html(getMergedDescription($subject, $entityId,'Contacts'));
+			send_mail('Contacts', $email, $HELPDESK_SUPPORT_NAME, $HELPDESK_SUPPORT_EMAIL_ID, $subject, $contents,'','','','','',true);
 		}
 	} else {
-		$sql = 'UPDATE vtiger_portalinfo SET user_name=?,isactive=0 WHERE id=?';
-		$adb->pquery($sql, [$email, $entityId]);
+		$sql = "UPDATE vtiger_portalinfo SET user_name=?,isactive=0 WHERE id=?";
+		$adb->pquery($sql, array($email, $entityId));
 	}
 }
+
+?>

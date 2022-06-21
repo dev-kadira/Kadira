@@ -51,7 +51,6 @@ Vtiger.Class("Google_Map_Js", {}, {
 	getQueryString : function (address) {
 		address = address.replace(/,/g,' ');
 		address = address.replace(/ /g,'+');
-		address = address.replace("#",'%23');
 		return "https://maps.google.com/maps?q=" + address + "&zoom=14&size=512x512&maptype=roadmap&sensor=false";
 	}
 });

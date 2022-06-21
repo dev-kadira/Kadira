@@ -8,6 +8,6 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  * *********************************************************************************** */
-class Invoice_Popup_View extends Inventory_Popup_View
-{
+class Invoice_Popup_View extends Inventory_Popup_View {
+    
 }

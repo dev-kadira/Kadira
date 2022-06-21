@@ -6,30 +6,27 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
-class Documents_MoveDocuments_Action extends Vtiger_Mass_Action
-{
-	public function requiresPermission(Vtiger_Request $request)
-	{
+class Documents_MoveDocuments_Action extends Vtiger_Mass_Action {
+	
+	public function requiresPermission(Vtiger_Request $request){
 		$permissions = parent::requiresPermission($request);
-		$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
-
+		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
 		return $permissions;
 	}
 
-	public function checkPermission(Vtiger_Request $request)
-	{
+
+	public function checkPermission(Vtiger_Request $request) {
 		return parent::checkPermission($request);
 	}
 
-	public function process(Vtiger_Request $request)
-	{
+	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
 		$documentIdsList = $this->getRecordsListFromRequest($request);
 		$folderId = $request->get('folderid');
 
-		if (! empty($documentIdsList)) {
+		if (!empty ($documentIdsList)) {
 			foreach ($documentIdsList as $documentId) {
 				$documentModel = Vtiger_Record_Model::getInstanceById($documentId, $moduleName);
 				if (Users_Privileges_Model::isPermitted($moduleName, 'EditView', $documentId)) {
@@ -41,10 +38,10 @@ class Documents_MoveDocuments_Action extends Vtiger_Mass_Action
 				}
 			}
 		}
-		if (empty($documentsMoveDenied)) {
-			$result = ['success'=>true, 'message'=>vtranslate('LBL_DOCUMENTS_MOVED_SUCCESSFULLY', $moduleName)];
+		if (empty ($documentsMoveDenied)) {
+			$result = array('success'=>true, 'message'=>vtranslate('LBL_DOCUMENTS_MOVED_SUCCESSFULLY', $moduleName));
 		} else {
-			$result = ['success'=>false, 'message'=>vtranslate('LBL_DENIED_DOCUMENTS', $moduleName), 'LBL_RECORDS_LIST'=>$documentsMoveDenied];
+			$result = array('success'=>false, 'message'=>vtranslate('LBL_DENIED_DOCUMENTS', $moduleName), 'LBL_RECORDS_LIST'=>$documentsMoveDenied);
 		}
 
 		$response = new Vtiger_Response();

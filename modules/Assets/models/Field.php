@@ -6,33 +6,28 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- */
+ *************************************************************************************/
 
 /**
  * Assets Field Model Class
  */
-class Assets_Field_Model extends Vtiger_Field_Model
-{
+class Assets_Field_Model extends Vtiger_Field_Model {
+
 	/**
 	 * Function returns special validator for fields
 	 * @return <Array>
 	 */
-	public function getValidator()
-	{
-		$validator = [];
+	function getValidator() {
+		$validator = array();
 		$fieldName = $this->getName();
 
-		switch ($fieldName) {
-			case 'datesold':
-				$funcName = ['name'=>'lessThanOrEqualToToday'];
-				array_push($validator, $funcName);
-
-				break;
-			default: $validator = parent::getValidator();
-
-				break;
+		switch($fieldName) {
+            case 'datesold' : $funcName = array('name'=>'lessThanOrEqualToToday'); 
+                              array_push($validator, $funcName); 
+                              break; 
+			default : $validator = parent::getValidator();
+						break;
 		}
-
 		return $validator;
 	}
 }

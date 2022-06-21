@@ -13,10 +13,7 @@
 
     <span class="span2">
      <div style="position:relative;display:inline;">
-        {* SalesPlatform.ru begin *}
-        {if $RECORD->get('customer') and $RECORD->get('customertype') eq 'Contacts' and isRecordExists($RECORD->get('customer'))}
-        {* {if $RECORD->get('customer') and $RECORD->get('customertype') eq 'Contacts'} *}
-        {* SalesPlatform.ru end *}
+        {if $RECORD->get('customer') and $RECORD->get('customertype') eq 'Contacts'}
             {assign var=MODULE_INSTANCE value=Vtiger_Record_Model::getInstanceById($RECORD->get('customer'),$RECORD->get('customertype'))}
             {assign var=IMAGE_DETAILS value=$MODULE_INSTANCE->getImageDetails()}
 	    {if $IMAGE_DETAILS}
