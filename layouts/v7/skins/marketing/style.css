@@ -1297,10 +1297,10 @@ ul.unstyled {
   padding-left: 0px;
 }
 .coloredBorderBottom {
-  border-bottom: 1px solid #EF5E29;
+  border-bottom: 1px solid #175388;
 }
 .coloredBorderTop {
-  border-top: 1px solid #EF5E29;
+  border-top: 1px solid #175388;
 }
 .redColor {
   color: red;
@@ -3568,7 +3568,7 @@ th {
   padding-left: 40px;
 }
 .portal-dashboard {
-  border: 1px solid #EF5E29 !important;
+  border: 1px solid #175388 !important;
   border-left: 0px !important;
   min-height: 500px;
   padding-left: 15px;
@@ -5106,7 +5106,6 @@ hr {
 .related-tabs.row .nav > li {
   padding: 0 10px;
   margin: 0 2px 3px 2px;
-  width: 90px;
   text-align: center;
 }
 .massEditTabs.nav > li {
