@@ -6,33 +6,38 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-class Vtiger_CurrencyList_UIType extends Vtiger_Base_UIType {
+class Vtiger_CurrencyList_UIType extends Vtiger_Base_UIType
+{
 	/**
 	 * Function to get the Template name for the current UI Type Object
 	 * @return <String> - Template Name
 	 */
-	public function getTemplateName() {
+	public function getTemplateName()
+	{
 		return 'uitypes/CurrencyList.tpl';
 	}
 
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
+	public function getDisplayValue($value, $record = false, $recordInstance = false)
+	{
 		$db = PearDatabase::getInstance();
-		$result = $db->pquery('SELECT currency_name FROM vtiger_currency_info WHERE currency_status = ? AND id = ?',
-					array('Active', $value));
-		if($db->num_rows($result)) {
+		$query = 'SELECT currency_name FROM vtiger_currency_info WHERE currency_status = ? AND id = ?';
+		$result = $db->pquery($query, ['Active', $value]);
+		if ($db->num_rows($result)) {
 			return $db->query_result($result, 0, 'currency_name');
 		}
+
 		return $value;
 	}
 
-	public function getCurrenyListReferenceFieldName() {
+	public function getCurrenyListReferenceFieldName()
+	{
 		return 'currency_name';
 	}
 
-	public function getListSearchTemplateName() {
+	public function getListSearchTemplateName()
+	{
 		return 'uitypes/CurrencyListFieldSearchView.tpl';
 	}
 }
-?>
