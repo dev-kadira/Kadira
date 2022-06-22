@@ -9,9 +9,6 @@
 
 {assign var=APP_IMAGE_MAP value=Vtiger_MenuStructure_Model::getAppIcons()}
 <div class="col-sm-12 col-xs-12 app-indicator-icon-container extensionstore app-{$SELECTED_MENU_CATEGORY}"> 
-    <div class="row" title="{vtranslate('LBL_EXTENSION_STORE', 'Settings:ExtensionStore')}"> 
-        <span class="app-indicator-icon cursorPointer fa fa-shopping-cart"></span> 
-    </div>
 </div>
   
 {include file="modules/Vtiger/partials/SidebarAppMenu.tpl"}
