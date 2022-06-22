@@ -11,15 +11,12 @@
 {strip}
 	<style>
 		body {
-			background: url(layouts/v7/resources/Images/login-background.jpg);
-			background-position: center;
-			background-size: cover;
 			width: 100%;
-			background-repeat: no-repeat;
+			background-color: #f0f1f6;
 		}
 		hr {
 			margin-top: 15px;
-			background-color: #7C7C7C;
+			background-color: #f0f1f6;
 			height: 2px;
 			border-width: 0;
 		}
@@ -166,7 +163,8 @@
 			outline: 0;
 		}
 		.buttonBlue {
-			background-image: linear-gradient(to bottom, #35aa47 0px, #35aa47 100%)
+			border-radius: 4px;
+			background-image: linear-gradient(to bottom, #175388 0px, #175388 100%)
 		}
 		.ripples {
 			position: absolute;
