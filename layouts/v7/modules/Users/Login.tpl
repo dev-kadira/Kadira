@@ -68,6 +68,7 @@
 		}
 		.loginDiv {
 			max-width: 380px;
+			height: 450px;
 			margin: 0 auto;
 			border-radius: 4px;
 			box-shadow: 0 0 10px gray;
@@ -84,7 +85,7 @@
 			margin-left: 20px;
 		}
 		.user-logo {
-			height: 110px;
+			height: 140px;
 			margin: 0 auto;
 			padding-top: 40px;
 			padding-bottom: 20px;
@@ -164,7 +165,7 @@
 		}
 		.buttonBlue {
 			border-radius: 4px;
-			background-image: linear-gradient(to bottom, #175388 0px, #175388 100%)
+			background-image: linear-gradient(to bottom, #606bdc 0px, #6671dd 100%)
 		}
 		.ripples {
 			position: absolute;
