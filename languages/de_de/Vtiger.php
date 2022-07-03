@@ -8,8 +8,8 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'APPTITLE'                     => 'Vtiger CRM'                  ,
-	'POWEREDBY'                    => 'Powered by vtiger CRM'       , 
+	'APPTITLE'                     => 'Cadira'                  ,
+	'POWEREDBY'                    => 'Powered by Cadira'       , 
 	'LBL_READ_LICENSE'             => 'Lizenzbestimmungen'          , 
 	'LBL_PRIVACY_POLICY'           => 'Datenschutz'                 , 
 	'LBL_SELECT_ALL'               => 'Alle auswählen'             , 

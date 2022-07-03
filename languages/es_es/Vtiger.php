@@ -16,8 +16,8 @@
  *  Author       : JPL TSolucio, S. L. Joe Bordes
  ************************************************************************************/
 $languageStrings = array(
-	'APPTITLE'                     => 'Vtiger CRM',
-	'POWEREDBY'                    => 'Powered by vtiger CRM',
+	'APPTITLE'                     => 'Cadira',
+	'POWEREDBY'                    => 'Powered by Cadira',
 	'LBL_READ_LICENSE'             => 'Leer Licencia',
 	'LBL_PRIVACY_POLICY'           => 'Política de Privacidad',
 	'LBL_SELECT_ALL'               => 'Marcar Todos',
@@ -128,7 +128,7 @@ $languageStrings = array(
 	'ProjectTask'                  => 'Actividades',
 	'ServiceContracts'             => 'Contratos de Servicio',
 	'Services'                     => 'Servicios',
-	'Vendors'                      => 'Proveedores',
+	'Vendors'                      => 'Vendedores',
 	'Rss'                          => 'RSS',
 	'Quotes'                       => 'Presupuestos',
 	'PurchaseOrder'                => 'Ordenes de compra',
@@ -1089,6 +1089,7 @@ fuera de Vtiger.',
   'LBL_THUMBNAIL_VIEW' => 'Vista En Miniatura',
   'LBL_CHART_VIEW' => 'Vista De Gráfico',
 
+  'MyCredit' => 'Mi Crédito Disponible',
 
   'LBL_DAY(S)' => 'día(s)',
   'LBL_HOUR(S)' => 'hora(s)',
@@ -1235,7 +1236,7 @@ $jsLanguageStrings = array(
         //For Print Templates
         'JS_MAX_RECORDS_LIMIT' => 'Número máximo de registros para la selección es:',
         'JS_NONE' => 'Ninguno',
-	'SINGLE_Vendors' => 'Proveedor',
+	'SINGLE_Vendors' => 'Vendedor',
 	//Feedback on removing old version
 	'JS_PLEASE_GIVE_YOUR_FEEDBACK' => 'Por favor, rellene sus comentarios',
 
