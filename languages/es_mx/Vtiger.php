@@ -9,8 +9,8 @@
  **************************************************
  ***********************************/
 $languageStrings = array(
-	'APPTITLE'                     => 'Cadira'                  ,
-	'POWEREDBY'                    => 'Powered by Cadira',
+	'APPTITLE'                     => 'Kadira'                  ,
+	'POWEREDBY'                    => 'Powered by Kadira',
 	'LBL_READ_LICENSE'             => 'Leer Licencia'               ,
 	'LBL_PRIVACY_POLICY'           => 'Política de privacidad'     ,
 	'LBL_SELECT_ALL'               => 'Marcar todos'                ,

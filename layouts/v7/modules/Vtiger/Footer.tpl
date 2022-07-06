@@ -9,7 +9,7 @@
 </div>
 <footer class="app-footer">
 	<p>
-		Powered by Cadira - {$VTIGER_VERSION}	
+		Powered by Kadira - {$VTIGER_VERSION}	
 	</p>
 </footer>
 <div id='overlayPage'>

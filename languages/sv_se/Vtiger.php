@@ -10,8 +10,8 @@
 $languageStrings = array(
 
 	// Footer
-	'APPTITLE' => 'Cadira',
-	'POWEREDBY'=> 'Powered by Cadira',
+	'APPTITLE' => 'Kadira',
+	'POWEREDBY'=> 'Powered by Kadira',
 	'LBL_READ_LICENSE' => 'Läs Licensavatlet',
 	'LBL_PRIVACY_POLICY' => 'Sekretesspolicy',
 

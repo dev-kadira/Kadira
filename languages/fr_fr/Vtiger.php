@@ -8,8 +8,8 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-    'APPTITLE'                     => 'Cadira'                  , 
-    'POWEREDBY'                    => 'Powered by Cadira'       , 
+    'APPTITLE'                     => 'Kadira'                  , 
+    'POWEREDBY'                    => 'Powered by Kadira'       , 
     'LBL_READ_LICENSE'             => 'License'                     , 
     'LBL_PRIVACY_POLICY'           => 'Politique de confidentialité', 
     'LBL_SELECT_ALL'               => 'Tous'                        , 
