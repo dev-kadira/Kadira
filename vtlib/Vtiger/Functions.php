@@ -131,7 +131,7 @@ class Vtiger_Functions
 
 	public static function currentUserDisplayDateNew()
 	{
-		global $log, $current_user;
+		global $current_user;
 		$date = new DateTimeField(null);
 
 		return $date->getDisplayDate($current_user);
@@ -766,8 +766,8 @@ class Vtiger_Functions
 
 	/**
 	 * Function replaces all company merge tags will respective value.
-	 * @param Array $fields
-	 * @param String $description
+	 * @param type $fields
+	 * @param type $description
 	 * @return type
 	 */
 	public static function getMergedDescriptionCompanyDetails($fields, $description)
@@ -1081,7 +1081,9 @@ class Vtiger_Functions
 	{
 		global $adb;
 		$tablename = Vtiger_Util_Helper::validateStringForSql($tablename);
-		$query = "select ${tablename} from vtiger_${tablename} inner join vtiger_role2picklist on vtiger_role2picklist.picklistvalueid = vtiger_${tablename}.picklist_valueid where roleid=? and picklistid in (select picklistid from vtiger_picklist) order by sortorderid";
+		$query = "select ${tablename} from vtiger_${tablename} inner join vtiger_role2picklist on 
+			vtiger_role2picklist.picklistvalueid = vtiger_${tablename}.picklist_valueid where roleid=? and 
+			picklistid in (select picklistid from vtiger_picklist) order by sortorderid";
 		$result = $adb->pquery($query, [$roleid]);
 		$fldVal = [];
 		while ($row = $adb->fetch_array($result)) {
@@ -1545,7 +1547,8 @@ class Vtiger_Functions
 
 		// Next, add padding if it is needed.
 		switch (strlen($encoded_token) % 4) {
-			case 0:	break;// No pad characters needed.
+			case 0:
+				break;// No pad characters needed.
 			case 2:
 				$encoded_token = $encoded_token . '==';
 
@@ -1554,8 +1557,7 @@ class Vtiger_Functions
 				$encoded_token = $encoded_token . '=';
 
 				break;
-			default:
-				return null;// Invalid base64 string!
+			default:return null;// Invalid base64 string!
 		}
 
 		$json_string = base64_decode($encoded_token);
@@ -1672,16 +1674,13 @@ class Vtiger_Functions
 	{
 		$ok = true;
 		switch ($type) {
-			case 'id':
-				$ok = (preg_match('/[^0-9xH]/', $value)) ? false : $ok;
+			case 'id': $ok = (preg_match('/[^0-9xH]/', $value)) ? false : $ok;
 
 				break;
-			case 'email':
-				$ok = (! filter_var($value, FILTER_VALIDATE_EMAIL)) ? false : $ok;
+			case 'email': $ok = (! filter_var($value, FILTER_VALIDATE_EMAIL)) ? false : $ok;
 
 				break;
-			case 'idlist':
-				$ok = (preg_match('/[a-zA-Z]/', $value)) ? false : $ok;
+			case 'idlist': $ok = (preg_match('/[a-zA-Z]/', $value)) ? false : $ok;
 
 				break;
 			case 'keyword':
