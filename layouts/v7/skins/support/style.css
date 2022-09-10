@@ -80,8 +80,9 @@ body > .mCSB_inside > .mCSB_container {
   margin-bottom: 0;
   border-top: 0;
 }
-.global-nav {
+.global-nav{
   position: relative;
+  background-color: #165981;
 }
 .global-nav .global-actions {
   padding-right: 15px;
@@ -144,8 +145,8 @@ body > .mCSB_inside > .mCSB_container {
     top: 0;
     left: 0;
     min-height: 100%;
-    background-color: #175388;
-    background: #175388;
+    background-color: #2479a0;
+    background: #2479a0;
   }
   .main-container .sidebar-essentials {
     display: inline-block;
@@ -238,9 +239,11 @@ body > .mCSB_inside > .mCSB_container {
 }
 #navbar > ul > li > div > div > a {
   float: left;
+  color: white;
 }
 #navbar > ul > li > div > a {
   float: left;
+  color: white;
 }
 .global-nav > ul {
   margin-right: 20px;
@@ -268,6 +271,8 @@ body > .mCSB_inside > .mCSB_container {
   vertical-align: top;
   border: 1px solid #DDDDDD;
   border-width: thin;
+  background-color: white;
+  border-radius: 5px;
 }
 .search-link .adv-search {
   margin-top: 9px;
@@ -348,7 +353,7 @@ body > .mCSB_inside > .mCSB_container {
 }
 .module-action-bar .module-title {
   font-family: Oswald, "OpenSans-Semibold", "Helvetica Neue", Helvetica, sans-serif;
-  color: #1c64a2;
+  color: #338ab2;
   margin: 12px 0;
   white-space: nowrap;
   overflow: hidden;
@@ -445,14 +450,14 @@ body > .mCSB_inside > .mCSB_container {
   background-color: #010101 !important;
 }
 .app-switcher-container .app-navigator {
-  background-color: #175388;
+  background-color: #2479a0;
 }
 .app-switcher-container .app-navigator .app-icon {
   color: white;
   opacity: 0.8;
 }
 .global-nav .app-switcher-container .app-navigator:hover {
-  background: #1c64a2;
+  background: #338ab2;
   opacity: 1;
 }
 .global-nav .app-switcher-container .app-navigator:hover .app-icon {
@@ -479,12 +484,12 @@ body > .mCSB_inside > .mCSB_container {
   border: 0;
   top: 0px !important;
   box-shadow: 0px 5px 14px #555;
-  background: #175388;
+  background: #2479a0;
   z-index: 1102;
   display: none;
 }
 .app-menu hr {
-  border-top: 1px solid #1c64a2;
+  border-top: 1px solid #338ab2;
   padding: 1%;
 }
 .app-menu .app-name {
@@ -532,7 +537,7 @@ a.menu-item:hover {
   color: #fff;
   cursor: pointer;
   display: block;
-  background-color: #175388;
+  background-color: #2479a0;
   padding: 2.5% 2% !important;
   margin-left: 2px;
   opacity: 0.8;
@@ -547,7 +552,7 @@ a.menu-item:hover {
 .active-app-item,
 .app-item:hover {
   opacity: 1;
-  background: #1c64a2;
+  background: #338ab2;
   color: #f2f1f1;
 }
 .app-item-color-MARKETING {
@@ -588,7 +593,7 @@ a.menu-item:hover {
   height: 100vh;
   font-size: 1.2em;
   overflow-x: hidden;
-  background-color: #175388;
+  background-color: #2479a0;
   box-shadow: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -615,7 +620,7 @@ a.menu-item:hover {
 }
 .app-menu .app-modules-dropdown li:hover {
   opacity: 1;
-  background: #1c64a2;
+  background: #338ab2;
   color: #f2f1f1;
 }
 .app-menu .app-modules-dropdown li:hover .module-icon {
@@ -630,7 +635,7 @@ a.menu-item:hover {
 }
 .app-menu .app-list-divider {
   border-top: 1px solid;
-  color: #2a6192;
+  color: #3084aa;
 }
 .app-menu .menu-items-wrapper {
   padding-left: 8px;
@@ -710,7 +715,7 @@ a.menu-item:hover {
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
   transition: all 0.2s ease;
-  background: #175388;
+  background: #2479a0;
   padding: 6px;
   border-radius: 20px;
   margin-top: -2px;
@@ -737,6 +742,7 @@ a.menu-item:hover {
 }
 /* User Logout */
 .logout-content {
+  top: 50px;
   padding: 10px;
   width: 350px;
 }
@@ -931,7 +937,7 @@ input[type="password"].inputElement {
   width: 100%;
   height: 100%;
   float: left;
-  background: #175388;
+  background: #2479a0;
   position: absolute;
   z-index: 10;
   left: 0;
@@ -988,7 +994,7 @@ input[type="password"].inputElement {
   white-space: nowrap;
 }
 .modules-menu ul li:hover {
-  background: #1c64a2;
+  background: #338ab2;
   opacity: 1;
 }
 .modules-menu ul li:hover a {
@@ -1298,9 +1304,6 @@ ul.unstyled {
 }
 .coloredBorderBottom {
   border-bottom: 1px solid #6297C3;
-}
-.coloredBorderTop {
-  border-top: 1px solid #6297C3;
 }
 .redColor {
   color: red;
@@ -2455,7 +2458,7 @@ th {
 }
 .fieldBlockHeader {
   margin-top: 0;
-  color: #1c64a2;
+  color: #338ab2;
 }
 .quickCreateContent .referencefield-wrapper {
   width: 210px;
@@ -2766,7 +2769,7 @@ th {
 ********************************************/
 .modal-header {
   padding: 5px 15px;
-  background: #1c64a2;
+  background: #338ab2;
   color: #FFFFFF;
 }
 .modal-footer {
@@ -2797,7 +2800,7 @@ th {
   display: inline-block;
   width: 100%;
   float: left;
-  background: #175388;
+  background: #2479a0;
   height: 100%;
 }
 .settings-flip {
@@ -3298,7 +3301,7 @@ th {
   color: #FFFFFF;
 }
 .settingsgroup div.panel-collapse {
-  background-color: #175388;
+  background-color: #2479a0;
 }
 .settingsgroup-accordion {
   color: #FFFFFF;
@@ -3316,11 +3319,11 @@ th {
   text-transform: uppercase;
 }
 .settingsgroup {
-  background: #175388;
+  background: #2479a0;
   height: 100%;
 }
 .settingsgroup .panel-group .panel {
-  background-color: #175388;
+  background-color: #2479a0;
 }
 .userDefaultIcon {
   font-size: 30px;
@@ -4779,11 +4782,12 @@ li.dashboardWidget {
   margin-top: 10px;
 }
 .dashBoardContainer .dashBoardTabContents ul li {
-  border: 3px solid #E2E2E4;
+  border: 1px solid #E2E2E4;
   box-shadow: 1px;
   list-style: none;
   padding: 15px;
   position: absolute;
+  border-radius: 5px;
 }
 .dashboardWidgetContent .entryIcon {
   position: relative;
@@ -5553,8 +5557,8 @@ TN-34230 .row .nav > li > a:hover {
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {
-  color: #000000;
-  background-color: #FFFFFF;
+  color: white;
+  background-color: #175980;
 }
 .moduleResults-container .moduleSearchResults .table-container {
   background: #FFFFFF;
