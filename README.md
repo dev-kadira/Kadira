@@ -1,68 +1,170 @@
-Vtiger CRM
-==========
+![image](https://user-images.githubusercontent.com/89658833/189480151-42ee105c-143b-4697-9cdb-24d54a793279.png)
 
-Vtiger is a PHP based web application that enables businesses to increase sales wins, marketing ROI, and support satisfaction by providing tools for employees and management work more effectively, capture more data, and derive new actionable insights from across the customer lifecycle.
+<div align="center">
+  <h1>Kadira CRM / ERP</h1>
+</div>
+<div align="center">
+  <strong>The perfect solution for small and medium-sized companies</strong>
+</div>
 
-Get involved
-------------
+<div align="center">
+The Kadria project was born from a fork of VTiger 7.4. The aim of this project is to help companies that need a solution with well-defined business rules.
+</div>
 
-Development on vtiger is done at https://code.vtiger.com
+<br>
 
-**Note**: Any contributions submitted to Vtiger project should be made available under Vtiger Public License. 
-If contribution has any patented code, or commercial code, then please communicate with Vtiger team before making the contribution.
+## Web Server installation
 
-https://www.vtiger.com/vtiger-public-license/
+```bash
+sudo apt update
+sudo apt install nginx
+```
+We verify the services after installation
 
-To register for an account, please contact info @ vtiger.com, you will need this to file issues and/or fix the code
-Once you have an account, you can [browse the code](https://code.vtiger.com/vtiger/vtigercrm/tree/master),
-[see if your issue is already reported](https://code.vtiger.com/vtiger/vtigercrm/issues) and if you have a new problem
-to report you can [create an issue](https://code.vtiger.com/vtiger/vtigercrm/issues/new?issue)
+```bash
+sudo systemctl stop nginx.service
+sudo systemctl start nginx.service
+sudo systemctl enable nginx.service
+```
 
-If you then want to fix the issue (or another issue) you can create your own fork of vtiger to work on using the
-fork button on the vtiger project, this will create a new git repository for you at
-    
-    https://code.vtiger.com/yourname/vtigercrm.git
+## MariaDB database installation
 
-on your computer you will need a git client installed and you need to tell git who you are:
+```bash
+sudo apt-get install mariadb-server mariadb-client
+```
+We verify the services after installation
 
-    git config --global user.name "YOUR NAME"
-    git config --global user.email "YOUR EMAIL ADDRESS"
+```bash
+sudo systemctl stop mysql.service
+sudo systemctl start mysql.service
+sudo systemctl enable mysql.service
+```
+We activate the security of access to the database.
 
-now clone your fork of vtiger
+```bash
+sudo mysql_secure_installation
+```
+We specify the following values in the different questions.
 
-    git clone https://code.vtiger.com/yourname/vtigercrm.git
+```bash
+Enter current password for root (enter for none): Just press the Enter
+Set root password? [Y/n]: Y
+New password: Enter password
+Re-enter new password: Repeat password
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]: Y
+Reload privilege tables now? [Y/n]: Y
+```
 
-this will pull down from the server your copy of the vtiger code and all the history.
+Restart the service
 
-You will make a new branch for your changes, you can give it a descriptive name, once the branch is created
-you will switch to that branch using the checkout command
+```bash
+sudo systemctl restart mysql.service
+```
 
-    git branch fix_projects_on_calendar
-    git checkout fix_projects_on_calendar
+## Installation of PHP on NGINX web server
 
-Now you can make your changes and commit all changed files with
+```bash
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:ondrej/php
 
-    git commit -a
+sudo apt update
 
-Do reference the issue number in your commit message, e.g. "fix #2 display projects on the calendar" the number will
-allow the system to link the commit to the issue.
+sudo apt install php7.4-fpm php7.4-common php7.4-mbstring php7.4-xmlrpc php7.4-soap php7.4-gd php7.4-xml php7.4-intl php7.4-mysql php7.4-cli php7.4-mcrypt php7.4-ldap php7.4-zip php7.4-curl
+```
 
-Now you can push your branch to the server, this creates the branch on the server end and populates it
+Editing php.ini file to define the correct values to work with Kadira
 
-    git push --set-upstream origin fix_projects_on_calendar
+```bash
+sudo nano /etc/php/7.4/fpm/php.ini
+```
 
-look at the branch on code.vtiger.com and create a merge request from your branch
-to the upstream master, this will be reviewed to see if it fixes the 
-issue and if all is good will be merged into the upstream code.
-You can then switch back to your master branch with
+- file_uploads = On
+- allow_url_fopen = On
+- memory_limit = 256M
+- upload_max_filesize = 64M
+- max_execution_time = 30
+- display_errors = Off
+- cgi.fix_pathinfo = 0
+- max_input_vars = 1500
 
-    git checkout master
+## Database and user creation
 
-And you can create additional feature branches from there to fix different things.
+```sql
+sudo mysql -u root -p
 
-If there have been other changes to the central vtiger code that you want in your work area then you can add the central
-repository as an upstream remote (only need to do this bit once), then you can fetch changes and merge them
+CREATE DATABASE cadira;
+CREATE USER 'kadirauser'@'localhost' IDENTIFIED BY 'new_password_here';
+GRANT ALL ON kadira.* TO 'kadirauser'@'localhost' IDENTIFIED BY 'user_password_here' WITH GRANT OPTION;
 
-    git remote add upstream https://code.vtiger.com/vtiger/vtigercrm.git
-    git fetch upstream
-    git merge upstream/master
+FLUSH PRIVILEGES;
+EXIT;
+````
+
+We import the database of the base project
+
+```sql
+mysql -u username -p cadira < /var/www/html/cadira/schema/cadira.sql
+````
+
+## Download and install the project Kadira
+
+```bash
+cd /var/www/html/
+git clone https://github.com/dev-cadira/cadira.git
+```
+We apply permissions necessary for the web server to be able to write to the directory
+
+```bash
+sudo chown -R www-data:www-data /var/www/html/cadira/
+sudo chmod -R 755 /var/www/html/cadira/
+```
+
+## Web server configuration
+
+```bash
+sudo nano /etc/nginx/sites-available/kadira
+```
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+    root /var/www/html/kadira;
+    index  index.php index.html index.htm;
+
+     client_max_body_size 100M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;        
+    }
+
+    location ~ \.php$ {
+         include snippets/fastcgi-php.conf;
+         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+         include fastcgi_params;
+    }
+}
+```
+
+Once the changes have been applied, we activate the configuration on the nginx web server.
+
+```bash
+sudo ln -s /etc/nginx/sites-available/cadira/etc/nginx/sites-enabled/
+```
+
+To finish, we restart the web server
+
+```bash
+sudo systemctl restart nginx.service
+```
+
+With all changes completed, you should now be able to access the http:\localhost\kadira service.
+
+The user data defined in the default database are as follows:
+
+User: Admin
+
+Password: Admin*123
