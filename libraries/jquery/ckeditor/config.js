@@ -8,7 +8,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
     //vtiger editor toolbar configuration 
- 		    config.removePlugins = 'save,maximize,magicline'; 
+ 		    config.removePlugins = 'save,maximize,magicline,wsc,scayt'; 
 			config.fullPage = true; 
  		    config.allowedContent = true; 
 			config.disableNativeSpellChecker = false;
