@@ -42,13 +42,19 @@ class VTWorkflowEventHandler extends VTEventHandler {
 		global $adb;
 		$isNew = $entityData->isNew();
 
+		if(!isNew){
+			$sourceModule = $entityData->get('record_module');
+			if(is_array($sourceModule, ['Quotes', 'Invoide']) && $entityData->get('source') == 'WEBSERVICE'){
+				$isNew = true;
+			}
+		}
+
 		if (!$entityCache) {
 			$entityCache = new VTEntityCache($user);
 		}
 
 		$wsModuleName = $util->toWSModuleName($entityData);
-		$wsId = vtws_getWebserviceEntityId($wsModuleName,
-						$entityData->getId());
+		$wsId = vtws_getWebserviceEntityId($wsModuleName, $entityData->getId());
 		$entityData = $entityCache->forId($wsId);
 
 		/*
