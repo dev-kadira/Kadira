@@ -96,17 +96,16 @@ class CRMEntity {
 	}
 
 	function saveentity($module, $fileid = '') {
-		global $current_user, $adb; //$adb added by raju for mass mailing
-		$insertion_mode = $this->mode;
-
 		$columnFields = $this->column_fields;
 		$anyValue = false;
+
 		foreach ($columnFields as $value) {
 			if(!empty($value)) {
 				$anyValue = true;
 				break;
 			}
 		}
+
 		if(!$anyValue) {
 			die("<center>" .getTranslatedString('LBL_MANDATORY_FIELD_MISSING')."</center>");
 		}
@@ -255,7 +254,6 @@ class CRMEntity {
 	function insertIntoCrmEntity($module, $fileid = '') {
 		global $adb;
 		global $current_user;
-		global $log;
 
 		if ($fileid != '') {
 			$this->id = $fileid;
@@ -1024,26 +1022,16 @@ class CRMEntity {
 			// We have some data.
 
 			for ($index = $row_offset, $row = $this->db->fetchByAssoc($result, $index); $row && ($index < $row_offset + $max_per_page || $max_per_page == -99); $index++, $row = $this->db->fetchByAssoc($result, $index)) {
-
-
 				foreach ($this->list_fields as $entry) {
-
 					foreach ($entry as $key => $field) { // this will be cycled only once
 						if (isset($row[$field])) {
 							$this->column_fields[$this->list_fields_names[$key]] = $row[$field];
-
-
 							$this->log->debug("$this->object_name({$row['id']}): " . $field . " = " . $this->$field);
 						} else {
 							$this->column_fields[$this->list_fields_names[$key]] = "";
 						}
 					}
 				}
-
-
-				//$this->db->println("here is the bug");
-
-
 				$list[] = clone($this); //added by Richie to support PHP5
 			}
 		}
@@ -1204,7 +1192,6 @@ class CRMEntity {
 	 */
 	function track_view($user_id, $current_module, $id = '') {
 		$this->log->debug("About to call vtiger_tracker (user_id, module_name, item_id)($user_id, $current_module, $this->id)");
-
 		$tracker = new Tracker();
 		$tracker->track_view($user_id, $current_module, $id, '');
 	}

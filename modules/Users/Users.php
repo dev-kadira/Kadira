@@ -659,7 +659,6 @@ class Users extends CRMEntity {
 	 *
 	 */
 	function saveentity($module, $fileid='') {
-		global $current_user;//$adb added by raju for mass mailing
 		$insertion_mode = $this->mode;
 		if(empty($this->column_fields['time_zone'])) {
 			$dbDefaultTimeZone = DateTimeField::getDBTimeZone();
@@ -1361,7 +1360,6 @@ class Users extends CRMEntity {
 	 */
 	function track_view($user_id, $current_module,$id='') {
 		$this->log->debug("About to call vtiger_tracker (user_id, module_name, item_id)($user_id, $current_module, $this->id)");
-
 		$tracker = new Tracker();
 		$tracker->track_view($user_id, $current_module, $id, '');
 	}
