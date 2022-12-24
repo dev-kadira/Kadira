@@ -2218,6 +2218,7 @@ th {
   margin-bottom: 10px;
   background: #FFFFFF;
   border-width: thin;
+  border-radius: 5px;
 }
 .summaryView .fieldLabel {
   padding-left: 0px;
@@ -2252,6 +2253,7 @@ th {
   margin-bottom: 10px;
   background: #FFFFFF;
   border-width: thin;
+  border-radius: 5px;
 }
 .summaryWidgetContainer .widget_header {
   margin-bottom: 6px;
@@ -6064,7 +6066,7 @@ div.tooltip-inner {
 .detailview-header-block {
   background: white;
   padding: 15px;
-  padding-top: 25px;
+  margin-top: 2px;
   border: 1px solid #eee;
   border-width: thin;
 }
