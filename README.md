@@ -94,7 +94,7 @@ sudo nano /etc/php/7.4/fpm/php.ini
 ```sql
 sudo mysql -u root -p
 
-CREATE DATABASE cadira;
+CREATE DATABASE kadira;
 CREATE USER 'kadirauser'@'localhost' IDENTIFIED BY 'new_password_here';
 GRANT ALL ON kadira.* TO 'kadirauser'@'localhost' IDENTIFIED BY 'user_password_here' WITH GRANT OPTION;
 
@@ -105,20 +105,20 @@ EXIT;
 We import the database of the base project
 
 ```sql
-mysql -u username -p cadira < /var/www/html/cadira/schema/cadira.sql
+mysql -u username -p kadira < /var/www/html/kadira/schema/kadira.sql
 ````
 
 ## Download and install the project Kadira
 
 ```bash
 cd /var/www/html/
-git clone https://github.com/dev-cadira/cadira.git
+git clone https://github.com/dev-kadira/Kadira.git
 ```
 We apply permissions necessary for the web server to be able to write to the directory
 
 ```bash
-sudo chown -R www-data:www-data /var/www/html/cadira/
-sudo chmod -R 755 /var/www/html/cadira/
+sudo chown -R www-data:www-data /var/www/html/kadira/
+sudo chmod -R 755 /var/www/html/kadira/
 ```
 
 ## Web server configuration
@@ -152,7 +152,7 @@ server {
 Once the changes have been applied, we activate the configuration on the nginx web server.
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/cadira/etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/kadira/etc/nginx/sites-enabled/
 ```
 
 To finish, we restart the web server
