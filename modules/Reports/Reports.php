@@ -560,12 +560,12 @@ class Reports extends CRMEntity{
 				$report_details ['secondarymodules'] = $report["secondarymodules"];
 				$report_details ['state'] = $report["state"];
 				$report_details ['description'] = $report["description"];
-				$report_details ['reportname'] = $report["reportname"];
+				$report_details ['reportname'] = decode_html($report["reportname"]);
                 $report_details ['reporttype'] = $report["reporttype"];
 				$report_details ['sharingtype'] = $report["sharingtype"];
 				$report_details ['foldername'] = $report["foldername"];
 				$report_details ['pinned'] = $report["pinned"]; // To check whether a record is pinned to dashboard or not
-				$report_details ['owner'] = $report["ownername"];
+				$report_details ['owner'] = decode_html($report["ownername"]);
 				$report_details ['folderid'] = $report["folderid"];
 				if($is_admin==true || in_array($report["owner"],$subordinate_users) || $report["owner"]==$current_user->id)
 					$report_details ['editable'] = 'true';
@@ -1773,7 +1773,7 @@ function getEscapedColumns($selectedfields)
 	 */
 	public static function getAdvCriteriaHTML($selected="") {
 		global $adv_filter_options;
-
+		$shtml = '';
 		foreach($adv_filter_options as $key=>$value) {
 			if($selected == $key) {
 				$shtml .= "<option selected value=\"".$key."\">".$value."</option>";
@@ -1792,14 +1792,9 @@ function getEscapedColumns($selectedfields)
 
 function getReportsModuleList($focus)
 {
-	global $adb;
-	global $app_list_strings;
-	//global $report_modules;
-	global $mod_strings;
 	$modules = Array();
 	foreach($focus->module_list as $key=>$value) {
 		if(isPermitted($key,'index') == "yes") {
-			$count_flag = 1;
 			$modules [$key] = getTranslatedString($key,$key);
 		}
 	}
@@ -1813,9 +1808,6 @@ function getReportsModuleList($focus)
 
 function getReportRelatedModules($module,$focus)
 {
-	global $app_list_strings;
-	global $related_modules;
-	global $mod_strings;
 	$optionhtml = Array();
 	if(vtlib_isModuleActive($module)){
 		if(!empty($focus->related_modules[$module])) {
@@ -1829,19 +1821,18 @@ function getReportRelatedModules($module,$focus)
 		}
 	}
 
-
 	return $optionhtml;
 }
 
 function updateAdvancedCriteria($reportid, $advft_criteria, $advft_criteria_groups) {
 
-	global $adb, $log;
+	global $adb;
 
 	$idelrelcriteriasql = "delete from vtiger_relcriteria where queryid=?";
-	$idelrelcriteriasqlresult = $adb->pquery($idelrelcriteriasql, array($reportid));
+	$adb->pquery($idelrelcriteriasql, array($reportid));
 
 	$idelrelcriteriagroupsql = "delete from vtiger_relcriteria_grouping where queryid=?";
-	$idelrelcriteriagroupsqlresult = $adb->pquery($idelrelcriteriagroupsql, array($reportid));
+	$adb->pquery($idelrelcriteriagroupsql, array($reportid));
 
 	if(empty($advft_criteria)) return;
 
@@ -1896,7 +1887,7 @@ function updateAdvancedCriteria($reportid, $advft_criteria, $advft_criteria_grou
 		}
 
 		$irelcriteriasql = "insert into vtiger_relcriteria(QUERYID,COLUMNINDEX,COLUMNNAME,COMPARATOR,VALUE,GROUPID,COLUMN_CONDITION) values (?,?,?,?,?,?,?)";
-		$irelcriteriaresult = $adb->pquery($irelcriteriasql, array($reportid, $column_index, $adv_filter_column, $adv_filter_comparator, $adv_filter_value, $adv_filter_groupid, $adv_filter_column_condition));
+		$adb->pquery($irelcriteriasql, array($reportid, $column_index, $adv_filter_column, $adv_filter_comparator, $adv_filter_value, $adv_filter_groupid, $adv_filter_column_condition));
 
 		// Update the condition expression for the group to which the condition column belongs
 		$groupConditionExpression = '';
@@ -1913,7 +1904,7 @@ function updateAdvancedCriteria($reportid, $advft_criteria, $advft_criteria_grou
 		if(empty($group_condition_info["conditionexpression"])) continue; // Case when the group doesn't have any column criteria
 
 		$irelcriteriagroupsql = "insert into vtiger_relcriteria_grouping(GROUPID,QUERYID,GROUP_CONDITION,CONDITION_EXPRESSION) values (?,?,?,?)";
-		$irelcriteriagroupresult = $adb->pquery($irelcriteriagroupsql, array($group_index, $reportid, $group_condition_info["groupcondition"], $group_condition_info["conditionexpression"]));
+		$adb->pquery($irelcriteriagroupsql, array($group_index, $reportid, $group_condition_info["groupcondition"], $group_condition_info["conditionexpression"]));
 	}
 }
 ?>
