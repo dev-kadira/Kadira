@@ -7,25 +7,25 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
 /**
  * Mass Edit Record Structure Model
  */
-class Accounts_MassEditRecordStructure_Model extends Vtiger_MassEditRecordStructure_Model {
-	
+class Accounts_MassEditRecordStructure_Model extends Vtiger_MassEditRecordStructure_Model
+{
 	/*
 	 * Function that return Field Restricted are not
 	 *	@params Field Model
 	 *  @returns boolean true or false
 	 */
-	public function isFieldRestricted($fieldModel){
+	public function isFieldRestricted($fieldModel)
+	{
 		$restricted = parent::isFieldRestricted($fieldModel);
-		if($restricted && $fieldModel->getName() == 'accountname'){
+		if ($restricted && $fieldModel->getName() == 'accountname') {
 			return false;
 		} else {
 			return $restricted;
 		}
 	}
 }
-?>

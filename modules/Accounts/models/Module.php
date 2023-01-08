@@ -6,33 +6,34 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- * ************************************************************************************/
+ * */
 
-class Accounts_Module_Model extends Vtiger_Module_Model {
-
+class Accounts_Module_Model extends Vtiger_Module_Model
+{
 	/**
 	 * Function to get the Quick Links for the module
 	 * @param <Array> $linkParams
 	 * @return <Array> List of Vtiger_Link_Model instances
 	 */
-	public function getSideBarLinks($linkParams) {
+	public function getSideBarLinks($linkParams)
+	{
 		$parentQuickLinks = parent::getSideBarLinks($linkParams);
 
-		$quickLink = array(
-			'linktype' => 'SIDEBARLINK',
+		$quickLink = [
+			'linktype'  => 'SIDEBARLINK',
 			'linklabel' => 'LBL_DASHBOARD',
-			'linkurl' => $this->getDashBoardUrl(),
-			'linkicon' => '',
-		);
+			'linkurl'   => $this->getDashBoardUrl(),
+			'linkicon'  => '',
+		];
 
 		//Check profile permissions for Dashboards
 		$moduleModel = Vtiger_Module_Model::getInstance('Dashboard');
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
-		if($permission) {
+		if ($permission) {
 			$parentQuickLinks['SIDEBARLINK'][] = Vtiger_Link_Model::getInstanceFromValues($quickLink);
 		}
-		
+
 		return $parentQuickLinks;
 	}
 
@@ -44,34 +45,35 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 	 * @param <String> $listQuery
 	 * @return <String> Listview Query
 	 */
-	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery) {
+	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery)
+	{
 		if (($sourceModule == 'Accounts' && $field == 'account_id' && $record)
-				|| in_array($sourceModule, array('Campaigns', 'Products', 'Services', 'Emails'))) {
-
-		    	$db = PearDatabase::getInstance();
-		    	$params = array($record);
+				|| in_array($sourceModule, ['Campaigns', 'Products', 'Services', 'Emails'])) {
+			$db = PearDatabase::getInstance();
+			$params = [$record];
 			if ($sourceModule === 'Campaigns') {
-				$condition = " vtiger_account.accountid NOT IN (SELECT accountid FROM vtiger_campaignaccountrel WHERE campaignid = ?)";
+				$condition = ' vtiger_account.accountid NOT IN (SELECT accountid FROM vtiger_campaignaccountrel WHERE campaignid = ?)';
 			} elseif ($sourceModule === 'Products') {
-				$condition = " vtiger_account.accountid NOT IN (SELECT crmid FROM vtiger_seproductsrel WHERE productid = ?)";
+				$condition = ' vtiger_account.accountid NOT IN (SELECT crmid FROM vtiger_seproductsrel WHERE productid = ?)';
 			} elseif ($sourceModule === 'Services') {
-				$condition = " vtiger_account.accountid NOT IN (SELECT relcrmid FROM vtiger_crmentityrel WHERE crmid = ? UNION SELECT crmid FROM vtiger_crmentityrel WHERE relcrmid = ?) ";
-                		$params = array($record, $record);
-            		} elseif ($sourceModule === 'Emails') {
+				$condition = ' vtiger_account.accountid NOT IN (SELECT relcrmid FROM vtiger_crmentityrel WHERE crmid = ? UNION SELECT crmid FROM vtiger_crmentityrel WHERE relcrmid = ?) ';
+				$params = [$record, $record];
+			} elseif ($sourceModule === 'Emails') {
 				$condition = ' vtiger_account.emailoptout = 0';
-                		$params = array();
+				$params = [];
 			} else {
-				$condition = " vtiger_account.accountid != ?";
+				$condition = ' vtiger_account.accountid != ?';
 			}
-            		$condition = $db->convert2Sql($condition, $params);
+			$condition = $db->convert2Sql($condition, $params);
 
 			$position = stripos($listQuery, 'where');
-			if($position) {
+			if ($position) {
 				$split = preg_split('/where/i', $listQuery);
 				$overRideQuery = $split[0] . ' WHERE ' . $split[1] . ' AND ' . $condition;
 			} else {
-				$overRideQuery = $listQuery. ' WHERE ' . $condition;
+				$overRideQuery = $listQuery . ' WHERE ' . $condition;
 			}
+
 			return $overRideQuery;
 		}
 	}
@@ -83,16 +85,17 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 	 * @param Vtiger_Module_Model $relatedModule
 	 * @return <String>
 	 */
-	public function getRelationQuery($recordId, $functionName, $relatedModule, $relationId) {
+	public function getRelationQuery($recordId, $functionName, $relatedModule, $relationId)
+	{
 		if ($functionName === 'get_activities') {
 			$focus = CRMEntity::getInstance($this->getName());
 			$focus->id = $recordId;
 			$entityIds = $focus->getRelatedContactsIds();
 			$entityIds = implode(',', $entityIds);
 
-			$userNameSql = getSqlForNameInDisplayFormat(array('first_name' => 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'), 'Users');
+			$userNameSql = getSqlForNameInDisplayFormat(['first_name' => 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'], 'Users');
 
-			$query = "SELECT CASE WHEN (vtiger_users.user_name not like '') THEN $userNameSql ELSE vtiger_groups.groupname END AS user_name,
+			$query = "SELECT CASE WHEN (vtiger_users.user_name not like '') THEN {$userNameSql} ELSE vtiger_groups.groupname END AS user_name,
 						vtiger_crmentity.*, vtiger_activity.activitytype, vtiger_activity.subject, vtiger_activity.date_start, vtiger_activity.time_start,
 						vtiger_activity.recurringtype, vtiger_activity.due_date, vtiger_activity.time_end, vtiger_activity.visibility, vtiger_seactivityrel.crmid AS parent_id,
 						CASE WHEN (vtiger_activity.activitytype = 'Task') THEN (vtiger_activity.status) ELSE (vtiger_activity.eventstatus) END AS status
@@ -103,11 +106,11 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 						LEFT JOIN vtiger_users ON vtiger_users.id = vtiger_crmentity.smownerid
 						LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid
 							WHERE vtiger_crmentity.deleted = 0 AND vtiger_activity.activitytype <> 'Emails'
-								AND (vtiger_seactivityrel.crmid = ".$recordId;
-			if($entityIds) {
-				$query .= " OR vtiger_cntactivityrel.contactid IN (".$entityIds."))";
+								AND (vtiger_seactivityrel.crmid = " . $recordId;
+			if ($entityIds) {
+				$query .= ' OR vtiger_cntactivityrel.contactid IN (' . $entityIds . '))';
 			} else {
-				$query .= ")";
+				$query .= ')';
 			}
 
 			$relatedModuleName = $relatedModule->getName();
@@ -116,11 +119,11 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 			if ($nonAdminQuery) {
 				$query = appendFromClauseToQuery($query, $nonAdminQuery);
 
-				if(trim($nonAdminQuery)) {
+				if (trim($nonAdminQuery)) {
 					$relModuleFocus = CRMEntity::getInstance($relatedModuleName);
 					$condition = $relModuleFocus->buildWhereClauseConditionForCalendar();
-					if($condition) {
-						$query .= ' AND '.$condition;
+					if ($condition) {
+						$query .= ' AND ' . $condition;
 					}
 				}
 			}
@@ -142,11 +145,12 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 	 * @param <String> $recordId - record id
 	 * @return <Array>
 	 */
-	function getCalendarActivities($mode, $pagingModel, $user, $recordId = false) {
+	public function getCalendarActivities($mode, $pagingModel, $user, $recordId = false)
+	{
 		$currentUser = Users_Record_Model::getCurrentUserModel();
 		$db = PearDatabase::getInstance();
 
-		if (!$user) {
+		if (! $user) {
 			$user = $currentUser->getId();
 		}
 
@@ -157,7 +161,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 		$focus = CRMEntity::getInstance($this->getName());
 		$focus->id = $recordId;
 		$entityIds = $focus->getRelatedContactsIds();
-        $params = array();
+		$params = [];
 
 		$query = "SELECT DISTINCT vtiger_crmentity.crmid, (CASE WHEN (crmentity2.crmid not like '') THEN crmentity2.crmid ELSE crmentity3.crmid END) AS parent_id, 
 					(CASE WHEN (crmentity2.setype not like '') then crmentity2.setype ELSE crmentity3.setype END) AS crmentity2module, vtiger_crmentity.smownerid, vtiger_crmentity.setype, vtiger_activity.* FROM vtiger_activity
@@ -175,61 +179,61 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 					AND (vtiger_activity.status is NULL OR vtiger_activity.status NOT IN ('Completed', 'Deferred', 'Cancelled'))
 					AND (vtiger_activity.eventstatus is NULL OR vtiger_activity.eventstatus NOT IN ('Held', 'Cancelled'))";
 
-		if(!$currentUser->isAdminUser()) {
+		if (! $currentUser->isAdminUser()) {
 			$moduleFocus = CRMEntity::getInstance('Calendar');
 			$condition = $moduleFocus->buildWhereClauseConditionForCalendar();
-			if($condition) {
-				$query .= ' AND '.$condition;
+			if ($condition) {
+				$query .= ' AND ' . $condition;
 			}
 		}
 
 		if ($mode === 'upcoming') {
 			$query .= " AND CASE WHEN vtiger_activity.activitytype='Task' THEN due_date >= ? ELSE CONCAT(due_date,' ',time_end) >= ? END";
-            $params[] = $currentDate;
-            $params[] = $nowInDBFormat;
+			$params[] = $currentDate;
+			$params[] = $nowInDBFormat;
 		} elseif ($mode === 'overdue') {
 			$query .= " AND CASE WHEN vtiger_activity.activitytype='Task' THEN due_date < ? ELSE CONCAT(due_date,' ',time_end) < ? END";
-            $params[] = $currentDate;
-            $params[] = $nowInDBFormat;
+			$params[] = $currentDate;
+			$params[] = $nowInDBFormat;
 		}
 
 		if ($recordId) {
-			$query .= " AND (vtiger_seactivityrel.crmid = ?";
+			$query .= ' AND (vtiger_seactivityrel.crmid = ?';
 			array_push($params, $recordId);
 			if ($entityIds) {
-				$query .= " OR vtiger_cntactivityrel.contactid IN (" . generateQuestionMarks($entityIds) . "))";
-                $params = array_merge($params, $entityIds);
+				$query .= ' OR vtiger_cntactivityrel.contactid IN (' . generateQuestionMarks($entityIds) . '))';
+				$params = array_merge($params, $entityIds);
 			} else {
-				$query .= ")";
+				$query .= ')';
 			}
 		}
 
 		if ($user != 'all' && $user != '') {
-			$query .= " AND vtiger_crmentity.smownerid = ?";
+			$query .= ' AND vtiger_crmentity.smownerid = ?';
 			array_push($params, $user);
 		}
 
-		$query .= " ORDER BY date_start, time_start LIMIT " . $pagingModel->getStartIndex() . ", " . ($pagingModel->getPageLimit() + 1);
+		$query .= ' ORDER BY date_start, time_start LIMIT ' . $pagingModel->getStartIndex() . ', ' . ($pagingModel->getPageLimit() + 1);
 
 		$result = $db->pquery($query, $params);
 		$numOfRows = $db->num_rows($result);
 
 		$groupsIds = Vtiger_Util_Helper::getGroupsIdsForUsers($currentUser->getId());
-		$activities = array();
-		$recordsToUnset = array();
+		$activities = [];
+		$recordsToUnset = [];
 		for ($i = 0; $i < $numOfRows; $i++) {
 			$newRow = $db->query_result_rowdata($result, $i);
 			$model = Vtiger_Record_Model::getCleanInstance('Calendar');
 			$ownerId = $newRow['smownerid'];
 			$currentUser = Users_Record_Model::getCurrentUserModel();
-			$visibleFields = array('activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'crmid');
+			$visibleFields = ['activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'crmid'];
 			$visibility = true;
 			if (in_array($ownerId, $groupsIds)) {
 				$visibility = false;
-			} else if ($ownerId == $currentUser->getId()) {
+			} elseif ($ownerId == $currentUser->getId()) {
 				$visibility = false;
 			}
-			if (!$currentUser->isAdminUser() && $newRow['activitytype'] != 'Task' && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
+			if (! $currentUser->isAdminUser() && $newRow['activitytype'] != 'Task' && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
 				foreach ($newRow as $data => $value) {
 					if (in_array($data, $visibleFields) != -1) {
 						unset($newRow[$data]);
@@ -240,9 +244,9 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 			if ($newRow['activitytype'] == 'Task') {
 				unset($newRow['visibility']);
 
-				$due_date = $newRow["due_date"];
-				$dayEndTime = "23:59:59";
-				$EndDateTime = Vtiger_Datetime_UIType::getDBDateTimeValue($due_date . " " . $dayEndTime);
+				$due_date = $newRow['due_date'];
+				$dayEndTime = '23:59:59';
+				$EndDateTime = Vtiger_Datetime_UIType::getDBDateTimeValue($due_date . ' ' . $dayEndTime);
 				$dueDateTimeInDbFormat = explode(' ', $EndDateTime);
 				$dueTimeInDbFormat = $dueDateTimeInDbFormat[1];
 				$newRow['time_end'] = $dueTimeInDbFormat;
@@ -255,7 +259,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 			$model->setData($newRow);
 			$model->setId($newRow['crmid']);
 			$activities[$newRow['crmid']] = $model;
-			if (!$currentUser->isAdminUser() && $newRow['activitytype'] == 'Task' && isToDoPermittedBySharing($newRow['crmid']) == 'no') {
+			if (! $currentUser->isAdminUser() && $newRow['activitytype'] == 'Task' && isToDoPermittedBySharing($newRow['crmid']) == 'no') {
 				$recordsToUnset[] = $newRow['crmid'];
 			}
 		}
@@ -271,6 +275,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model {
 		foreach ($recordsToUnset as $record) {
 			unset($activities[$record]);
 		}
+
 		return $activities;
 	}
 }
