@@ -19,7 +19,7 @@
 					<input type="hidden" value="importResult" name="mode">
 					<h5><label class ="col-lg-4 textAlignRight" for="import_file" style = "padding-top:9px">{vtranslate('LBL_IMPORT_RECORDS', $MODULE)}</label></h5>
 					<div class = "col-lg-6">
-						<div class="fileUploadBtn btn btn-primary">
+						<div class="fileUploadBtn btn btn-large btn-primary">
 							<span><i class="fa fa-laptop"></i> {vtranslate('Select from My Computer', $MODULE)}</span>
 							<input type="file" name="import_file" id="import_file" onchange="Vtiger_Import_Js.checkFileType(event)" data-file-formats="ics"/>
 						</div>

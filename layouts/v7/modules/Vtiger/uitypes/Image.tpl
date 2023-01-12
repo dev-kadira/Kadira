@@ -19,7 +19,7 @@
 		{assign var="SPECIAL_VALIDATOR" value=$FIELD_MODEL->getValidator()}
 		{assign var="FIELD_INFO" value=$FIELD_MODEL->getFieldInfo()}
 		<div class="fileUploadContainer text-left">
-			<div class="fileUploadBtn btn btn-primary">
+			<div class="fileUploadBtn btn btn-large btn-primary">
 				<span><i class="fa fa-laptop"></i> {vtranslate('LBL_UPLOAD', $MODULE)}</span>
 				<input type="file" class="inputElement {if $MODULE eq 'Products'}multi max-6{/if} {if $FIELD_MODEL->get('fieldvalue') and $FIELD_INFO["mandatory"] eq true} ignore-validation {/if}" name="{$FIELD_MODEL->getFieldName()}[]" value="{$FIELD_MODEL->get('fieldvalue')}"
 					{if !empty($SPECIAL_VALIDATOR)}data-validator="{Zend_Json::encode($SPECIAL_VALIDATOR)}"{/if} 

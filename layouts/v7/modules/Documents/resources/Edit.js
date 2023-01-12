@@ -55,7 +55,7 @@ Vtiger_Edit_Js("Documents_Edit_Js", {
             var replaceElement = fileNameElement;
 			if(thisInstance.isFileLocationInternalType(fileLocationTypeElement)) {
 				var newFileNameElement = jQuery(
-                    '<div class="fileUploadBtn btn btn-primary">'+
+                    '<div class="fileUploadBtn btn btn-large btn-primary">'+
                         '<span><i class="fa fa-laptop"></i>&nbsp;'+
                             app.vtranslate("JS_UPLOAD")+
                         '</span>'+

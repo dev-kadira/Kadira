@@ -29,7 +29,7 @@
 							<input type="checkbox" name="acceptDisclaimer" /> &nbsp;&nbsp;<b>{vtranslate('LBL_ACCEPT_WITH_THE_DISCLAIMER', $QUALIFIED_MODULE)}</b>
 						</div>
 						<div style="margin-top: 15px; display: none;">
-							<span name="proceedInstallation" class="fileUploadBtn btn btn-primary">
+							<span name="proceedInstallation" class="fileUploadBtn btn btn-large btn-primary">
 								<span><i class="fa fa-laptop"></i> {vtranslate('Select from My Computer', $MODULE)}</span>
 								<input type="file" name="moduleZip" id="moduleZip" size="80px" data-validation-engine="validate[required, funcCall[Vtiger_Base_Validator_Js.invokeValidation]]"
 										data-validator={Zend_Json::encode([['name'=>'UploadModuleZip']])} />

@@ -2145,6 +2145,7 @@ th {
   font-size: 14px;
   color: white;
   padding: 7px 25px;
+  border-radius: 5px;
 }
 .cancelLink,
 .popoverCancel {
@@ -4057,6 +4058,7 @@ th {
 .fileUploadBtn {
   position: relative;
   overflow: hidden;
+  border-radius: 5px;
 }
 .fileUploadBtn input[type="file"] {
   position: absolute;
@@ -7014,6 +7016,7 @@ a.btnReport:hover {
 }
 .commentContainer .detailViewSaveComment {
   width: 102px;
+  border-radius: 5px;
 }
 .socialContainer .socialBlock {
   padding: 10px 5px;
