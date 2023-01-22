@@ -806,7 +806,7 @@ a.menu-item:hover {
   height: inherit;
 }
 .viewContent .content-area {
-  padding-left: 4%;
+  padding-left: 3%;
 }
 .viewContent .content-area.full-width {
   padding-left: 15px;
@@ -2027,6 +2027,9 @@ th {
 }
 .commentDetails li {
   padding-left: 50px;
+}
+.blockComment {
+  margin: 10px, 10px, 10px, 10px
 }
 .commentInfoContent {
   display: inline-block;

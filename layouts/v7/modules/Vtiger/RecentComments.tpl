@@ -72,13 +72,13 @@
 				{foreach key=index item=COMMENT from=$COMMENTS}
 					{assign var=CREATOR_NAME value={decode_html($COMMENT->getCommentedByName())}}
 					<div class="commentDetails">
-						<div class="singleComment" {if $COMMENT->get('is_private')}style="background: #fff9ea;"{/if}>
+						<div class="singleComment" {if $COMMENT->get('is_private')}style="background: #f5f5f5;"{/if}>
 							<input type="hidden" name='is_private' value="{$COMMENT->get('is_private')}">
 							{assign var=PARENT_COMMENT_MODEL value=$COMMENT->getParentCommentModel()}
 							{assign var=CHILD_COMMENTS_MODEL value=$COMMENT->getChildComments()}
 							<div class="row">
 								<div class="col-lg-12">
-									<div class="media">
+									<div class="media" style="margin: 10px;">
 										<div class="media-left title">
 											<div class="col-lg-2 recordImage commentInfoHeader" data-commentid="{$COMMENT->getId()}" data-parentcommentid="{$COMMENT->get('parent_comments')}" data-relatedto = "{$COMMENT->get('related_to')}">
 												{assign var=IMAGE_PATH value=$COMMENT->getImagePath()}
