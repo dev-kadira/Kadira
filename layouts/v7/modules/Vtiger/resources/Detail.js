@@ -2018,6 +2018,52 @@ Vtiger.Class("Vtiger_Detail_Js",{
 	},
 
 	/**
+	 * function to save comment
+	 * return json response
+	 */
+	deleteComment : function(e) {
+		var self = this;
+		var aDeferred = jQuery.Deferred();
+		var currentTarget = jQuery(e.currentTarget);
+		var commentInfoHeader = currentTarget.closest('.singleComment').find('.commentInfoHeader');
+		var commentId = commentInfoHeader.data('commentid');
+
+		app.helper.showProgress();
+
+		var element = jQuery(e.currentTarget);
+		element.attr('disabled', 'disabled');
+
+		var params = {};
+		params['module'] = 'ModComments';
+		params['action'] = 'Delete';
+		params['mode'] = 'delete';
+		params['record'] = commentId;
+
+		var incrementCount = true;
+		app.request.post({'data': params}).then(
+			function(err,data){
+				Vtiger_Index_Js.files = '';
+				jQuery('.MultiFile-remove').trigger('click');
+				app.helper.hideProgress();
+				if(incrementCount){
+					// to increment related records count when we add comment from related tab / summary view widget
+					var tabElement = self.getTabByLabel("ModComments");
+					var relatedController = new Vtiger_RelatedList_Js(self.getRecordId(), app.getModuleName(), tabElement, self.getRelatedModuleName());
+					relatedController.updateRelatedRecordsCount(jQuery(tabElement).data('relation-id'),[1],true);
+				}
+				aDeferred.resolve(data);
+			},
+			function(textStatus, errorThrown){
+				app.helper.hideProgress();
+				element.removeAttr('disabled');
+				aDeferred.reject(textStatus, errorThrown);
+			}
+		);
+
+		return aDeferred.promise();
+	},
+
+	/**
 	 * function to remove comment block if its exists.
 	 */
 	removeCommentBlockIfExists : function() {
@@ -2823,7 +2869,7 @@ Vtiger.Class("Vtiger_Detail_Js",{
 					var commentTextAreaElement = closestAddCommentBlock.find('.commentcontent');
 					var commentInfoBlock = currentTarget.closest('.singleComment');
 					commentTextAreaElement.val('');
-
+					closestAddCommentBlock.find('#is_private').removeAttr('checked');
 					if(mode == "add"){
 						var commentId = data['id'];
 						var commentHtml = self.getCommentUI(commentId);
@@ -2905,6 +2951,35 @@ Vtiger.Class("Vtiger_Detail_Js",{
 			/*commentInfoContent.hide();
 			commentInfoBlock.find('.commentActionsContainer').hide();*/
 			editCommentBlock.appendTo(commentInfoBlock).show();
+		});
+
+		detailContentsHolder.on('click','.deleteComment', function(e){
+			var element = jQuery(e.currentTarget);
+			var commentInfoBlock = element.closest('.commentDetails');
+			if(!element.is(":disabled")) {
+				var dataObj = self.deleteComment(e);
+				dataObj.then(function(){
+					commentInfoBlock.remove();
+				});
+			}
+		});
+
+		detailContentsHolder.on('click','.deleteCommentSummary', function(e){
+			var element = jQuery(e.currentTarget);
+			if(!element.is(":disabled")) {
+				var dataObj = self.deleteComment(e);
+				dataObj.then(function(){
+					var commentsContainer = detailContentsHolder.find("[data-name='ModComments']");
+					if(typeof commentsContainer != "undefined") {
+						self.loadWidget(commentsContainer).then(function() {							
+							element.removeAttr('disabled');
+							app.event.trigger('post.summarywidget.load',commentsContainer);
+							var indexInstance = Vtiger_Index_Js.getInstance();
+							indexInstance.registerMultiUpload();
+						});
+					}
+				});
+			}
 		});
 
 		detailContentsHolder.on('click','.closeCommentBlock', function(e){

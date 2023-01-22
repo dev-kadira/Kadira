@@ -86,12 +86,7 @@
 												{vtranslate('LBL_REPLY',$MODULE_NAME)}
 											</a>
 										{/if}
-										{if $CURRENTUSER->getId() eq $COMMENT->get('userid') && $IS_EDITABLE}
-											{if $IS_CREATABLE}&nbsp;&nbsp;&nbsp;{/if}
-											<a href="javascript:void(0);" class="cursorPointer editComment feedback" style="color: blue;">
-												{vtranslate('LBL_EDIT',$MODULE_NAME)}
-											</a>
-										{/if}
+
 									</span>
 								</span>
 							</div>

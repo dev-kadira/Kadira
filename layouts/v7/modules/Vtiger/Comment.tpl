@@ -7,8 +7,6 @@
  * All Rights Reserved.
  ************************************************************************************}
 {strip}
-	{assign var="PRIVATE_COMMENT_MODULES" value=Vtiger_Functions::getPrivateCommentModules()}
-	
 	<div class="commentDiv {if $COMMENT->get('is_private')}privateComment{/if}">
 		<div class="singleComment">
 			<input type="hidden" name="is_private" value="{$COMMENT->get('is_private')}">
@@ -21,7 +19,7 @@
 					<div class="col-lg-12">
 						<div class="media">
 							<div class="media-left title" id="{$COMMENT->getId()}">
-								{assign var=CREATOR_NAME value={decode_html($COMMENT->getCommentedByName())}}
+								{assign var=CREATOR_NAME value=$COMMENT->getCommentedByName()}
 								<div class="col-lg-2 recordImage commentInfoHeader" style ="width:50px; height:50px; font-size: 30px;" data-commentid="{$COMMENT->getId()}" data-parentcommentid="{$COMMENT->get('parent_comments')}" data-relatedto = "{$COMMENT->get('related_to')}">
 									{assign var=IMAGE_PATH value=$COMMENT->getImagePath()}
 									{if !empty($IMAGE_PATH)}
@@ -49,18 +47,7 @@
 									{/if}
 									<span class="commentTime text-muted cursorDefault">
 										<small title="{Vtiger_Util_Helper::formatDateTimeIntoDayString($COMMENT->getCommentedTime())}">{Vtiger_Util_Helper::formatDateDiffInStrings($COMMENT->getCommentedTime())}</small>
-									</span>&nbsp;&nbsp;
-									
-									{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
-										<span>
-											{if $COMMENT->get('is_private')}
-												<i class="fa fa-lock" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_INTERNAL_COMMENT_TOOTLTIP',$MODULE)}"></i>
-											{else}
-												<i class="fa fa-unlock" data-toggle="tooltip" data-placement="top" data-original-title="{vtranslate('LBL_EXTERNAL_COMMENT_TOOTLTIP',$MODULE)}"></i>
-											{/if}
-										</span>
-									{/if}
-									
+									</span>
 									<div class="commentInfoContentBlock">
 										<span class="commentInfoContent">
 											{nl2br($COMMENT->get('commentcontent'))}
@@ -86,6 +73,12 @@
 														{vtranslate('LBL_EDIT',$MODULE_NAME)}
 													</a>
 												{/if}
+											{/if}
+											{if $COMMENTS_MODULE_MODEL->isPermitted('Delete')}
+												{if $IS_CREATABLE}&nbsp;&nbsp;&nbsp;{/if}
+												<a href="javascript:void(0);" class="cursorPointer deleteComment feedback" style="color: blue;">
+													{vtranslate('LBL_DELETE',$MODULE_NAME)}
+												</a>
 											{/if}
 
 											{assign var=CHILD_COMMENTS_COUNT value=$COMMENT->getChildCommentsCount()}
