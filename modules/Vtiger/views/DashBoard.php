@@ -121,6 +121,7 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View
 		$jsFileNames = [
 			'~/libraries/chart.js/Chart.min.js',
 			'~/libraries/chart.js/chartjs-plugin-datalabels.min.js',
+			'~/libraries/chart.js/palette.js',
 			'~/libraries/jquery/gridster/jquery.gridster.min.js',
 			'~/libraries/jquery/jqplot/jquery.jqplot.min.js',
 			'~/libraries/jquery/jqplot/plugins/jqplot.canvasTextRenderer.min.js',
