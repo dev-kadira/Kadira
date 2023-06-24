@@ -11,7 +11,7 @@
 	<!DOCTYPE html>
 	<html>
 		<head>
-			<title>Vtiger</title>
+			<title>Kadira</title>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 			<link REL="SHORTCUT ICON" HREF="layouts/v7/skins/images/favicon.ico">

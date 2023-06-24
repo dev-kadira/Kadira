@@ -13,7 +13,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Vtiger login page</title>
+		<title>Kadira login page</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- for Login page we are added -->
 		<link href="libraries/bootstrap/css/bootstrap.min.css" rel="stylesheet">

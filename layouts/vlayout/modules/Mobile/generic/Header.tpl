@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 {/if}
 
-<title>{if $TITLE}{$TITLE}{else}vtiger CRM Mobile{/if}</title>
+<title>{if $TITLE}{$TITLE}{else}Kadira CRM Mobile{/if}</title>
 
 <link rel="stylesheet" type="text/css" href="resources/skins/{$SKIN}" />
 <script type="text/javascript" src="Mobile.js"></script>

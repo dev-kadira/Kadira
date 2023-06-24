@@ -10,7 +10,7 @@
 {strip}
 	<html lang="en">
 		<head>
-			<title>Vtiger CRM Setup</title>
+			<title>Kadira CRM Setup</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 			<link REL="SHORTCUT ICON" HREF="layouts/v7/skins/images/favicon.ico">
