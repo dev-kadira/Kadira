@@ -31,8 +31,8 @@ $CALENDAR_DISPLAY = 'true';
 $USE_RTE = 'true';
 
 // helpdesk support email id and support name (Example: 'support@vtiger.com' and 'vtiger support')
-$HELPDESK_SUPPORT_EMAIL_ID = 'admin@cadira.com';
-$HELPDESK_SUPPORT_NAME = 'Cadira';
+$HELPDESK_SUPPORT_EMAIL_ID = 'admin@kadira.com';
+$HELPDESK_SUPPORT_NAME = 'Kadira';
 $HELPDESK_SUPPORT_EMAIL_REPLY_ID = $HELPDESK_SUPPORT_EMAIL_ID;
 
 /* database configuration
@@ -46,9 +46,9 @@ $HELPDESK_SUPPORT_EMAIL_REPLY_ID = $HELPDESK_SUPPORT_EMAIL_ID;
 
 $dbconfig['db_server'] = 'localhost';
 $dbconfig['db_port'] = ':3306';
-$dbconfig['db_username'] = 'cadira';
+$dbconfig['db_username'] = 'kadira';
 $dbconfig['db_password'] = '63edr2LZxD';
-$dbconfig['db_name'] = 'cadira';
+$dbconfig['db_name'] = 'kadira';
 $dbconfig['db_type'] = 'mysqli';
 $dbconfig['db_status'] = 'true';
 
