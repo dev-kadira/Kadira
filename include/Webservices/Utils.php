@@ -281,7 +281,6 @@ function vtws_getOwnerType($ownerId)
 	}
 
 	return false;
-//	throw new WebServiceException(WebServiceErrorCode::$INVALIDID,"Invalid owner of the record");
 }
 
 function vtws_runQueryAsTransaction($query, $params, &$result)
@@ -1284,7 +1283,6 @@ function vtws_transferRelatedPotentialActivities($entityId, $relatedId)
 function vtws_transferRelatedPotentialQuotes($entityId, $relatedId)
 {
 	$db = PearDatabase::getInstance();
-	$entityRecordModel = Vtiger_Record_Model::getInstanceById($entityId);
 	$relatedRecordModel = Vtiger_Record_Model::getInstanceById($relatedId);
 
 	$relatedModel = $relatedRecordModel->getModule();
@@ -1292,9 +1290,9 @@ function vtws_transferRelatedPotentialQuotes($entityId, $relatedId)
 	$quotesModel = Vtiger_Module_Model::getInstance('Quotes');
 
 	$query = 'SELECT vtiger_quotes.quoteid FROM vtiger_quotes
-				INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid=vtiger_quotes.quoteid
-				INNER JOIN vtiger_potential on vtiger_potential.potentialid=vtiger_quotes.potentialid
-				WHERE vtiger_crmentity.deleted=0 and vtiger_potential.potentialid=?';
+		INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid=vtiger_quotes.quoteid
+		INNER JOIN vtiger_potential on vtiger_potential.potentialid=vtiger_quotes.potentialid
+		WHERE vtiger_crmentity.deleted=0 and vtiger_potential.potentialid=?';
 	$result = $db->pquery($query, [$entityId]);
 	if ($result == false) {
 		return false;
