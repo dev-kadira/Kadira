@@ -6,24 +6,27 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-class Vtiger_Dashboard_View extends Vtiger_Index_View {
-
+class Vtiger_Dashboard_View extends Vtiger_Index_View
+{
 	protected static $selectable_dashboards;
 
-	public function requiresPermission(\Vtiger_Request $request) {
+	public function requiresPermission(\Vtiger_Request $request)
+	{
 		$permissions = parent::requiresPermission($request);
-		if($request->get('module') != 'Dashboard'){
+		if ($request->get('module') != 'Dashboard') {
 			$request->set('custom_module', 'Dashboard');
-			$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'DetailView');
-		}else{
-			$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+			$permissions[] = ['module_parameter' => 'custom_module', 'action' => 'DetailView'];
+		} else {
+			$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView'];
 		}
+
 		return $permissions;
 	}
-	
-	function preProcess(Vtiger_Request $request, $display=true) {
+
+	public function preProcess(Vtiger_Request $request, $display = true)
+	{
 		parent::preProcess($request, false);
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
@@ -33,34 +36,36 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 		$moduleModel = Vtiger_Module_Model::getInstance('Dashboard');
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
-		if($permission) {
-		// TODO : Need to optimize the widget which are retrieving twice
-		$dashboardTabs = $dashBoardModel->getActiveTabs();
-		if ($request->get("tabid")) {
-			$tabid = $request->get("tabid");
+		if ($permission) {
+			// TODO : Need to optimize the widget which are retrieving twice
+			$dashboardTabs = $dashBoardModel->getActiveTabs();
+			if ($request->get('tabid')) {
+				$tabid = $request->get('tabid');
+			} else {
+				// If no tab, then select first tab of the user
+				$tabid = $dashboardTabs[0]['id'];
+			}
+			$dashBoardModel->set('tabid', $tabid);
+			$widgets = $dashBoardModel->getSelectableDashboard();
+			self::$selectable_dashboards = $widgets;
 		} else {
-			// If no tab, then select first tab of the user
-			$tabid = $dashboardTabs[0]["id"];
-		}
-		$dashBoardModel->set("tabid", $tabid);
-		$widgets = $dashBoardModel->getSelectableDashboard();
-		self::$selectable_dashboards = $widgets;
-		} else {
-			$widgets = array();
+			$widgets = [];
 		}
 		$viewer->assign('MODULE_PERMISSION', $permission);
 		$viewer->assign('WIDGETS', $widgets);
 		$viewer->assign('MODULE_NAME', $moduleName);
-		if($display) {
+		if ($display) {
 			$this->preProcessDisplay($request);
 		}
 	}
 
-	function preProcessTplName(Vtiger_Request $request) {
+	public function preProcessTplName(Vtiger_Request $request)
+	{
 		return 'dashboards/DashBoardPreProcess.tpl';
 	}
 
-	function process(Vtiger_Request $request) {
+	public function process(Vtiger_Request $request)
+	{
 		$viewer = $this->getViewer($request);
 		$moduleName = $request->getModule();
 
@@ -70,16 +75,16 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 		$moduleModel = Vtiger_Module_Model::getInstance('Dashboard');
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
-		if($permission) {
+		if ($permission) {
 			// TODO : Need to optimize the widget which are retrieving twice
-		   $dashboardTabs = $dashBoardModel->getActiveTabs();
-		   if($request->get("tabid")){
-			   $tabid = $request->get("tabid");
-		   } else {
-			   // If no tab, then select first tab of the user
-			   $tabid = $dashboardTabs[0]["id"];
-		   }
-		   $dashBoardModel->set("tabid",$tabid);
+			$dashboardTabs = $dashBoardModel->getActiveTabs();
+			if ($request->get('tabid')) {
+				$tabid = $request->get('tabid');
+			} else {
+				// If no tab, then select first tab of the user
+				$tabid = $dashboardTabs[0]['id'];
+			}
+			$dashBoardModel->set('tabid', $tabid);
 			$widgets = $dashBoardModel->getDashboards($moduleName);
 		} else {
 			return;
@@ -89,16 +94,17 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 		$viewer->assign('WIDGETS', $widgets);
 		$viewer->assign('DASHBOARD_TABS', $dashboardTabs);
 		$viewer->assign('DASHBOARD_TABS_LIMIT', $dashBoardModel->dashboardTabLimit);
-		$viewer->assign('SELECTED_TAB',$tabid);
-        if (self::$selectable_dashboards) {
+		$viewer->assign('SELECTED_TAB', $tabid);
+		if (self::$selectable_dashboards) {
 			$viewer->assign('SELECTABLE_WIDGETS', self::$selectable_dashboards);
 		}
 		$viewer->assign('CURRENT_USER', Users_Record_Model::getCurrentUserModel());
-		$viewer->assign('TABID',$tabid);
+		$viewer->assign('TABID', $tabid);
 		$viewer->view('dashboards/DashBoardContents.tpl', $moduleName);
 	}
 
-	public function postProcess(Vtiger_Request $request) {
+	public function postProcess(Vtiger_Request $request)
+	{
 		parent::postProcess($request);
 	}
 
@@ -107,11 +113,15 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 	 * @param Vtiger_Request $request
 	 * @return <Array> - List of Vtiger_JsScript_Model instances
 	 */
-	public function getHeaderScripts(Vtiger_Request $request) {
+	public function getHeaderScripts(Vtiger_Request $request)
+	{
 		$headerScriptInstances = parent::getHeaderScripts($request);
 		$moduleName = $request->getModule();
 
-		$jsFileNames = array(
+		$jsFileNames = [
+			'~/libraries/chart.js/Chart.min.js',
+			'~/libraries/chart.js/chartjs-plugin-datalabels.min.js',
+			'~/libraries/chart.js/palette.js',
 			'~/libraries/jquery/gridster/jquery.gridster.min.js',
 			'~/libraries/jquery/jqplot/jquery.jqplot.min.js',
 			'~/libraries/jquery/jqplot/plugins/jqplot.canvasTextRenderer.min.js',
@@ -134,15 +144,15 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 			'~/layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/modules/Vtiger/resources/Detail.js',
 			'~/layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/modules/Reports/resources/Detail.js',
 			'~/layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/modules/Reports/resources/ChartDetail.js',
-			"modules.Emails.resources.MassEdit",
-			"modules.Vtiger.resources.CkEditor",
-			"~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/bootstrap-daterangepicker/moment.js",
-			"~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/bootstrap-daterangepicker/daterangepicker.js",
-		);
+			'modules.Emails.resources.MassEdit',
+			'modules.Vtiger.resources.CkEditor',
+			'~layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/lib/bootstrap-daterangepicker/moment.js',
+			'~layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/lib/bootstrap-daterangepicker/daterangepicker.js',
+		];
 
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
+
+		return array_merge($headerScriptInstances, $jsScriptInstances);
 	}
 
 	/**
@@ -150,16 +160,18 @@ class Vtiger_Dashboard_View extends Vtiger_Index_View {
 	 * @param Vtiger_Request $request
 	 * @return <Array> - List of Vtiger_CssScript_Model instances
 	 */
-	public function getHeaderCss(Vtiger_Request $request) {
+	public function getHeaderCss(Vtiger_Request $request)
+	{
 		$parentHeaderCssScriptInstances = parent::getHeaderCss($request);
 
-		$headerCss = array(
+		$headerCss = [
+			'~/libraries/chart.js/Chart.min.css',
 			'~layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/lib/jquery/gridster/jquery.gridster.min.css',
 			'~layouts/'.Vtiger_Viewer::getDefaultLayoutName().'/lib/bootstrap-daterangepicker/daterangepicker.css',
 			'~libraries/jquery/jqplot/jquery.jqplot.min.css'
-		);
+		];
 		$cssScripts = $this->checkAndConvertCssStyles($headerCss);
-		$headerCssScriptInstances = array_merge($parentHeaderCssScriptInstances , $cssScripts);
-		return $headerCssScriptInstances;
+
+		return array_merge($parentHeaderCssScriptInstances, $cssScripts);
 	}
 }

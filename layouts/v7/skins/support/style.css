@@ -82,7 +82,7 @@ body > .mCSB_inside > .mCSB_container {
 }
 .global-nav{
   position: relative;
-  background-color: #165981;
+  background-color: #414247;
 }
 .global-nav .global-actions {
   padding-right: 15px;
@@ -353,7 +353,7 @@ body > .mCSB_inside > .mCSB_container {
 }
 .module-action-bar .module-title {
   font-family: Oswald, "OpenSans-Semibold", "Helvetica Neue", Helvetica, sans-serif;
-  color: #338ab2;
+  color: #414247;
   margin: 12px 0;
   white-space: nowrap;
   overflow: hidden;
@@ -450,14 +450,14 @@ body > .mCSB_inside > .mCSB_container {
   background-color: #010101 !important;
 }
 .app-switcher-container .app-navigator {
-  background-color: #2479a0;
+  background-color: #414247;
 }
 .app-switcher-container .app-navigator .app-icon {
   color: white;
   opacity: 0.8;
 }
 .global-nav .app-switcher-container .app-navigator:hover {
-  background: #338ab2;
+  background: #dfdfdf;
   opacity: 1;
 }
 .global-nav .app-switcher-container .app-navigator:hover .app-icon {
@@ -484,12 +484,12 @@ body > .mCSB_inside > .mCSB_container {
   border: 0;
   top: 0px !important;
   box-shadow: 0px 5px 14px #555;
-  background: #2479a0;
+  background: #dfdfdf;
   z-index: 1102;
   display: none;
 }
 .app-menu hr {
-  border-top: 1px solid #338ab2;
+  border-top: 1px solid #414247;
   padding: 1%;
 }
 .app-menu .app-name {
@@ -534,14 +534,13 @@ a.menu-item:hover {
 }
 .app-item {
   font-size: 14px;
-  color: #fff;
+  color: black;
   cursor: pointer;
   display: block;
-  background-color: #2479a0;
+  background-color: #dfdfdf;
   padding: 2.5% 2% !important;
   margin-left: 2px;
   opacity: 0.8;
-  text-shadow: 0 0 1px #000;
 }
 .app-item div {
   -webkit-transition: all 0.25s ease-in;
@@ -552,7 +551,7 @@ a.menu-item:hover {
 .active-app-item,
 .app-item:hover {
   opacity: 1;
-  background: #338ab2;
+  background: #414247;
   color: #f2f1f1;
 }
 .app-item-color-MARKETING {
@@ -593,7 +592,7 @@ a.menu-item:hover {
   height: 100vh;
   font-size: 1.2em;
   overflow-x: hidden;
-  background-color: #2479a0;
+  background-color: #dfdfdf;
   box-shadow: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -601,14 +600,15 @@ a.menu-item:hover {
 }
 .app-menu .app-modules-dropdown li {
   padding: 3%;
-  opacity: 0.7;
 }
 .app-menu .app-modules-dropdown li a {
   background: transparent;
   padding-left: 20px;
-  color: #fff;
-  text-shadow: 0 0 1px #000;
+  color: #414247;
   display: block;
+}
+.app-menu .app-modules-dropdown li a:hover {
+  color: #f2f1f1;
 }
 .app-menu .app-modules-dropdown li a .module-name {
   padding-left: 5px;
@@ -619,23 +619,22 @@ a.menu-item:hover {
   max-width: 85%;
 }
 .app-menu .app-modules-dropdown li:hover {
-  opacity: 1;
-  background: #338ab2;
+  background: #414247;
   color: #f2f1f1;
 }
 .app-menu .app-modules-dropdown li:hover .module-icon {
-  opacity: 1;
+  color:#f2f1f1;
 }
 .app-menu .app-modules-dropdown .module-icon {
   font-size: 1.2em;
-  opacity: 0.2;
+  color:#414247;
 }
 .app-menu .app-list {
   margin-top: -10px;
 }
 .app-menu .app-list-divider {
   border-top: 1px solid;
-  color: #3084aa;
+  color: #414247;
 }
 .app-menu .menu-items-wrapper {
   padding-left: 8px;
@@ -937,7 +936,7 @@ input[type="password"].inputElement {
   width: 100%;
   height: 100%;
   float: left;
-  background: #2479a0;
+  background: #dfdfdf;
   position: absolute;
   z-index: 10;
   left: 0;
@@ -953,7 +952,7 @@ input[type="password"].inputElement {
   margin-bottom: 0;
 }
 .modules-menu ul li a {
-  color: #fff;
+  color: #414247;
   padding: 10px 17px;
   display: block;
   z-index: 1;
@@ -994,16 +993,18 @@ input[type="password"].inputElement {
   white-space: nowrap;
 }
 .modules-menu ul li:hover {
-  background: #338ab2;
+  background: #414247;
   opacity: 1;
 }
 .modules-menu ul li:hover a {
+  color: white;
   opacity: 1;
 }
 .modules-menu ul li.active {
-  background: #185488;
+  background: #414247;
 }
 .modules-menu ul li.active a {
+  color: white;
   opacity: 1;
   padding-left: 8px;
 }

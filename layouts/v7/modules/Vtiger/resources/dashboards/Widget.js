@@ -535,8 +535,9 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
 		var jData = container.find('.widgetData').val();
 		var data = JSON.parse(jData);
 		var chartData = [];
-		var xLabels = new Array();
+		var xLabels = [];
 		var yMaxValue = 0;
+		
 		for(var index in data) {
 			var row = data[index];
 			row[0] = parseFloat(row[0]);
@@ -548,7 +549,8 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
 		}
         // yMaxValue Should be 25% more than Maximum Value
 		yMaxValue = yMaxValue + 2 + (yMaxValue/100)*25;
-		return {'chartData':[chartData], 'yMaxValue':yMaxValue, 'labels':xLabels};
+
+		return {'chartData':chartData, 'yMaxValue':yMaxValue, 'labels':xLabels};
 	},
     
     generateLinks : function() {
@@ -575,10 +577,83 @@ Vtiger_Widget_Js('Vtiger_Barchat_Widget_Js',{},{
         var chartOptions = {
             renderer:'bar',
             links: this.generateLinks()
-        };
-        this.getPlotContainer(false).vtchart(data,chartOptions);
-	}
-    
+		};
+
+		var container = this.getContainer();
+		var ctx = container.find('.widgetChartContainer');
+
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+			  labels: data['labels'],
+			  datasets: [{
+				label: 'Chart',
+				data: data['chartData'],
+				backgroundColor: [
+				  'rgba(255, 99, 132, 0.2)',
+				  'rgba(54, 162, 235, 0.2)',
+				  'rgba(255, 206, 86, 0.2)',
+				  'rgba(75, 192, 192, 0.2)',
+				  'rgba(153, 102, 255, 0.2)',
+				  'rgba(255, 159, 64, 0.2)',
+				  'rgba(255, 99, 132, 0.2)',
+				  'rgba(54, 162, 235, 0.2)',
+				  'rgba(255, 206, 86, 0.2)',
+				  'rgba(75, 192, 192, 0.2)',
+				  'rgba(153, 102, 255, 0.2)',
+				  'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+				  'rgba(255,99,132,1)',
+				  'rgba(54, 162, 235, 1)',
+				  'rgba(255, 206, 86, 1)',
+				  'rgba(75, 192, 192, 1)',
+				  'rgba(153, 102, 255, 1)',
+				  'rgba(255, 159, 64, 1)',
+				  'rgba(255,99,132,1)',
+				  'rgba(54, 162, 235, 1)',
+				  'rgba(255, 206, 86, 1)',
+				  'rgba(75, 192, 192, 1)',
+				  'rgba(153, 102, 255, 1)',
+				  'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+			  }]
+			},
+			options: {
+				responsive:true,
+				maintainAspectRatio: false,
+				layout: {
+					padding: 10,
+				},
+				legend: {
+					position: 'top',
+					display: false
+				},
+				scales: {	
+                    yAxes: [{
+						scaleLabel: {
+							display: false,
+						},						
+                        ticks: {
+							suggestedMax: data['yMaxValue'],
+                            beginAtZero: true
+                        }
+					}],
+				},
+				plugins: {
+					datalabels: {
+					  anchor: 'end',
+					  align: 'top',
+					  formatter: Math.round,
+					  font: {
+						weight: 'bold'
+					  }
+					}
+				  },
+			}
+		  });
+	}	
 });
 
 Vtiger_Widget_Js('Vtiger_MultiBarchat_Widget_Js',{
