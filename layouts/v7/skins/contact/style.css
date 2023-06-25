@@ -542,12 +542,6 @@ a.menu-item:hover {
   margin-left: 2px;
   opacity: 0.8;
 }
-.app-item div {
-  -webkit-transition: all 0.25s ease-in;
-  -moz-transition: all 0.25s ease;
-  -o-transition: all 0.25s ease;
-  transition: all 0.25s ease-in;
-}
 .active-app-item,
 .app-item:hover {
   opacity: 1;
