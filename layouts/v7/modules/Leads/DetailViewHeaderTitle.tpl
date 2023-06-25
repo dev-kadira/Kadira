@@ -62,10 +62,6 @@
                     </div>
                 </div>
                 *}
-               <div class="info-row">
-                  <i class="fa fa-map-marker"></i>&nbsp;
-                  <a class="showMap" href="javascript:void(0);" onclick='Vtiger_Index_Js.showMap(this);' data-module='{$RECORD->getModule()->getName()}' data-record='{$RECORD->getId()}'>{vtranslate('LBL_SHOW_MAP', $MODULE_NAME)}</a>
-               </div>
             </div>
         </div>
     </div>
