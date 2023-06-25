@@ -169,46 +169,6 @@ Vtiger.Class('Vtiger_Index_Js', {
 			}
 		});
 	},
-
-	/**
-	 * Function to show record address in Google Map
-	 * @param {type} e
-	 * @returns {undefined}
-	 */
-	showMap : function(e) {
-		var currentElement = jQuery(e);
-		var params1 = {
-			'module' : 'Google',
-			'action' : 'MapAjax',
-			'mode' : 'getLocation',
-			'recordid' : currentElement.data('record'),
-			'source_module' : currentElement.data('module')
-		};
-		app.request.post({"data":params1}).then(function(error,response) {
-			var result = JSON.parse(response);
-			var address = result.address;
-			var location = jQuery.trim((address).replace(/\,/g," "));
-			if(location == '' || location == null) {
-				app.helper.showAlertNotification({message:app.vtranslate('Please add address information to view on map')});
-				return false;
-			} else {
-				var params = {
-					'module' : 'Google',
-					'view' : 'Map',
-					'mode' : 'showMap',
-					'viewtype' : 'detail',
-					'record' : currentElement.data('record'),
-					'source_module' : currentElement.data('module')
-				};
-				var popupInstance = Vtiger_Popup_Js.getInstance();
-				popupInstance.showPopup(params, '', function(data) {
-					var mapInstance = new Google_Map_Js();
-					mapInstance.showMap(data);
-				});
-			}
-		});
-	},
-
 	/**
 	 * Function registers event for Calendar Reminder popups
 	 */
