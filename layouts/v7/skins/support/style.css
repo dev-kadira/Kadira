@@ -2799,7 +2799,7 @@ th {
   display: inline-block;
   width: 100%;
   float: left;
-  background: #2479a0;
+  background: #414247;
   height: 100%;
 }
 .settings-flip {
@@ -3300,7 +3300,7 @@ th {
   color: #FFFFFF;
 }
 .settingsgroup div.panel-collapse {
-  background-color: #2479a0;
+  background-color: #414247;
 }
 .settingsgroup-accordion {
   color: #FFFFFF;
@@ -3318,11 +3318,11 @@ th {
   text-transform: uppercase;
 }
 .settingsgroup {
-  background: #2479a0;
+  background: #414247;
   height: 100%;
 }
 .settingsgroup .panel-group .panel {
-  background-color: #2479a0;
+  background-color: #414247;
 }
 .userDefaultIcon {
   font-size: 30px;
