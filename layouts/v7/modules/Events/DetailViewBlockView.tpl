@@ -25,7 +25,7 @@
     <hr>
 
     <div class="blockData">
-        <table class="table detailview-table no-border">
+        <table class="table detailview-table">
             <tbody>
                 <tr>
                     <td class="fieldLabel {$WIDTHTYPE}">

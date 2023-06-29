@@ -27,7 +27,7 @@
 			</div>
 			<hr>
 			<div class="contents col-lg-12">
-				<table class="table detailview-table no-border">
+				<table class="table detailview-table">
 					<tbody>
 						{assign var=FIELDS value=PBXManager_PBXManager_Connector::getSettingsParameters()}
 						{foreach item=FIELD_TYPE key=FIELD_NAME from=$FIELDS}

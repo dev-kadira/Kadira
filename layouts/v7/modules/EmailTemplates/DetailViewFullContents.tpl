@@ -18,7 +18,7 @@
 					<h4>{vtranslate('Email Template - Properties of ', $MODULE_NAME)} " {$RECORD->get('templatename')} "</h4>
 				</div>
 				<hr>
-				<table class="table detailview-table no-border">
+				<table class="table detailview-table">
 					<tbody> 
 						<tr>
 							<td class="fieldLabel {$WIDTHTYPE}"><label class="muted marginRight10px">{vtranslate('Templatename', $MODULE_NAME)}</label></td>

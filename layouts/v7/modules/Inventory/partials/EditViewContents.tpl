@@ -26,7 +26,7 @@
              <div class='fieldBlockContainer' data-block="{$BLOCK_LABEL}">
                      <h4 class='fieldBlockHeader'>{vtranslate($BLOCK_LABEL, $MODULE)}</h4>
                  <hr>
-                 <table class="table table-borderless {if $BLOCK_LABEL eq 'LBL_ADDRESS_INFORMATION'} addressBlock{/if}">
+                 <table class="table detailview-table {if $BLOCK_LABEL eq 'LBL_ADDRESS_INFORMATION'} addressBlock{/if}">
                      {if ($BLOCK_LABEL eq 'LBL_ADDRESS_INFORMATION') and ($MODULE neq 'PurchaseOrder')}
                         <tr>
                             <td class="fieldLabel " name="copyHeader1">

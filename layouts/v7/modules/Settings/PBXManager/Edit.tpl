@@ -20,7 +20,7 @@
 			<input type="hidden" name="parent" value="Settings"/>
 			<input type="hidden" name="id" value="{$RECORD_ID}">
 			<div class="blockData">
-				<table class="table detailview-table no-border">
+				<table class="table detailview-table">
 					<tbody>
 						{assign var=FIELDS value=PBXManager_PBXManager_Connector::getSettingsParameters()}
 						{foreach item=FIELD_TYPE key=FIELD_NAME from=$FIELDS}
