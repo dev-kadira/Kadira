@@ -6,7 +6,7 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- * ***********************************************************************************/
+ * */
 
 /**
  * Function to relate CRM records for relationships exists in vtiger_relatedlists table.
@@ -15,16 +15,17 @@
  * @param $relationIdLabel - Relation id or label as in vtiger_relatedlists table.
  * @param $user
  */
-function vtws_add_related($sourceRecordId, $relatedRecordId, $relationIdLabel = false, $user = false) {
+function vtws_add_related($sourceRecordId, $relatedRecordId, $relationIdLabel = false, $user = false)
+{
 	$db = PearDatabase::getInstance();
-	if (!is_array($relatedRecordId)) {
-		$relatedRecordId = array($relatedRecordId);
+	if (! is_array($relatedRecordId)) {
+		$relatedRecordId = [$relatedRecordId];
 	}
 
 	$sourceRecordIdParts = vtws_getIdComponents($sourceRecordId);
 	$relatedRecordIdParts = vtws_getIdComponents($relatedRecordId[0]);
-	if (!isRecordExists($sourceRecordIdParts[1])) {
-		throw new Exception("Source record $sourceRecordIdParts is deleted");
+	if (! isRecordExists($sourceRecordIdParts[1])) {
+		throw new Exception("Source record {$sourceRecordIdParts} is deleted");
 	}
 
 	try {
@@ -38,7 +39,7 @@ function vtws_add_related($sourceRecordId, $relatedRecordId, $relationIdLabel = 
 		$relationId = false;
 		if (is_numeric($relationIdLabel)) {
 			$relationId = $relationIdLabel;
-		} else if (!empty($relationIdLabel)) {
+		} elseif (! empty($relationIdLabel)) {
 			$relationLabel = $relationIdLabel;
 		}
 
@@ -53,7 +54,8 @@ function vtws_add_related($sourceRecordId, $relatedRecordId, $relationIdLabel = 
 				}
 			}
 		}
-		return array('message' => 'successfull');
+
+		return ['message' => 'successfull'];
 	} catch (Exception $ex) {
 		throw new Exception($ex->getMessage());
 	}

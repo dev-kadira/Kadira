@@ -8,6 +8,13 @@
  * All Rights Reserved.
  */
 
+/**
+ * vtws_file_retrieve
+ *
+ * @param  mixed $file_id
+ * @param  mixed $user
+ * @return Object
+ */
 function vtws_file_retrieve($file_id, $user)
 {
 	global $log, $adb;
@@ -16,8 +23,12 @@ function vtws_file_retrieve($file_id, $user)
 	$attachmentId = $idComponents[1];
 
 	$id = vtws_getAttachmentRecordId($attachmentId);
+
 	if (! $id || ! $attachmentId) {
-		throw new WebServiceException(WebServiceErrorCode::$RECORDNOTFOUND, 'Record you are trying to access is not found');
+		throw new WebServiceException(
+			WebServiceErrorCode::$RECORDNOTFOUND,
+			'Record you are trying to access is not found'
+		);
 	} else {
 		$id = vtws_getId($idComponents[0], $id);
 	}
@@ -40,7 +51,10 @@ function vtws_file_retrieve($file_id, $user)
 	$types = vtws_listtypes(null, $user);
 	$viewPermission = Users_Privileges_Model::isPermitted($elementType, 'DetailView', $recordId);
 	if (! $viewPermission || ! in_array($elementType, $types['types'])) {
-		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to perform the operation is denied');
+		throw new WebServiceException(
+			WebServiceErrorCode::$ACCESSDENIED,
+			'Permission to perform the operation is denied'
+		);
 	}
 
 	$response = $handler->file_retrieve($id, $elementType, $attachmentId);

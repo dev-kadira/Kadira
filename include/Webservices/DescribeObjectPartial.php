@@ -6,30 +6,38 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- *************************************************************************************/
+ */
 
-	include_once 'include/Webservices/DescribeObject.php';
+include_once 'include/Webservices/DescribeObject.php';
 
-	function vtws_describe_partial($elementType,$user){
-		
-		global $log,$adb;
-		$webserviceObject = VtigerWebserviceObject::fromName($adb,$elementType);
-		$handlerPath = $webserviceObject->getHandlerPath();
-		$handlerClass = $webserviceObject->getHandlerClass();
-		
-		require_once $handlerPath;
-		
-		$handler = new $handlerClass($webserviceObject,$user,$adb,$log);
-		$meta = $handler->getMeta();
-		
-		$types = vtws_listtypes(null, $user);
-		if(!in_array($elementType,$types['types'])){
-			throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED,"Permission to perform the operation is denied");
-		}
-		
-		$entity = $handler->describePartial($elementType, array('picklist','multipicklist'));
-		VTWS_PreserveGlobal::flush();
-		return $entity;
+/**
+ * vtws_describe_partial
+ *
+ * @param  mixed $elementType
+ * @param  mixed $user
+ * @return Object
+ */
+function vtws_describe_partial($elementType, $user)
+{
+	global $log,$adb;
+
+	$webserviceObject = VtigerWebserviceObject::fromName($adb, $elementType);
+	$handlerPath = $webserviceObject->getHandlerPath();
+	$handlerClass = $webserviceObject->getHandlerClass();
+
+	require_once $handlerPath;
+	$handler = new $handlerClass($webserviceObject, $user, $adb, $log);
+
+	$types = vtws_listtypes(null, $user);
+	if (! in_array($elementType, $types['types'])) {
+		throw new WebServiceException(
+			WebServiceErrorCode::$ACCESSDENIED,
+			'Permission to perform the operation is denied'
+		);
 	}
-	
-?>
+
+	$entity = $handler->describePartial($elementType, ['picklist', 'multipicklist']);
+	VTWS_PreserveGlobal::flush();
+
+	return $entity;
+}

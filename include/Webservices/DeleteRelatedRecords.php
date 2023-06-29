@@ -13,6 +13,14 @@
  * License terms of Creative Commons Attribution-NonCommercial-ShareAlike 3.0 (the License).
  */
 
+/**
+ * vtws_delete_related
+ *
+ * @param  mixed $sourceRecordId
+ * @param  mixed $relatedRecordId
+ * @param  mixed $user
+ * @return void
+ */
 function vtws_delete_related($sourceRecordId, $relatedRecordId, $user = false)
 {
 	global $log,$adb;
@@ -32,23 +40,38 @@ function vtws_delete_related($sourceRecordId, $relatedRecordId, $user = false)
 	$types = vtws_listtypes(null, $user);
 
 	if (! in_array($sourceModuleName, $types['types'])) {
-		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to perform the operation is denied');
+		throw new WebServiceException(
+			WebServiceErrorCode::$ACCESSDENIED,
+			'Permission to perform the operation is denied'
+		);
 	}
 
 	if ($sourceModuleName !== $webserviceObject->getEntityName()) {
-		throw new WebServiceException(WebServiceErrorCode::$INVALIDID, 'Id specified is incorrect');
+		throw new WebServiceException(
+			WebServiceErrorCode::$INVALIDID,
+			'Id specified is incorrect'
+		);
 	}
 
 	if (! $meta->hasPermission(EntityMeta::$UPDATE, $sourceRecordId)) {
-		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to read given object is denied');
+		throw new WebServiceException(
+			WebServiceErrorCode::$ACCESSDENIED,
+			'Permission to read given object is denied'
+		);
 	}
 
 	if (! $meta->exists($elementSourceId)) {
-		throw new WebServiceException(WebServiceErrorCode::$RECORDNOTFOUND, 'Record you are trying to access is not found');
+		throw new WebServiceException(
+			WebServiceErrorCode::$RECORDNOTFOUND,
+			'Record you are trying to access is not found'
+		);
 	}
 
 	if ($meta->hasWriteAccess() !== true) {
-		throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, 'Permission to write is denied');
+		throw new WebServiceException(
+			WebServiceErrorCode::$ACCESSDENIED,
+			'Permission to write is denied'
+		);
 	}
 
 	list($moduleRelatedId, $elementRelatedId) = vtws_getIdComponents($relatedRecordId);
@@ -57,7 +80,12 @@ function vtws_delete_related($sourceRecordId, $relatedRecordId, $user = false)
 
 	$sourceModuleFocus = CRMEntity::getInstance($sourceModuleName);
 	if ($sourceModuleFocus) {
-		$sourceModuleFocus->delete_related_module($sourceModuleName, $elementSourceId, $relatedModuleName, $elementRelatedId);
+		$sourceModuleFocus->delete_related_module(
+			$sourceModuleName,
+			$elementSourceId,
+			$relatedModuleName,
+			$elementRelatedId
+		);
 	}
 
 	VTWS_PreserveGlobal::flush();
