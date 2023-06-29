@@ -1571,7 +1571,7 @@ input[type=checkbox]:checked {
   display: table-cell;
 }
 .listview-table tr.searchRow th {
-  padding: 5px 3px;
+  padding: 5px 12px 5px 3px;
 }
 .listview-table tr.searchRow th.inline-search-btn {
   padding: 3px 10px;
