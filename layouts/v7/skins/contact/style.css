@@ -7891,7 +7891,12 @@ div.flip {
   margin-bottom: -5px;
 }
 .fileUploadContainer {
-  padding-top: 0px;
+  padding-top: 10px;
+  padding-bottom: 0px;
+  border-width: 0px;
+}
+.commentContainer {
+  padding-top: 10px;
   padding-bottom: 0px;
   border-width: 0px;
 }

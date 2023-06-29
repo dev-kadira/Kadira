@@ -27,7 +27,7 @@
 				</div>
 				<div class='row'>
 					<div class="col-xs-6 pull-right paddingTop10 paddingLeft0">
-						<div style="text-align: right;">
+						<div class="commentContainer text-right">
 							{if in_array($MODULE_NAME, $PRIVATE_COMMENT_MODULES)}
 								<div class="" style="margin: 7px 0;">
 									<label>
