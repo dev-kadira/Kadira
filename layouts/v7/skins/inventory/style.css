@@ -484,7 +484,7 @@ body > .mCSB_inside > .mCSB_container {
   border: 0;
   top: 0px !important;
   box-shadow: 0px 5px 14px #555;
-  background: #dfdfdf;
+  background: #414247;
   z-index: 1102;
   display: none;
 }
@@ -534,18 +534,17 @@ a.menu-item:hover {
 }
 .app-item {
   font-size: 14px;
-  color: black;
+  color: white;
   cursor: pointer;
   display: block;
-  background-color: #dfdfdf;
+  background-color: #414247;
   padding: 2.5% 2% !important;
   margin-left: 2px;
   opacity: 0.8;
 }
 .active-app-item,
 .app-item:hover {
-  opacity: 1;
-  background: #414247;
+  background: #64656a;
   color: #f2f1f1;
 }
 .app-item-color-MARKETING {
@@ -582,7 +581,7 @@ a.menu-item:hover {
   height: 100vh;
   font-size: 1.2em;
   overflow-x: hidden;
-  background-color: #dfdfdf;
+  background-color: #414247;
   box-shadow: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -594,11 +593,12 @@ a.menu-item:hover {
 .app-menu .app-modules-dropdown li a {
   background: transparent;
   padding-left: 20px;
-  color: #414247;
+  color: white;
+  opacity: 0.8;
   display: block;
 }
 .app-menu .app-modules-dropdown li a:hover {
-  color: #f2f1f1;
+  color: white;
 }
 .app-menu .app-modules-dropdown li a .module-name {
   padding-left: 5px;
@@ -609,15 +609,15 @@ a.menu-item:hover {
   max-width: 85%;
 }
 .app-menu .app-modules-dropdown li:hover {
-  background: #414247;
-  color: #f2f1f1;
+  background: #64656a;
+  color: white;
 }
 .app-menu .app-modules-dropdown li:hover .module-icon {
-  color:#f2f1f1;
+  color:white;
 }
 .app-menu .app-modules-dropdown .module-icon {
   font-size: 1.2em;
-  color:#414247;
+  color: white;
 }
 .app-menu .app-list {
   margin-top: -10px;
@@ -926,7 +926,7 @@ input[type="password"].inputElement {
   width: 100%;
   height: 100%;
   float: left;
-  background: #dfdfdf;
+  background: #414247;
   position: absolute;
   z-index: 10;
   left: 0;
@@ -942,7 +942,7 @@ input[type="password"].inputElement {
   margin-bottom: 0;
 }
 .modules-menu ul li a {
-  color: #414247;
+  color: #bbbcbf;
   padding: 10px 17px;
   display: block;
   z-index: 1;
