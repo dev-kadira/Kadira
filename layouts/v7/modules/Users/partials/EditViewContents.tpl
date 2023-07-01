@@ -22,7 +22,7 @@
                      <h4>{vtranslate($BLOCK_LABEL, $MODULE)}</h4>
                  </div>
                  <hr >
-                 <table class="table table-borderless">
+                 <table class="table detailview-table">
                      <tr>
                      {assign var=COUNTER value=0}
                      {foreach key=FIELD_NAME item=FIELD_MODEL from=$BLOCK_FIELDS name=blockfields}

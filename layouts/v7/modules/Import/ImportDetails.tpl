@@ -15,7 +15,7 @@
 		<div class="modal-body">
 			<div id="popupPageContainer" class="contentsDiv import-details-container">
 				<div id="popupContents" class="paddingLeftRight10px">
-					<table class="table table-borderless listViewEntriesTable">
+					<table class="table detailview-table listViewEntriesTable">
 						<thead>
 							<tr class="listViewHeaders">
 								{assign var=LISTVIEW_HEADERS value=$IMPORT_RECORDS['headers']}

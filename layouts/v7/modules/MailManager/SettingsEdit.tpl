@@ -18,7 +18,7 @@
             {include file="ModalHeader.tpl"|vtemplate_path:$SOURCE_MODULE TITLE=$MODAL_TITLE}
             <form id="EditView" method="POST">
                 <div class="modal-body" id="mmSettingEditModal">
-                    <table class="table table-borderless">
+                    <table class="table detailview-table">
                         <tbody>
                             <tr>
                                 <td class="fieldLabel width40per">

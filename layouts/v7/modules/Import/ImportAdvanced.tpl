@@ -44,7 +44,7 @@
                 {include file="BreadCrumbs.tpl"|vtemplate_path:$MODULE BREADCRUMB_ID='navigation_links'
                          ACTIVESTEP=3 BREADCRUMB_LABELS=$LABELS MODULE=$MODULE}
                 <div class = "importBlockContainer">
-                    <table class = "table table-borderless">
+                    <table class = "table detailview-table">
                         {if $ERROR_MESSAGE neq ''}
                             <tr>
                                 <td align="left">

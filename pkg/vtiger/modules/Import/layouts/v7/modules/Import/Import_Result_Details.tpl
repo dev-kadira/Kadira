@@ -10,7 +10,7 @@
 ********************************************************************************/
 -->*}
 
-<table width="100%" class="table table-borderless">
+<table width="100%" class="table detailview-table">
 	<tr>
 		<td class = "greenColor">{'LBL_TOTAL_RECORDS_IMPORTED'|@vtranslate:$MODULE}</td>
 		<td width="10%">:</td>

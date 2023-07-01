@@ -20,7 +20,7 @@
                     <h4>&nbsp;&nbsp;&nbsp;{'LBL_DELETION_SUMMARY'|@vtranslate:$MODULE}</h4>
                 </span>
                 <hr style="margin-top:12px;margin-bottom:12px;">
-                <table class = "table table-borderless">
+                <table class = "table detailview-table">
                     {if $ERROR_MESSAGE neq ''}
                         <span>
                             <h4>

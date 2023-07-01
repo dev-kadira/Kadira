@@ -11,7 +11,7 @@
 -->*}
 
 <div class ="importBlockContainer show" id = "uploadFileContainer">
-    <table class = "table table-borderless" cellpadding = "30" >
+    <table class = "table detailview-table" cellpadding = "30" >
         <span>
 			{if $FORMAT eq 'vcf'}
 				<h4>&nbsp;&nbsp;&nbsp;{'LBL_IMPORT_FROM_VCF_FILE'|@vtranslate:$MODULE}</h4>

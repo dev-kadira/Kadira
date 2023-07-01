@@ -16,7 +16,7 @@
                 <h4 class='fieldBlockHeader' >{vtranslate('SINGLE_EmailTemplates', $MODULE)}</h4>
             </span>
             <hr>
-            <table class="table table-borderless">
+            <table class="table detailview-table">
                 <tbody>
                     <tr>
                         <td class="fieldLabel {$WIDTHTYPE} alignMiddle">{vtranslate('LBL_TEMPLATE_NAME', $MODULE)}&nbsp;<span class="redColor">*</span></td>
@@ -38,7 +38,7 @@
                 <h4 class='fieldBlockHeader'>{vtranslate('LBL_EMAIL_TEMPLATE', $MODULE)} {vtranslate('LBL_DESCRIPTION', $MODULE)}</h4>
             </span>
             <hr>
-            <table class="table table-borderless">
+            <table class="table detailview-table">
                 <tbody>
                     <tr>
                         <td class="fieldLabel {$WIDTHTYPE}">{vtranslate('LBL_SELECT_FIELD_TYPE', $MODULE)}&nbsp;<span class="redColor">*</span></td>

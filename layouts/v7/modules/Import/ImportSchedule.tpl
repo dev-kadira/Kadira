@@ -16,7 +16,7 @@
     </div>
     <div class='modal-body' style="margin-bottom:250px">
         <div>
-            <table class="table table-borderless">
+            <table class="table detailview-table">
                 {if $ERROR_MESSAGE neq ''}
                     <tr>
                         <td>
@@ -33,7 +33,7 @@
                 {/if}
                 <tr>
                     <td>
-                        <table cellpadding="10" cellspacing="0" align="center" class="table table-borderless">
+                        <table cellpadding="10" cellspacing="0" align="center" class="table detailview-table">
                             <tr>
                                 <td>{'LBL_SCHEDULED_IMPORT_DETAILS'|@vtranslate:$MODULE}</td>
                             </tr>

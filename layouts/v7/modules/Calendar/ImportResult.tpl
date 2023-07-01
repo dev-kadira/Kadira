@@ -19,7 +19,7 @@
 				<table style=" width:90%; margin-left:5%" cellpadding="5">
 					<tr>
 						<td valign="top">
-							<table cellpadding="5" cellspacing="0" align="center" width="100%" class="table table-borderless">
+							<table cellpadding="5" cellspacing="0" align="center" width="100%" class="table detailview-table">
 								<tr>
 									<td>{'LBL_TOTAL_EVENTS_IMPORTED'|@vtranslate:$MODULE}</td>
 									<td width="10%">:</td>

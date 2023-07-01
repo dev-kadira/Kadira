@@ -15,7 +15,7 @@
 		<div class='fieldBlockContainer' data-block="{$BLOCK_LABEL}">
 			<h4 class='fieldBlockHeader'>{vtranslate('LBL_INVITE_USER_BLOCK', $MODULE)}</h4>
 			<hr>
-			<table class="table table-borderless">
+			<table class="table detailview-table">
 				<tr>
 					<td class="fieldLabel alignMiddle">{vtranslate('LBL_INVITE_USERS', $MODULE)}</td>
 					<td class="fieldValue">

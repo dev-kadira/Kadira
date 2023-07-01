@@ -19,10 +19,10 @@
         <div class = "alert alert-danger">
             {$ERROR_MESSAGE}
         </div>
-        <table class = "table table-borderless">
+        <table class = "table detailview-table">
             <tr>
                 <td valign="top">
-                    <table  class="table table-borderless">
+                    <table  class="table detailview-table">
                         
                         {if $ERROR_DETAILS neq ''}
                             <tr>

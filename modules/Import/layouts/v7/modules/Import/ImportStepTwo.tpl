@@ -15,7 +15,7 @@
         <h4>&nbsp;&nbsp;&nbsp;{'LBL_DUPLICATE_RECORD_HANDLING'|@vtranslate:$MODULE}</h4>
     </span>
     <hr>
-    <table class = "table table-borderless" id="duplicates_merge_configuration">
+    <table class = "table detailview-table" id="duplicates_merge_configuration">
         <tr>
             <td>
                 <span><strong>{'LBL_SPECIFY_MERGE_TYPE'|@vtranslate:$MODULE}</strong></span>
