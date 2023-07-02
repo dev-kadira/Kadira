@@ -61,39 +61,6 @@ class Products_Detail_View extends Vtiger_Detail_View
 	}
 
 	/**
-	 * showModuleDetailView
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function showModuleDetailView(Vtiger_Request $request)
-	{
-		$recordId = $request->get('record');
-		$moduleName = $request->getModule();
-
-		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
-		$baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
-
-		$viewer = $this->getViewer($request);
-		$viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
-		$viewer->assign('TAXCLASS_DETAILS', $recordModel->getTaxClassDetails());
-		$viewer->assign('IMAGE_DETAILS', $recordModel->getImageDetails());
-
-		return parent::showModuleDetailView($request);
-	}
-
-	/**
-	 * showModuleBasicView
-	 *
-	 * @param  mixed $request
-	 * @return void
-	 */
-	public function showModuleBasicView(Vtiger_Request $request)
-	{
-		return $this->showModuleDetailView($request);
-	}
-
-	/**
 	 * getOverlayHeaderScripts
 	 *
 	 * @param  mixed $request
