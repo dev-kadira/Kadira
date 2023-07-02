@@ -8,47 +8,72 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Products_Detail_View extends Vtiger_Detail_View {
-
-	public function __construct() {
+class Products_Detail_View extends Vtiger_Detail_View
+{
+	public function __construct()
+	{
 		parent::__construct();
 		$this->exposeMethod('showBundleTotalCostView');
 	}
-	
-	public function requiresPermission(Vtiger_Request $request){
+
+	/**
+	 * requiresPermission
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function requiresPermission(Vtiger_Request $request)
+	{
 		$permissions = parent::requiresPermission($request);
 		$mode = $request->getMode();
-		if(!empty($mode)) {
+		if (! empty($mode)) {
 			switch ($mode) {
 				case 'showBundleTotalCostView':
-					$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-					$permissions[] = array('module_parameter' => 'relatedModule', 'action' => 'DetailView');
+					$permissions[] = ['module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record'];
+					$permissions[] = ['module_parameter' => 'relatedModule', 'action' => 'DetailView'];
+
 					break;
 			}
 		}
+
 		return $permissions;
 	}
-	
-	function preProcess(Vtiger_Request $request, $display = true) {
+
+	/**
+	 * preProcess
+	 *
+	 * @param  mixed $request
+	 * @param  mixed $display
+	 * @return void
+	 */
+	public function preProcess(Vtiger_Request $request, $display = true)
+	{
 		$recordId = $request->get('record');
 		$moduleName = $request->getModule();
 
 		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
 		$baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
-		
+
 		$viewer = $this->getViewer($request);
 		$viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
-		
+
 		parent::preProcess($request, $display);
 	}
 
-	public function showModuleDetailView(Vtiger_Request $request) {
+	/**
+	 * showModuleDetailView
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function showModuleDetailView(Vtiger_Request $request)
+	{
 		$recordId = $request->get('record');
 		$moduleName = $request->getModule();
 
 		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
 		$baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
-		
+
 		$viewer = $this->getViewer($request);
 		$viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
 		$viewer->assign('TAXCLASS_DETAILS', $recordModel->getTaxClassDetails());
@@ -57,46 +82,73 @@ class Products_Detail_View extends Vtiger_Detail_View {
 		return parent::showModuleDetailView($request);
 	}
 
-	public function showModuleBasicView(Vtiger_Request $request) {
+	/**
+	 * showModuleBasicView
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function showModuleBasicView(Vtiger_Request $request)
+	{
 		return $this->showModuleDetailView($request);
 	}
-	
-	public function getOverlayHeaderScripts(Vtiger_Request $request){
+
+	/**
+	 * getOverlayHeaderScripts
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function getOverlayHeaderScripts(Vtiger_Request $request)
+	{
 		$moduleName = $request->getModule();
-		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
-		$jsFileNames = array(
+		$moduleDetailFile = 'modules.' . $moduleName . '.resources.Detail';
+		$jsFileNames = [
 			'~libraries/jquery/boxslider/jquery.bxslider.min.js',
 			'modules.PriceBooks.resources.Detail',
-		);
+		];
 		$jsFileNames[] = $moduleDetailFile;
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $jsScriptInstances;	
+
+		return $this->checkAndConvertJsScripts($jsFileNames);
 	}
 
-	public function getHeaderScripts(Vtiger_Request $request) {
+	/**
+	 * getHeaderScripts
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function getHeaderScripts(Vtiger_Request $request)
+	{
 		$headerScriptInstances = parent::getHeaderScripts($request);
 		$moduleName = $request->getModule();
-		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
-		$moduleRelatedListFile = 'modules.'.$moduleName.'.resources.RelatedList';
-		unset($headerScriptInstances[$moduleDetailFile]);
-		unset($headerScriptInstances[$moduleRelatedListFile]);
+		$moduleDetailFile = 'modules.' . $moduleName . '.resources.Detail';
+		$moduleRelatedListFile = 'modules.' . $moduleName . '.resources.RelatedList';
+		unset($headerScriptInstances[$moduleDetailFile], $headerScriptInstances[$moduleRelatedListFile]);
 
-		$jsFileNames = array(
+		$jsFileNames = [
 			'~libraries/jquery/jquery.cycle.min.js',
-			'~libraries/jquery/boxslider/jquery.bxslider.min.js', 
+			'~libraries/jquery/boxslider/jquery.bxslider.min.js',
 			'modules.PriceBooks.resources.Detail',
 			'modules.PriceBooks.resources.RelatedList',
-		);
-		
+		];
+
 		$jsFileNames[] = $moduleDetailFile;
 		$jsFileNames[] = $moduleRelatedListFile;
 
 		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
+
+		return array_merge($headerScriptInstances, $jsScriptInstances);
 	}
-	
-	public function showBundleTotalCostView(Vtiger_Request $request) {
+
+	/**
+	 * showBundleTotalCostView
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
+	public function showBundleTotalCostView(Vtiger_Request $request)
+	{
 		$moduleName = $request->getModule();
 		$relatedModuleName = $request->get('relatedModule');
 		$parentRecordId = $request->get('record');
