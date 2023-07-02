@@ -42,13 +42,23 @@ class Campaigns_Module_Model extends Vtiger_Module_Model {
 	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery) {
 		if (in_array($sourceModule, array('Leads', 'Accounts', 'Contacts'))) {
 			switch($sourceModule) {
-				case 'Leads'		: $tableName = 'vtiger_campaignleadrel';		$relatedFieldName = 'leadid';		break;
-				case 'Accounts'		: $tableName = 'vtiger_campaignaccountrel';		$relatedFieldName = 'accountid';	break;
-				case 'Contacts'		: $tableName = 'vtiger_campaigncontrel';		$relatedFieldName = 'contactid';	break;
+				case 'Leads': 
+					$tableName = 'vtiger_campaignleadrel';		
+					$relatedFieldName = 'leadid';
+					break;
+				case 'Accounts': 
+					$tableName = 'vtiger_campaignaccountrel';		
+					$relatedFieldName = 'accountid';	
+					break;
+				case 'Contacts': 
+					$tableName = 'vtiger_campaigncontrel';		
+					$relatedFieldName = 'contactid';	
+					break;
 			}
-                	$db = PearDatabase::getInstance();
+            
+			$db = PearDatabase::getInstance();
 			$condition = " vtiger_campaign.campaignid NOT IN (SELECT campaignid FROM $tableName WHERE $relatedFieldName = ?)";
-            		$condition = $db->convert2Sql($condition, array($record));
+            $condition = $db->convert2Sql($condition, array($record));
 			$pos = stripos($listQuery, 'where');
 
 			if ($pos) {
