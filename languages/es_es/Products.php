@@ -14,8 +14,8 @@
  *  Author       : JPL TSolucio, S. L. Joe Bordes
  *  Last change  : 2013-05-03
  *  Author       : JPL TSolucio, S. L. Joe Bordes
- ************************************************************************************/
-$languageStrings = array(
+ */
+$languageStrings = [
 	'Products'                     => 'Productos',
 	'SINGLE_Products'              => 'Producto',
 	'LBL_ADD_RECORD'               => 'Añadir Producto',
@@ -79,20 +79,20 @@ $languageStrings = array(
 	'Sheet'                        => 'Hoja',
 	'Spiral Binder'                => 'Cuaderno espiral',
 	'Sq Ft'                        => 'm<sup>2</sup>',
-	'LBL_CONVERSION_RATE' => 'Tasa Conversión',
-    'LBL_PRODUCTSMOD_DISABLED' => 'Habilitar Productos Módulo para ver Productos',
-	'LBL_SHOW_BUNDLE_IN_INVENTORY' => 'Mostrar elementos de paquete en factura/Cotizaciones/Sales Order/Orden de Compra',
-	'LBL_BUNDLE_TOTAL_COST' => 'Coste total de Bundle',
-	'LBL_UPDATE_BUNDLE_PRICE' => 'Actualización Bundle Precio',
+	'LBL_CONVERSION_RATE'          => 'Tasa Conversión',
+	'LBL_PRODUCTSMOD_DISABLED'     => 'Habilitar Productos Módulo para ver Productos',
+	'LBL_SHOW_BUNDLE_IN_INVENTORY' => 'Mostrar elementos de paquete en factura/Presupuestos/Sales Order/Orden de Compra',
+	'LBL_BUNDLE_TOTAL_COST'        => 'Coste total de Bundle',
+	'LBL_UPDATE_BUNDLE_PRICE'      => 'Actualización Bundle Precio',
 
-  'LBL_PRODUCT_NAME' => 'Nombre Del Producto',
-  'LBL_PRICE_QUANTITY' => 'Precio x Cantidad',
+	'LBL_PRODUCT_NAME'   => 'Nombre Del Producto',
+	'LBL_PRICE_QUANTITY' => 'Precio x Cantidad',
 
-);
+];
 
-$jsLanguageStrings = array(
-	'JS_SUB_PRODUCTS_WILL_BE_SHOWN_IN_INVENTORY' => 'Subproductos se le aparecen en el Inventario',
-	'JS_SUB_PRODUCTS_WILL_NOT_BE_SHOWN_IN_INVENTORY' => 'Subproductos no se mostrarán en el Inventario',
-	'JS_SUCCESSFULLY_CHANGED_BUNDLE_COST' => 'Costo total cambiado con éxito del paquete',
+$jsLanguageStrings = [
+	'JS_SUB_PRODUCTS_WILL_BE_SHOWN_IN_INVENTORY'         => 'Subproductos se le aparecen en el Inventario',
+	'JS_SUB_PRODUCTS_WILL_NOT_BE_SHOWN_IN_INVENTORY'     => 'Subproductos no se mostrarán en el Inventario',
+	'JS_SUCCESSFULLY_CHANGED_BUNDLE_COST'                => 'Costo total cambiado con éxito del paquete',
 	'JS_DELETION_OR_IN_ACTIVATION_CHILD_PRODUCT_MESSAGE' => 'Este producto es parte de un paquete de productos. El precio del paquete no se modifican cuando un elemento de paquete se elimina o inactiva. ¿Seguro que desea continuar?',
-);
+];

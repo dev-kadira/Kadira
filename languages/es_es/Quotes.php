@@ -14,10 +14,10 @@
  *  Author       : JPL TSolucio, S. L. Joe Bordes
  *  Last change  : 2013-05-03
  *  Author       : JPL TSolucio, S. L. Joe Bordes
- ************************************************************************************/
-$languageStrings = array(
-    'Quotes'                       => 'cotizaciones',
-	'SINGLE_Quotes'                => 'cotizaciones',
+ */
+$languageStrings = [
+	'Quotes'                       => 'Presupuestos',
+	'SINGLE_Quotes'                => 'Presupuestos',
 	'LBL_EXPORT_TO_PDF'            => 'Exportar a PDF',
 	'LBL_ADD_RECORD'               => 'Añadir Presupuesto',
 	'LBL_RECORDS_LIST'             => 'Lista de Presupuestos',
@@ -28,11 +28,12 @@ $languageStrings = array(
 	'Inventory Manager'            => 'Encargado del Inventario',
 	'Accepted'                     => 'Aceptado',
 	'Rejected'                     => 'Rechazado',
-	'LBL_SEND_MAIL_PDF' => 'Enviar Email con PDF',
-    'Related To'                   => 'En relación con',
+	'LBL_SEND_MAIL_PDF'            => 'Enviar Email con PDF',
+	'Related To'                   => 'En relación con',
 
-  'LBL_THIS' => 'Este',
-  'LBL_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_OR_REPLACE_THIS_ITEM' => 'se elimina del sistema.por favor, quitar o reemplazar este elemento',
-  'LBL_THIS_LINE_ITEM_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_THIS_LINE_ITEM' => 'Esta línea de ítem es eliminado del sistema,por favor, elimine esta línea de artículos',
+	'LBL_THIS'=> 'Este',
 
-);
+	'LBL_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_OR_REPLACE_THIS_ITEM'          => 'se elimina del sistema.por favor, quitar o reemplazar este elemento',
+	'LBL_THIS_LINE_ITEM_IS_DELETED_FROM_THE_SYSTEM_PLEASE_REMOVE_THIS_LINE_ITEM' => 'Esta línea de ítem es eliminado del sistema,por favor, elimine esta línea de artículos',
+
+];
