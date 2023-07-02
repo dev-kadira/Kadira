@@ -6,30 +6,29 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- ************************************************************************************/
-$languageStrings = array(
-	'ALVT'                         => 'Cuentas más importantes'         , 
-	'PLVT'                         => 'Oportunidades más importantes'   , 
-	'QLTQ'                         => 'Cotizaciones más importantes'    , 
-	'CVLVT'                        => 'Métricas clave'               , 
-	'HLT'                          => 'Casos más importantes'      , 
-	'GRT'                          => 'Asignación de grupo'        , 
-	'OLTSO'                        => 'Pedidos más importantes', 
-	'ILTI'                         => 'Facturas más importantes'        , 
-	'HDB'                          => 'Tablero principal'         , 
-	'OLTPO'                        => 'Órdenes de compra más importantes', 
-	'LTFAQ'                        => 'FAQs recientes'              , 
-	'UA'                           => 'Eventos próximos'           , 
-	'PA'                           => 'Eventos pendientes'          , 
-    'Home'                         => 'Tablero'                     ,
+ */
+$languageStrings = [
+	'ALVT'                         => 'Cuentas más importantes',
+	'PLVT'                         => 'Oportunidades más importantes',
+	'QLTQ'                         => 'Cotizaciones más importantes',
+	'CVLVT'                        => 'Métricas clave',
+	'HLT'                          => 'Casos más importantes',
+	'GRT'                          => 'Asignación de grupo',
+	'OLTSO'                        => 'Pedidos más importantes',
+	'ILTI'                         => 'Facturas más importantes',
+	'HDB'                          => 'Tablero principal',
+	'OLTPO'                        => 'Órdenes de compra más importantes',
+	'LTFAQ'                        => 'FAQs recientes',
+	'UA'                           => 'Eventos próximos',
+	'PA'                           => 'Eventos pendientes',
+	'Home'                         => 'Tablero',
 
-  'LBL_SAVE_ORDER' => 'Guardar orden',
-  'LBL_ADD_NEW_DASHBOARD' => 'Agregar nuevo Tablero',
-  'LBL_MAX_CHARACTERS_ALLOWED_DASHBOARD' => 'Se permiten máximo 30 caracteres para el nombre del Tablero',
-);
+	'LBL_SAVE_ORDER'                       => 'Guardar orden',
+	'LBL_ADD_NEW_DASHBOARD'                => 'Agregar nuevo Tablero',
+	'LBL_MAX_CHARACTERS_ALLOWED_DASHBOARD' => 'Se permiten máximo 30 caracteres para el nombre del Tablero',
+];
 
-$jsLanguageStrings = array(
+$jsLanguageStrings = [
 	'JS_TAB_NAME_SHOULD_NOT_BE_EMPTY' => 'El nombre del Dashboard no no puede estar vacío',
-	'JS_NO_DATA_AVAILABLE' => 'Datos no disponibles',
-);
-
+	'JS_NO_DATA_AVAILABLE'            => 'Datos no disponibles',
+];
