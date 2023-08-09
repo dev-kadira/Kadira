@@ -38,7 +38,7 @@
 						<i class="fa fa-search"></i>
 					</button>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-6">
 					<div id="search-links-container" class="search-links-container collapse navbar-collapse">
 						<div class="search-link">
 							<span class="fa fa-search" aria-hidden="true"></span>
