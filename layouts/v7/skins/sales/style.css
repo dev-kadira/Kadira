@@ -7927,3 +7927,7 @@ div.flip {
     width: 90%;
 }
 /*# sourceMappingURL=style.css.map */
+
+#nav-tabs {
+    border: 1px solid #eee;
+}
