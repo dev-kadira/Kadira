@@ -14,7 +14,7 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top app-fixed-navbar">
 		<div class="container-fluid global-nav">
 			<div class="row">
-				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-8 app-navigator-container">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-8 app-navigator-container">
 					<div class="row">
 						<div id="appnavigator" class="col-sm-2 col-xs-2 cursorPointer app-switcher-container" data-app-class="{if $MODULE eq 'Home' || !$MODULE}fa-dashboard{else}{$APP_IMAGE_MAP[$SELECTED_MENU_CATEGORY]}{/if}">
 							<div class="row app-navigator">
@@ -38,7 +38,7 @@
 						<i class="fa fa-search"></i>
 					</button>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div id="search-links-container" class="search-links-container collapse navbar-collapse">
 						<div class="search-link">
 							<span class="fa fa-search" aria-hidden="true"></span>
