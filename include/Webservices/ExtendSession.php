@@ -23,13 +23,13 @@ function vtws_extendSession()
 
 		$crmObject = VtigerWebserviceObject::fromName($adb, 'Users');
 		$userId = vtws_getId($crmObject->getEntityId(), $userId);
-		$vtigerVersion = vtws_getVtigerVersion();
+		$kadiraVersion = vtws_getVtigerVersion();
 
 		$resp = [
 			'sessionName'  => $sessionManager->getSessionId(),
 			'userId'       => $userId,
 			'version'      => $API_VERSION,
-			'vtigerVersion'=> $vtigerVersion
+			'kadiraVersion'=> $kadiraVersion
 		];
 
 		return $resp;

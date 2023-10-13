@@ -199,7 +199,7 @@ class OperationManager
 
 					$webserviceObject = VtigerWebserviceObject::fromName($adb, 'Users');
 					$userId = vtws_getId($webserviceObject->getEntityId(), $userDetails->id);
-					$vtigerVersion = vtws_getVtigerVersion();
+					$kadiraversion = vtws_getVtigerVersion();
 					$userInfo = [
 						'username'             => $userDetails->user_name,
 						'first_name'           => $userDetails->first_name,
@@ -214,7 +214,7 @@ class OperationManager
 						'sessionName'          => $this->sessionManager->getSessionId(),
 						'userId'               => $userId,
 						'version'              => $API_VERSION,
-						'vtigerVersion'        => $vtigerVersion
+						'kadiraversion'        => $kadiraversion
 					];
 
 					return $userInfo;
