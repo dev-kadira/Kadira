@@ -122,11 +122,6 @@ class ModComments extends ModCommentsCore {
 		return new ModComments_CommentsModel($this->column_fields);
 	}
 
-	function getListButtons($app_strings) {
-		$list_buttons = Array();
-		return $list_buttons;
-	}
-
 	/**
 	 * Function to copy the comments from parent record to the target record.
 	 * @param type $currentParentId

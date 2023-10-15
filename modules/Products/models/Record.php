@@ -392,13 +392,14 @@ class Products_Record_Model extends Vtiger_Record_Model
 				$imageIdsList[] = $db->query_result($result, $i, 'attachmentsid');
 				$imagePathList[] = $db->query_result($result, $i, 'path');
 				$imageName = $db->query_result($result, $i, 'name');
-				$url = \Vtiger_Functions::getFilePublicURL($imageId, $imageName);
 
 				//decode_html - added to handle UTF-8 characters in file names
 				$imageOriginalNamesList[] = urlencode(decode_html($imageName));
 
 				//urlencode - added to handle special characters like #, %, etc.,
 				$imageNamesList[] = $imageName;
+
+				$url = \Vtiger_Functions::getFilePublicURL($imageId, $imageName);
 				$imageUrlsList[] = $url;
 			}
 
