@@ -9,8 +9,15 @@
  */
 
 class Assets_Detail_View extends Vtiger_Detail_View
-{
-	public function preProcess(Vtiger_Request $request)
+{	
+	/**
+	 * preProcess
+	 *
+	 * @param  Vtiger_Request $request
+	 * @param  Bool $display
+	 * @return void
+	 */
+	public function preProcess(Vtiger_Request $request, $display = true)
 	{
 		$viewer = $this->getViewer($request);
 		$viewer->assign('NO_SUMMARY', true);

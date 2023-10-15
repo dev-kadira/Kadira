@@ -9,7 +9,16 @@
  */
 
 class Assets_Module_Model extends Vtiger_Module_Model
-{
+{	
+	/**
+	 * getQueryByModuleField
+	 *
+	 * @param  String $sourceModule
+	 * @param  String $field
+	 * @param  String $record
+	 * @param  String $listQuery
+	 * @return String
+	 */
 	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery)
 	{
 		if ($sourceModule == 'HelpDesk') {
@@ -32,15 +41,20 @@ class Assets_Module_Model extends Vtiger_Module_Model
 	}
 
 	/**
-	 * Function to check whether the module is summary view supported
-	 * @return <Boolean> - true/false
+	 * isSummaryViewSupported
+	 *
+	 * @return Bool
 	 */
 	public function isSummaryViewSupported()
 	{
 		return true;
 	}
 
-	// Function to get supported utility actions for a module
+	/**
+	 * getUtilityActionsNames
+	 *
+	 * @return Array
+	 */
 	public function getUtilityActionsNames()
 	{
 		return ['Import', 'Export', 'DuplicatesHandling'];
