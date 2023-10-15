@@ -1631,7 +1631,7 @@ class Accounts extends CRMEntity {
 	 */
 	function get_related_list($id, $cur_tab_id, $rel_tab_id, $actions = false) {
 
-		global $currentModule, $app_strings, $singlepane_view;
+		global $currentModule, $singlepane_view;
 
 		$parenttab = getParentTab();
 

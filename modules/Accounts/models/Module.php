@@ -30,6 +30,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 		$moduleModel = Vtiger_Module_Model::getInstance('Dashboard');
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
+
 		if ($permission) {
 			$parentQuickLinks['SIDEBARLINK'][] = Vtiger_Link_Model::getInstanceFromValues($quickLink);
 		}
@@ -93,20 +94,22 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 			$entityIds = $focus->getRelatedContactsIds();
 			$entityIds = implode(',', $entityIds);
 
-			$userNameSql = getSqlForNameInDisplayFormat(['first_name' => 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'], 'Users');
+			$columns = ['first_name' => 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'];
+			$userNameSql = getSqlForNameInDisplayFormat($columns, 'Users');
 
 			$query = "SELECT CASE WHEN (vtiger_users.user_name not like '') THEN {$userNameSql} ELSE vtiger_groups.groupname END AS user_name,
-						vtiger_crmentity.*, vtiger_activity.activitytype, vtiger_activity.subject, vtiger_activity.date_start, vtiger_activity.time_start,
-						vtiger_activity.recurringtype, vtiger_activity.due_date, vtiger_activity.time_end, vtiger_activity.visibility, vtiger_seactivityrel.crmid AS parent_id,
-						CASE WHEN (vtiger_activity.activitytype = 'Task') THEN (vtiger_activity.status) ELSE (vtiger_activity.eventstatus) END AS status
-						FROM vtiger_activity
-						INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_activity.activityid
-						LEFT JOIN vtiger_seactivityrel ON vtiger_seactivityrel.activityid = vtiger_activity.activityid
-						LEFT JOIN vtiger_cntactivityrel ON vtiger_cntactivityrel.activityid = vtiger_activity.activityid
-						LEFT JOIN vtiger_users ON vtiger_users.id = vtiger_crmentity.smownerid
-						LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid
-							WHERE vtiger_crmentity.deleted = 0 AND vtiger_activity.activitytype <> 'Emails'
-								AND (vtiger_seactivityrel.crmid = " . $recordId;
+				vtiger_crmentity.*, vtiger_activity.activitytype, vtiger_activity.subject, vtiger_activity.date_start, vtiger_activity.time_start,
+				vtiger_activity.recurringtype, vtiger_activity.due_date, vtiger_activity.time_end, vtiger_activity.visibility, vtiger_seactivityrel.crmid AS parent_id,
+				CASE WHEN (vtiger_activity.activitytype = 'Task') THEN (vtiger_activity.status) ELSE (vtiger_activity.eventstatus) END AS status
+				FROM vtiger_activity
+				INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_activity.activityid
+				LEFT JOIN vtiger_seactivityrel ON vtiger_seactivityrel.activityid = vtiger_activity.activityid
+				LEFT JOIN vtiger_cntactivityrel ON vtiger_cntactivityrel.activityid = vtiger_activity.activityid
+				LEFT JOIN vtiger_users ON vtiger_users.id = vtiger_crmentity.smownerid
+				LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid
+				WHERE vtiger_crmentity.deleted = 0 AND vtiger_activity.activitytype <> 'Emails'
+				AND (vtiger_seactivityrel.crmid = " . $recordId;
+
 			if ($entityIds) {
 				$query .= ' OR vtiger_cntactivityrel.contactid IN (' . $entityIds . '))';
 			} else {
@@ -116,6 +119,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 			$relatedModuleName = $relatedModule->getName();
 			$query .= $this->getSpecificRelationQuery($relatedModuleName);
 			$nonAdminQuery = $this->getNonAdminAccessControlQueryForRelation($relatedModuleName);
+
 			if ($nonAdminQuery) {
 				$query = appendFromClauseToQuery($query, $nonAdminQuery);
 
@@ -164,20 +168,20 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 		$params = [];
 
 		$query = "SELECT DISTINCT vtiger_crmentity.crmid, (CASE WHEN (crmentity2.crmid not like '') THEN crmentity2.crmid ELSE crmentity3.crmid END) AS parent_id, 
-					(CASE WHEN (crmentity2.setype not like '') then crmentity2.setype ELSE crmentity3.setype END) AS crmentity2module, vtiger_crmentity.smownerid, vtiger_crmentity.setype, vtiger_activity.* FROM vtiger_activity
-					INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_activity.activityid
-					LEFT JOIN vtiger_seactivityrel ON vtiger_seactivityrel.activityid = vtiger_activity.activityid
-					LEFT JOIN vtiger_cntactivityrel ON vtiger_cntactivityrel.activityid = vtiger_activity.activityid
-					LEFT JOIN vtiger_crmentity as crmentity2 on (vtiger_seactivityrel.crmid = crmentity2.crmid AND vtiger_seactivityrel.crmid IS NOT NULL AND crmentity2.deleted = 0)
-					LEFT JOIN vtiger_crmentity as crmentity3 on (vtiger_cntactivityrel.contactid = crmentity3.crmid AND vtiger_cntactivityrel.contactid IS NOT NULL AND crmentity3.deleted = 0)
-					LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid";
+			(CASE WHEN (crmentity2.setype not like '') then crmentity2.setype ELSE crmentity3.setype END) AS crmentity2module, vtiger_crmentity.smownerid, vtiger_crmentity.setype, vtiger_activity.* FROM vtiger_activity
+			INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_activity.activityid
+			LEFT JOIN vtiger_seactivityrel ON vtiger_seactivityrel.activityid = vtiger_activity.activityid
+			LEFT JOIN vtiger_cntactivityrel ON vtiger_cntactivityrel.activityid = vtiger_activity.activityid
+			LEFT JOIN vtiger_crmentity as crmentity2 on (vtiger_seactivityrel.crmid = crmentity2.crmid AND vtiger_seactivityrel.crmid IS NOT NULL AND crmentity2.deleted = 0)
+			LEFT JOIN vtiger_crmentity as crmentity3 on (vtiger_cntactivityrel.contactid = crmentity3.crmid AND vtiger_cntactivityrel.contactid IS NOT NULL AND crmentity3.deleted = 0)
+			LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid";
 
 		$query .= Users_Privileges_Model::getNonAdminAccessControlQuery('Calendar');
 
 		$query .= " WHERE vtiger_crmentity.deleted=0
-					AND (vtiger_activity.activitytype NOT IN ('Emails'))
-					AND (vtiger_activity.status is NULL OR vtiger_activity.status NOT IN ('Completed', 'Deferred', 'Cancelled'))
-					AND (vtiger_activity.eventstatus is NULL OR vtiger_activity.eventstatus NOT IN ('Held', 'Cancelled'))";
+			AND (vtiger_activity.activitytype NOT IN ('Emails'))
+			AND (vtiger_activity.status is NULL OR vtiger_activity.status NOT IN ('Completed', 'Deferred', 'Cancelled'))
+			AND (vtiger_activity.eventstatus is NULL OR vtiger_activity.eventstatus NOT IN ('Held', 'Cancelled'))";
 
 		if (! $currentUser->isAdminUser()) {
 			$moduleFocus = CRMEntity::getInstance('Calendar');
@@ -221,6 +225,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 		$groupsIds = Vtiger_Util_Helper::getGroupsIdsForUsers($currentUser->getId());
 		$activities = [];
 		$recordsToUnset = [];
+
 		for ($i = 0; $i < $numOfRows; $i++) {
 			$newRow = $db->query_result_rowdata($result, $i);
 			$model = Vtiger_Record_Model::getCleanInstance('Calendar');
@@ -228,6 +233,7 @@ class Accounts_Module_Model extends Vtiger_Module_Model
 			$currentUser = Users_Record_Model::getCurrentUserModel();
 			$visibleFields = ['activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'crmid'];
 			$visibility = true;
+			
 			if (in_array($ownerId, $groupsIds)) {
 				$visibility = false;
 			} elseif ($ownerId == $currentUser->getId()) {

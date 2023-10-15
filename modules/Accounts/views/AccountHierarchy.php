@@ -9,7 +9,13 @@
  */
 
 class Accounts_AccountHierarchy_View extends Vtiger_View_Controller
-{
+{	
+	/**
+	 * requiresPermission
+	 *
+	 * @param  mixed $request
+	 * @return Array
+	 */
 	public function requiresPermission(Vtiger_Request $request)
 	{
 		$permissions = parent::requiresPermission($request);
@@ -17,12 +23,24 @@ class Accounts_AccountHierarchy_View extends Vtiger_View_Controller
 
 		return $permissions;
 	}
-
+	
+	/**
+	 * checkPermission
+	 *
+	 * @param  mixed $request
+	 * @return Bool
+	 */
 	public function checkPermission(Vtiger_Request $request)
 	{
 		return parent::checkPermission($request);
 	}
-
+	
+	/**
+	 * process
+	 *
+	 * @param  mixed $request
+	 * @return void
+	 */
 	public function process(Vtiger_Request $request)
 	{
 		$viewer = $this->getViewer($request);
