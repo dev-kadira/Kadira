@@ -142,17 +142,18 @@ Class Google_Calendar_Connector extends WSAPP_TargetConnector {
             $this->client->setAccessToken($this->apiConnection->getAccessToken());
             $this->service = new Google_Service_Calendar($this->client);
         }
-        $query = array(
-            'maxResults' => $this->maxResults,
-            'orderBy' => 'updated',
-            'singleEvents' => true,
-        );
+
         
         if (Google_Utils_Helper::getSyncTime('Calendar', $user)) {
             $query['updatedMin'] = $this->googleFormat(Google_Utils_Helper::getSyncTime('Calendar', $user));
             //shows deleted by default
         }
-        
+             $query['updatedMin'] =  date('Y-m-d\TH:i:s\Z', strtotime("-7 days"));
+
+        $query['orderBy'] = 'startTime';
+        $query['timeMin'] = date('c',strtotime("-30 days"));
+        $query['showDeleted'] = false;
+
         $calendarId = Google_Utils_Helper::getSelectedCalendarForUser($user);
         if(!isset($this->calendars)) {
             $this->calendars = $this->pullCalendars(true);
