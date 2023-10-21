@@ -48,6 +48,10 @@ Settings_Vtiger_Detail_Js('Settings_Webforms_Detail_Js', {
 					//show html without rendering
 					var allowedAllFilesSize = container.find('.allowedAllFilesSize').val();
 					var showFormContents = container.find('pre').html();
+
+					// Replace custom (vscript) tags to (script) before adding to textarea
+					showFormContents = showFormContents.replace(/vscript/g, "script");
+
 					showFormContents = showFormContents + '<script  type="text/javascript">' +
 						'window.onload = function() { ' +
 						'var N=navigator.appName, ua=navigator.userAgent, tem;' +
@@ -125,11 +129,9 @@ Settings_Vtiger_Detail_Js('Settings_Webforms_Detail_Js', {
 						'alert("Maximum allowed file size including all files is 50MB.");' +
 						'return false;' +
 						'}' +
-
 						'}; ' +
 						'}' +
 						'</script>';
-
 					//Html contents should be placed inside textarea element
 					container.find('#showFormContent').text(showFormContents);
 					//Rendering content has been removed from container
