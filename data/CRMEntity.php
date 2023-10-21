@@ -2163,7 +2163,7 @@ class CRMEntity
 				//loop through and update any entry in those table/columns that points to the old ID and update to point to the new ID
 				foreach ($transferEntityIds as $transferId) {
 					$sql3 = "UPDATE {$table} SET {$column} = ? WHERE {$column} = ?";
-					$query3 = $adb->pquery($sql3, [$entityId, $transferId]);
+					$adb->pquery($sql3, [$entityId, $transferId]);
 				}
 			}
 		}
