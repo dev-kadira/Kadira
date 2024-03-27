@@ -13,7 +13,7 @@ The Kadria project was born from a fork of VTiger 7.4. The aim of this project i
 
 <br>
 
-<a href="https://www.buymeacoffee.com/dibaia" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V7VPS3W)
 
 <br>
 
